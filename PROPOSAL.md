@@ -5,7 +5,7 @@
 - **项目名称**：Moon Proto Lab：MoonBit protobuf 生态的动态 schema、兼容性测试与 AI 代码验证工具链
 - **参赛者 / 队伍**：王越的战队（王越）
 - **联系方式**：15372503381
-- **GitHub 仓库链接**：https://github.com/dsadsasdaddas/moon_proto
+- **GitHub 仓库链接**：https://github.com/123123213weqw/moon_proto
 - **Gitlink 仓库链接**：https://gitlink.org.cn/wangyue111/moon_proto
 - **项目方向**：MoonBit 基础软件生态工具 / protobuf schema 验证、兼容性测试与代码生成辅助设施
 - **是否为移植或参考项目**：参考 Protocol Buffers 公开标准与成熟实现，从零实现 MoonBit 动态 schema、测试 oracle 和代码生成实验工具；不直接重复已有 `moonbitlang/protobuf` / `protoc-gen-mbt` 的官方运行时定位。

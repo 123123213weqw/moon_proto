@@ -1,5 +1,11 @@
 # Changelog
 
+## [Unreleased]
+
+### Changed
+
+- Documented repository migration from the unavailable original GitHub account to Gitlink as canonical repository plus `123123213weqw/moon_proto` as the new GitHub mirror.
+
 All notable changes to **Moon Proto Lab** are recorded here for contest review,
 release tracking, and long-term maintenance.
 

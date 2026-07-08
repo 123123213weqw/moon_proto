@@ -6,7 +6,7 @@ Moon Proto Lab 是面向 MoonBit protobuf 生态的动态 schema、兼容性测�
 
 仓库地址：
 
-- GitHub: https://github.com/dsadsasdaddas/moon_proto
+- GitHub: https://github.com/123123213weqw/moon_proto
 - Gitlink: https://gitlink.org.cn/wangyue111/moon_proto
 
 ## 2. 与已有生态的关系

@@ -6,8 +6,8 @@ The repository name remains `moon_proto`, but the project is now deliberately po
 
 ## Repository links
 
-- GitHub: https://github.com/dsadsasdaddas/moon_proto
-- Gitlink: https://gitlink.org.cn/wangyue111/moon_proto
+- Gitlink（主仓库）: https://gitlink.org.cn/wangyue111/moon_proto
+- GitHub（新镜像）: https://github.com/123123213weqw/moon_proto
 
 ## Ecosystem positioning
 
@@ -57,13 +57,14 @@ The project has a small but end-to-end verifiable protobuf laboratory pipeline:
 
 ## Engineering records
 
-For contest traceability, the repository keeps public engineering records in.
-Early work is primarily evidenced by the commit log and CI history; issues #2-#5
-are explicitly retrospective records, while new work should use the live issue/PR
-workflow.
+For contest traceability, the repository keeps public engineering records in these files.
+Early work is primarily evidenced by the commit log and CI history.  After the
+original GitHub account became unavailable, Gitlink remains the canonical public
+repository and the new GitHub repository is maintained as a mirror.
 
 - [`CHANGELOG.md`](CHANGELOG.md) for release-level changes;
 - [`docs/ENGINEERING_RECORD.md`](docs/ENGINEERING_RECORD.md) for work-package traceability and verification policy;
+- [`docs/REPOSITORY_MIGRATION.md`](docs/REPOSITORY_MIGRATION.md) for repository migration notes;
 - GitHub Issues and Pull Requests for future task/bug tracking;
 - GitHub Actions for reproducible CI evidence.
 

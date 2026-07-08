@@ -4,7 +4,7 @@ version = "0.1.0"
 
 readme = "README.md"
 
-repository = "https://github.com/dsadsasdaddas/moon_proto"
+repository = "https://github.com/123123213weqw/moon_proto"
 
 license = "MIT"
 

@@ -2,47 +2,48 @@
 
 This document explains how Moon Proto Lab keeps the contest-required engineering
 history public and traceable.  The earliest development phase was tracked mainly
-through Git commits and CI; the public issues #2-#5 below are **retrospective
-traceability records**, not pre-existing sprint tickets.  They are intentionally
-marked as completed records so reviewers can see the mapping from commits to work
-packages without implying that the issues were opened before the work started.
+through Git commits and CI.  After the original GitHub account/repository became
+unavailable, Gitlink is treated as the canonical public repository and the new
+GitHub repository is maintained as a mirror.
 
-The real-time process from this point forward is: open issue -> branch -> pull
-request -> CI -> merge -> Gitlink sync.  PR #1 and issue #6 are the first records
-created with that live process.
+The old GitHub issue/PR metadata cannot be assumed to survive a repository
+rebuild.  Therefore long-term traceability is preserved in Git commits, this
+engineering record, `CHANGELOG.md`, verification reports, and the Gitlink mirror.
+Future work should use the live flow: open issue -> branch -> pull request -> CI
+-> merge -> Gitlink sync.
 
 ## Public tracking locations
 
-- GitHub repository: <https://github.com/dsadsasdaddas/moon_proto>
-- Gitlink repository: <https://gitlink.org.cn/wangyue111/moon_proto>
-- GitHub issues: <https://github.com/dsadsasdaddas/moon_proto/issues>
-- GitHub pull requests: <https://github.com/dsadsasdaddas/moon_proto/pulls>
-- GitHub Actions: <https://github.com/dsadsasdaddas/moon_proto/actions>
+- Gitlink repository (canonical): <https://gitlink.org.cn/wangyue111/moon_proto>
+- GitHub repository (new mirror): <https://github.com/123123213weqw/moon_proto>
 - Changelog: [`CHANGELOG.md`](../CHANGELOG.md)
+- Repository migration note: [`docs/REPOSITORY_MIGRATION.md`](REPOSITORY_MIGRATION.md)
 - Reviewer demo: [`docs/DEMO.md`](DEMO.md)
 - Development report: [`docs/DEVELOPMENT_REPORT.md`](DEVELOPMENT_REPORT.md)
 - Submission checklist: [`docs/SUBMISSION_CHECKLIST.md`](SUBMISSION_CHECKLIST.md)
 
+## Issue and pull-request continuity
 
-## Public issue tracker records
+The first GitHub mirror used issues and pull requests for repository hygiene and
+engineering-record cleanup, but GitHub issues/PRs are platform metadata rather
+than Git objects.  They are not automatically preserved when the repository is
+mirrored to a new GitHub account.
 
-The following public GitHub issues make the main work packages visible in the
-issue tracker.  Issues #2-#5 are retrospective records created after the initial
-implementation, while #6 is tracked by an actual PR workflow.
+For the contest submission, the authoritative engineering history is therefore:
 
-| Issue | Purpose | Status |
-| --- | --- | --- |
-| [#2](https://github.com/dsadsasdaddas/moon_proto/issues/2) | Runtime primitives and golden vectors | Retrospective completed record |
-| [#3](https://github.com/dsadsasdaddas/moon_proto/issues/3) | Schema parser, validation and Schema Doctor | Retrospective completed record |
-| [#4](https://github.com/dsadsasdaddas/moon_proto/issues/4) | JSON mapping, dynamic runtime and MoonBit codegen | Retrospective completed record |
-| [#5](https://github.com/dsadsasdaddas/moon_proto/issues/5) | Oracle, conformance, official differential and descriptor registry gates | Retrospective completed record |
-| [#6](https://github.com/dsadsasdaddas/moon_proto/issues/6) | Contest submission engineering records and release hygiene | Live issue tracked by PR [#1](https://github.com/dsadsasdaddas/moon_proto/pull/1) |
+1. the Git commit history, preserved on Gitlink and in the new GitHub mirror;
+2. the work-package table below, which maps milestones to representative commits;
+3. `CHANGELOG.md`, verification reports and CI workflow files committed in Git;
+4. future Gitlink/GitHub issues and pull requests created after the migration.
+
+This avoids pretending that old GitHub issue numbers still exist after the
+account migration.
 
 ## Work-package traceability
 
 | Work package | Scope | Representative commits | Evidence |
 | --- | --- | --- | --- |
-| WP0 project bootstrap | Repository metadata, MoonBit package layout, CI skeleton and proposal materials | `d3a149d`, `5cd4ff2`, `d6eba92`, `b78e7f2` | README, proposal PDF, GitHub/Gitlink mirrors |
+| WP0 project bootstrap | Repository metadata, MoonBit package layout, CI skeleton and proposal materials | `d3a149d`, `5cd4ff2`, `d6eba92`, `b78e7f2` | README, proposal PDF, Gitlink/new GitHub mirror |
 | WP1 protobuf primitives | Wire types, varint, zig-zag, fixed-width and field encoders | `ddb3bbf`..`1787a1f` | `golden_wbtest.mbt`, `moon test` |
 | WP2 schema parser | Proto3 descriptors, lexer/parser, decorated schema tolerance | `dd121ab`, `627cdc4`, `82a9548`..`8d78a2a` | parser tests, example `.proto` files |
 | WP3 validation and doctor | Schema validator, reserved contracts, diagnostic CLI and verify reports | `6d50012`, `4e88bf3`, `d16c366` | `doctor`, `verify`, JUnit XML reports |
@@ -64,7 +65,7 @@ Every future change should follow this flow:
 6. Update `CHANGELOG.md` and docs if user-visible behavior changes.
 7. Open a pull request and complete the PR checklist.
 8. Merge only after CI and manual smoke checks pass.
-9. Sync Gitlink after GitHub `main` is updated.
+9. Sync Gitlink and the GitHub mirror after `main` is updated.
 
 ## Minimum verification commands
 
