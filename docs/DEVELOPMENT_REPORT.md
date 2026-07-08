@@ -94,7 +94,8 @@ Moon Proto Lab 是面向 MoonBit protobuf 生态的动态 schema、兼容性测�
 - parser/codegen snapshot：验证 `.proto` 输入产生稳定 AST 和 MoonBit 源码；
 - negative tests：验证错误输入、类型不匹配、oneof 冲突、非法 map key 等被拒绝；
 - cross-language oracle：Python `google.protobuf` 与 Go `google.golang.org/protobuf`；
-- generated-code compile check：实际生成 `.mbt` 文件并执行 `moon check`；
+- release gate：执行 `moon fmt --check`、`moon info`、`moon package`、`moon check`，满足格式、接口、打包和编译门禁；
+- generated-code compile check：实际生成 `.mbt` 文件并在临时项目中执行 `moon check`；
 - AI verify report：生成 Markdown/HTML/JUnit XML 报告，记录 doctor、inspect、codegen 和 compile 结果；
 - CI：GitHub Actions 自动执行完整检查矩阵。
 
@@ -103,6 +104,9 @@ Moon Proto Lab 是面向 MoonBit protobuf 生态的动态 schema、兼容性测�
 ```bash
 python3 tests/oracle/python_protobuf_oracle.py
 (cd tests/oracle && go run .)
+moon fmt --check
+moon info
+moon package
 moon check
 moon build
 moon test

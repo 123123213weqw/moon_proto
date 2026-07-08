@@ -1,4 +1,4 @@
-name = "moon_proto"
+name = "123123213weqw/moon_proto"
 
 version = "0.1.0"
 
@@ -8,7 +8,7 @@ repository = "https://github.com/123123213weqw/moon_proto"
 
 license = "MIT"
 
-keywords = ["protobuf", "schema", "verification", "codegen", "wasm"]
+keywords = [ "protobuf", "schema", "verification", "codegen", "wasm" ]
 
 preferred_target = "wasm-gc"
 

@@ -326,7 +326,7 @@ fn has_duplicate_enum_value_number(
 
 ///|
 fn is_valid_enum_reserved_number(number : Int) -> Bool {
-  number >= (-2147483647 - 1) && number <= 2147483647
+  number >= -2147483647 - 1 && number <= 2147483647
 }
 
 ///|
@@ -336,12 +336,7 @@ fn validate_enum_reservations(
   reservation : ReservedDescriptor,
 ) -> Unit {
   let path = "enum." + enum_desc.name
-  validate_reserved_descriptor(
-    issues,
-    path,
-    reservation,
-    true,
-  )
+  validate_reserved_descriptor(issues, path, reservation, true)
   for value in enum_desc.values {
     if reserved_ranges_contain(reservation.numbers, value.number) {
       push_issue(

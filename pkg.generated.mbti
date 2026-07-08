@@ -1,0 +1,335 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "123123213weqw/moon_proto"
+
+import {
+  "moonbitlang/core/debug",
+}
+
+// Values
+pub fn base64_decode(String) -> DecodeBytesResult
+
+pub fn base64_encode(Bytes) -> String
+
+pub fn concat_bytes(Array[Bytes]) -> Bytes
+
+pub fn decode_fixed32(Bytes, offset? : Int) -> DecodeU32Result
+
+pub fn decode_fixed64(Bytes, offset? : Int) -> DecodeU64FixedResult
+
+pub fn decode_length_delimited(Bytes, offset? : Int) -> DecodeBytesResult
+
+pub fn decode_message(MessageDescriptor, Bytes, offset? : Int) -> DecodeMessageResult
+
+pub fn decode_message_with_descriptors(MessageDescriptor, Array[MessageDescriptor], Bytes, offset? : Int) -> DecodeMessageResult
+
+pub fn decode_string_lossy(Bytes, offset? : Int) -> DecodeStringResult
+
+pub fn decode_varint_u64(Bytes, offset? : Int) -> DecodeU64Result
+
+pub fn decode_zigzag_i64(UInt64) -> Int64
+
+pub fn decode_zigzag_int(UInt) -> Int
+
+pub fn encode_bool_field(Int, Bool) -> Bytes
+
+pub fn encode_bytes_field(Int, Bytes) -> Bytes
+
+pub fn encode_fixed32(UInt) -> Bytes
+
+pub fn encode_fixed64(UInt64) -> Bytes
+
+pub fn encode_key(Int, WireType) -> Bytes
+
+pub fn encode_length_delimited(Bytes) -> Bytes
+
+pub fn encode_message(MessageDescriptor, MessageValue) -> EncodeMessageResult
+
+pub fn encode_message_with_descriptors(MessageDescriptor, Array[MessageDescriptor], MessageValue) -> EncodeMessageResult
+
+pub fn encode_sint64_field(Int, Int64) -> Bytes
+
+pub fn encode_string(String) -> Bytes
+
+pub fn encode_string_field(Int, String) -> Bytes
+
+pub fn encode_uint64_field(Int, UInt64) -> Bytes
+
+pub fn encode_varint_u64(UInt64) -> Bytes
+
+pub fn encode_varint_uint(UInt) -> Bytes
+
+pub fn encode_zigzag_i64(Int64) -> UInt64
+
+pub fn encode_zigzag_int(Int) -> UInt
+
+pub fn generate_descriptor_function(MessageDescriptor) -> String
+
+pub fn generate_enum(EnumDescriptor) -> String
+
+pub fn generate_enum_descriptor_function(EnumDescriptor) -> String
+
+pub fn generate_enum_descriptor_registry(ProtoFile) -> String
+
+pub fn generate_message_descriptor_registry(ProtoFile) -> String
+
+pub fn generate_message_runtime_helpers(MessageDescriptor) -> String
+
+pub fn generate_message_struct(MessageDescriptor) -> String
+
+pub fn generate_moonbit_source(ProtoFile, options? : CodegenOptions) -> String
+
+pub fn is_valid_field_number(Int) -> Bool
+
+pub fn is_valid_map_key_type(ScalarType) -> Bool
+
+pub fn json_escape_string(String) -> String
+
+pub fn json_to_message(MessageDescriptor, String) -> JsonDecodeResult
+
+pub fn json_to_message_with_descriptors(MessageDescriptor, Array[MessageDescriptor], String) -> JsonDecodeResult
+
+pub fn json_to_message_with_schema(MessageDescriptor, Array[MessageDescriptor], Array[EnumDescriptor], String) -> JsonDecodeResult
+
+pub fn lex_proto(String) -> Array[ProtoToken]
+
+pub fn make_key(Int, WireType) -> UInt64
+
+pub fn map_entry_value(ProtoValue, ProtoValue) -> ProtoValue
+
+pub fn message_field(String, ProtoValue) -> MessageField
+
+pub fn message_to_json(MessageDescriptor, MessageValue) -> JsonEncodeResult
+
+pub fn message_to_json_lower_camel(MessageDescriptor, MessageValue) -> JsonEncodeResult
+
+pub fn message_to_json_lower_camel_with_descriptors(MessageDescriptor, Array[MessageDescriptor], MessageValue) -> JsonEncodeResult
+
+pub fn message_to_json_lower_camel_with_schema(MessageDescriptor, Array[MessageDescriptor], Array[EnumDescriptor], MessageValue) -> JsonEncodeResult
+
+pub fn message_to_json_with_descriptors(MessageDescriptor, Array[MessageDescriptor], MessageValue) -> JsonEncodeResult
+
+pub fn message_to_json_with_schema(MessageDescriptor, Array[MessageDescriptor], Array[EnumDescriptor], MessageValue) -> JsonEncodeResult
+
+pub fn message_value(Array[MessageField]) -> MessageValue
+
+pub fn parse_key(UInt64) -> ParseKeyResult
+
+pub fn parse_proto(String) -> ParseProtoResult
+
+pub fn repeated_message_field(String, Array[ProtoValue]) -> MessageField
+
+pub fn scalar_type_from_string(String) -> ScalarType
+
+pub fn schema_is_valid(ProtoFile) -> Bool
+
+pub fn validate_enum_descriptor(EnumDescriptor) -> SchemaValidationResult
+
+pub fn validate_message_descriptor(MessageDescriptor) -> SchemaValidationResult
+
+pub fn validate_proto_file(ProtoFile) -> SchemaValidationResult
+
+pub fn wire_type_from_number(Int) -> WireType?
+
+// Errors
+
+// Types and methods
+pub(all) struct CodegenOptions {
+  emit_descriptor_functions : Bool
+  emit_runtime_helpers : Bool
+} derive(Eq, @debug.Debug)
+pub fn CodegenOptions::default() -> Self
+
+pub(all) enum DecodeBytesResult {
+  BytesOk(Bytes, Int)
+  BytesErr(DecodeError)
+} derive(Eq, @debug.Debug)
+
+pub(all) enum DecodeError {
+  UnexpectedEof
+  VarintOverflow
+  InvalidWireType(Int)
+  InvalidFieldNumber(Int)
+  NegativeLength
+  Unsupported(String)
+} derive(Eq, @debug.Debug)
+
+pub(all) enum DecodeMessageResult {
+  DecodeMessageOk(MessageValue, Int)
+  DecodeMessageErr(DecodeError)
+} derive(Eq, @debug.Debug)
+
+pub(all) enum DecodeStringResult {
+  StringOk(String, Int)
+  StringErr(DecodeError)
+} derive(Eq, @debug.Debug)
+
+pub(all) enum DecodeU32Result {
+  U32Ok(UInt, Int)
+  U32Err(DecodeError)
+} derive(Eq, @debug.Debug)
+
+pub(all) enum DecodeU64FixedResult {
+  U64FixedOk(UInt64, Int)
+  U64FixedErr(DecodeError)
+} derive(Eq, @debug.Debug)
+
+pub(all) enum DecodeU64Result {
+  U64Ok(UInt64, Int)
+  U64Err(DecodeError)
+} derive(Eq, @debug.Debug)
+
+pub(all) enum EncodeMessageResult {
+  EncodeMessageOk(Bytes)
+  EncodeMessageErr(DecodeError)
+} derive(Eq, @debug.Debug)
+
+pub(all) struct EnumDescriptor {
+  name : String
+  values : Array[EnumValueDescriptor]
+  allow_alias : Bool
+} derive(Eq, @debug.Debug)
+
+pub(all) struct EnumValueDescriptor {
+  name : String
+  number : Int
+} derive(Eq, @debug.Debug)
+
+pub(all) struct FieldDescriptor {
+  name : String
+  typ : ScalarType
+  number : Int
+  label : FieldLabel
+} derive(Eq, @debug.Debug)
+
+pub(all) enum FieldLabel {
+  Singular
+  Optional
+  Repeated
+  Oneof(String)
+} derive(Eq, @debug.Debug)
+
+pub(all) enum JsonDecodeResult {
+  JsonDecodeOk(MessageValue)
+  JsonDecodeErr(DecodeError)
+} derive(Eq, @debug.Debug)
+
+pub(all) enum JsonEncodeResult {
+  JsonOk(String)
+  JsonErr(DecodeError)
+} derive(Eq, @debug.Debug)
+
+pub(all) struct MessageDescriptor {
+  name : String
+  fields : Array[FieldDescriptor]
+} derive(Eq, @debug.Debug)
+
+pub(all) struct MessageField {
+  name : String
+  values : Array[ProtoValue]
+} derive(Eq, @debug.Debug)
+
+pub(all) struct MessageValue {
+  fields : Array[MessageField]
+} derive(Eq, @debug.Debug)
+
+pub(all) enum ParseKeyResult {
+  KeyOk(Int, WireType)
+  KeyErr(DecodeError)
+} derive(Eq, @debug.Debug)
+
+pub(all) enum ParseProtoResult {
+  ProtoOk(ProtoFile)
+  ProtoErr(SchemaError)
+} derive(Eq, @debug.Debug)
+
+pub(all) struct ProtoFile {
+  syntax : String
+  package_name : String
+  messages : Array[MessageDescriptor]
+  enums : Array[EnumDescriptor]
+  message_reservations : Array[ReservedDescriptor]
+  enum_reservations : Array[ReservedDescriptor]
+} derive(Eq, @debug.Debug)
+pub fn ProtoFile::empty() -> Self
+
+pub(all) enum ProtoToken {
+  Ident(String)
+  IntLit(Int)
+  StrLit(String)
+  Sym(String)
+} derive(Eq, @debug.Debug)
+
+pub(all) enum ProtoValue {
+  UInt64Value(UInt64)
+  Int64Value(Int64)
+  FloatValue(Float)
+  DoubleValue(Double)
+  BoolValue(Bool)
+  StringValue(String)
+  BytesValue(Bytes)
+  NestedMessageValue(MessageValue)
+  MapEntryValue(MessageValue)
+} derive(Eq, @debug.Debug)
+
+pub(all) struct ReservedDescriptor {
+  owner : String
+  numbers : Array[ReservedNumberRange]
+  names : Array[String]
+} derive(Eq, @debug.Debug)
+
+pub(all) struct ReservedNumberRange {
+  start : Int
+  end : Int
+} derive(Eq, @debug.Debug)
+
+pub(all) enum ScalarType {
+  DoubleType
+  FloatType
+  Int32Type
+  Int64Type
+  UInt32Type
+  UInt64Type
+  SInt32Type
+  SInt64Type
+  Fixed32Type
+  Fixed64Type
+  SFixed32Type
+  SFixed64Type
+  BoolType
+  StringType
+  BytesType
+  EnumType(String)
+  NamedType(String)
+  MapType(ScalarType, ScalarType)
+} derive(Eq, @debug.Debug)
+pub fn ScalarType::wire_type(Self) -> WireType
+
+pub(all) enum SchemaError {
+  Expected(String)
+  UnexpectedEofInSchema
+} derive(Eq, @debug.Debug)
+
+pub(all) struct SchemaIssue {
+  path : String
+  message : String
+} derive(Eq, @debug.Debug)
+
+pub(all) enum SchemaValidationResult {
+  SchemaValid
+  SchemaInvalid(Array[SchemaIssue])
+} derive(Eq, @debug.Debug)
+
+pub(all) enum WireType {
+  Varint
+  Fixed64
+  LengthDelimited
+  StartGroup
+  EndGroup
+  Fixed32
+} derive(Eq, @debug.Debug)
+pub fn WireType::number(Self) -> Int
+
+// Type aliases
+
+// Traits
+

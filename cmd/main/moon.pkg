@@ -1,6 +1,6 @@
 import {
-  "moonbitlang/core/env" @env,
-  "moon_proto" @proto,
+  "moonbitlang/core/env",
+  "123123213weqw/moon_proto" @proto,
 }
 
 options(

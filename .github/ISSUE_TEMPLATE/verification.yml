@@ -16,6 +16,9 @@ body:
       label: Commands
       render: bash
       value: |
+        moon fmt --check
+        moon info
+        moon package
         moon check
         moon build
         moon test

@@ -46,7 +46,7 @@ Moon Proto Lab 面向 MoonBit protobuf 生态，提供动态 `.proto` schema 解
 - `scripts/moon_proto_lab.py doctor/inspect/compat/verify` 提供文件版 Schema Doctor、schema summary、old/new schema 兼容性检查、AI verify 与 Markdown/HTML 报告生成；
 - `scripts/moon_proto_official_diff.py` 提供面向 `moonbitlang/protoc-gen-mbt` / `moonbitlang/protobuf` 的 differential harness manifest、报告入口与 CI 官方源码契约检查；
 - `scripts/moon_proto_descriptor.py` 提供 FileDescriptorSet descriptor/reflection 导入、proto 子集重建、descriptor verify、old/new descriptor-set 兼容性检查、descriptor registry release gate 与 JSON release-policy 检查；
-- `tests/codegen/compile_generated.sh` 实际生成 MoonBit 源码并执行 `moon check`，验证生成代码可编译；
+- CI/release gate 执行 `moon fmt --check`、`moon info`、`moon package`、`moon check`；`tests/codegen/compile_generated.sh` 实际生成 MoonBit 源码并执行 `moon check`，验证生成代码可编译；
 - Python `google.protobuf` 与 Go `google.golang.org/protobuf` oracle fixtures，用于验证 scalar/repeated/map/oneof/32-bit numeric/float/double/special float golden bytes/JSON 与成熟生态一致；
 - deterministic property-style tests 覆盖 varint、zig-zag、动态 message 二进制和 JSON roundtrip；
 - GitHub Actions CI 覆盖 oracle、check、build、test、多 target、CLI smoke 和 generated-code compile check。
@@ -74,6 +74,9 @@ Protocol Buffers 是云计算、RPC、边缘通信和多语言系统中最常见
 ```bash
 python3 tests/oracle/python_protobuf_oracle.py
 (cd tests/oracle && go run .)
+moon fmt --check
+moon info
+moon package
 moon check
 moon build
 moon test

@@ -44,6 +44,9 @@ Run the full matrix:
 ```bash
 python3 tests/oracle/python_protobuf_oracle.py
 (cd tests/oracle && go run .)
+moon fmt --check
+moon info
+moon package
 moon check
 moon build
 moon test

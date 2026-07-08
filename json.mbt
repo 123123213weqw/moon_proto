@@ -423,15 +423,9 @@ fn map_key_to_json_property(
       } else {
         JsonErr(Unsupported("uint32 map key out of range"))
       }
-    (UInt64Type | Fixed64Type, UInt64Value(v)) =>
-      JsonOk(v.to_string())
-    (
-      Int32Type
-      | SInt32Type
-      | SFixed32Type,
-      Int64Value(v),
-    ) =>
-      if v >= (-2147483647L - 1L) && v <= 2147483647L {
+    (UInt64Type | Fixed64Type, UInt64Value(v)) => JsonOk(v.to_string())
+    (Int32Type | SInt32Type | SFixed32Type, Int64Value(v)) =>
+      if v >= -2147483647L - 1L && v <= 2147483647L {
         JsonOk(v.to_string())
       } else {
         JsonErr(Unsupported("int32 map key out of range"))
@@ -506,23 +500,13 @@ fn scalar_to_json(typ : ScalarType, value : ProtoValue) -> JsonEncodeResult {
       } else {
         JsonOk(v.to_string())
       }
-    (
-      Int32Type
-      | SInt32Type
-      | SFixed32Type,
-      Int64Value(v),
-    ) =>
-      if v < (-2147483647L - 1L) || v > 2147483647L {
+    (Int32Type | SInt32Type | SFixed32Type, Int64Value(v)) =>
+      if v < -2147483647L - 1L || v > 2147483647L {
         JsonErr(Unsupported("int32 value out of range"))
       } else {
         JsonOk(v.to_string())
       }
-    (
-      Int64Type
-      | SInt64Type
-      | SFixed64Type,
-      Int64Value(v),
-    ) =>
+    (Int64Type | SInt64Type | SFixed64Type, Int64Value(v)) =>
       if is_i64_json_string_type(typ) {
         JsonOk(json_escape_string(v.to_string()))
       } else {
@@ -573,9 +557,14 @@ fn field_to_json(
   if desc.label == Repeated {
     let items : Array[String] = []
     for value in field.values {
-      match scalar_to_json_with_options(
-        desc.typ, value, descriptors, enum_descriptors, lower_camel,
-      ) {
+      match
+        scalar_to_json_with_options(
+          desc.typ,
+          value,
+          descriptors,
+          enum_descriptors,
+          lower_camel,
+        ) {
         JsonErr(e) => return JsonErr(e)
         JsonOk(item) => items.push(item)
       }
@@ -585,7 +574,11 @@ fn field_to_json(
     JsonErr(Unsupported("singular field has no JSON value: " + field.name))
   } else {
     scalar_to_json_with_options(
-      desc.typ, field.values[0], descriptors, enum_descriptors, lower_camel,
+      desc.typ,
+      field.values[0],
+      descriptors,
+      enum_descriptors,
+      lower_camel,
     )
   }
 }
@@ -622,7 +615,10 @@ fn scalar_to_json_with_options(
 }
 
 ///|
-fn json_output_field_name(field : FieldDescriptor, lower_camel : Bool) -> String {
+fn json_output_field_name(
+  field : FieldDescriptor,
+  lower_camel : Bool,
+) -> String {
   if lower_camel {
     json_lower_camel_field_name(field.name)
   } else {
@@ -681,7 +677,9 @@ pub fn message_to_json_with_schema(
   enum_descriptors : Array[EnumDescriptor],
   value : MessageValue,
 ) -> JsonEncodeResult {
-  message_to_json_with_options(desc, descriptors, enum_descriptors, value, false)
+  message_to_json_with_options(
+    desc, descriptors, enum_descriptors, value, false,
+  )
 }
 
 ///|
@@ -713,9 +711,8 @@ fn message_to_json_with_options(
     match json_find_message_field(value, fd.name) {
       None => ()
       Some(field) =>
-        match field_to_json(
-          fd, field, descriptors, enum_descriptors, lower_camel,
-        ) {
+        match
+          field_to_json(fd, field, descriptors, enum_descriptors, lower_camel) {
           JsonErr(e) => return JsonErr(e)
           JsonOk(encoded) =>
             props.push(
@@ -1260,7 +1257,7 @@ fn parse_scalar_from_json(
         JsonStringOk(text) =>
           match parse_i64_digits(text) {
             Some(v) =>
-              if v >= (-2147483647L - 1L) && v <= 2147483647L {
+              if v >= -2147483647L - 1L && v <= 2147483647L {
                 JsonScalarOk(Int64Value(v))
               } else {
                 JsonScalarErr(Unsupported("int32 JSON out of range"))
@@ -1288,8 +1285,7 @@ fn parse_scalar_from_json(
                 Some(desc) =>
                   match json_enum_number_for_name(desc, text) {
                     Some(number) => JsonScalarOk(Int64Value(number))
-                    None =>
-                      JsonScalarErr(Unsupported("unknown enum JSON name"))
+                    None => JsonScalarErr(Unsupported("unknown enum JSON name"))
                   }
                 None => JsonScalarErr(Unsupported("invalid enum integer JSON"))
               }
@@ -1376,7 +1372,7 @@ fn parse_map_key_from_json_property(
     Int32Type | SInt32Type | SFixed32Type =>
       match parse_i64_digits(key) {
         Some(v) =>
-          if v >= (-2147483647L - 1L) && v <= 2147483647L {
+          if v >= -2147483647L - 1L && v <= 2147483647L {
             JsonScalarOk(Int64Value(v))
           } else {
             JsonScalarErr(Unsupported("int32 map key JSON out of range"))
@@ -1470,9 +1466,7 @@ fn parse_json_field(
   }
   match fd.typ {
     MapType(_, _) =>
-      return parse_json_map_field(
-        parser, fd, descriptors, enum_descriptors,
-      )
+      return parse_json_map_field(parser, fd, descriptors, enum_descriptors)
     _ => ()
   }
   if fd.label == Repeated {
@@ -1504,7 +1498,8 @@ fn parse_json_field(
     }
     JsonDecodeOk(message_value([repeated_message_field(fd.name, values)]))
   } else {
-    match parse_scalar_from_json(parser, fd.typ, descriptors, enum_descriptors) {
+    match
+      parse_scalar_from_json(parser, fd.typ, descriptors, enum_descriptors) {
       JsonScalarErr(e) => JsonDecodeErr(e)
       JsonScalarOk(value) =>
         JsonDecodeOk(message_value([message_field(fd.name, value)]))

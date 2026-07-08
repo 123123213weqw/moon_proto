@@ -191,10 +191,9 @@ fn encode_varint_payload(
       } else {
         EncodeFieldErr(Unsupported("uint32 value out of range"))
       }
-    (UInt64Type, UInt64Value(v)) =>
-      EncodedField(encode_varint_u64(v))
+    (UInt64Type, UInt64Value(v)) => EncodedField(encode_varint_u64(v))
     (Int32Type, Int64Value(v)) =>
-      if v >= (-2147483647L - 1L) && v <= 2147483647L {
+      if v >= -2147483647L - 1L && v <= 2147483647L {
         EncodedField(encode_varint_u64(v.reinterpret_as_uint64()))
       } else {
         EncodeFieldErr(Unsupported("int32 value out of range"))
@@ -202,7 +201,7 @@ fn encode_varint_payload(
     (Int64Type, Int64Value(v)) =>
       EncodedField(encode_varint_u64(v.reinterpret_as_uint64()))
     (SInt32Type, Int64Value(v)) =>
-      if v >= (-2147483647L - 1L) && v <= 2147483647L {
+      if v >= -2147483647L - 1L && v <= 2147483647L {
         EncodedField(encode_varint_u64(encode_zigzag_i64(v)))
       } else {
         EncodeFieldErr(Unsupported("sint32 value out of range"))
@@ -271,7 +270,7 @@ fn encode_fixed32_payload(
         EncodeFieldErr(Unsupported("fixed32 value out of range"))
       }
     (SFixed32Type, Int64Value(v)) =>
-      if v >= (-2147483647L - 1L) && v <= 2147483647L {
+      if v >= -2147483647L - 1L && v <= 2147483647L {
         EncodedField(
           encode_fixed32((v.reinterpret_as_uint64() & 0xffffffffUL).to_uint()),
         )

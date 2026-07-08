@@ -8,6 +8,9 @@ protobuf schemas, JSON mapping, generated-code checks and compatibility review.
 ## 0. One-command health check
 
 ```bash
+moon fmt --check
+moon info
+moon package
 moon check
 moon build
 moon test
@@ -110,6 +113,9 @@ Generate MoonBit code from a `.proto` file:
 
 ```bash
 python3 scripts/moon_proto_gen.py gen examples/simple/user.proto -o generated/
+moon fmt --check
+moon info
+moon package
 moon check
 ```
 

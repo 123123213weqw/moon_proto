@@ -4,6 +4,7 @@
 
 ### Changed
 
+- Added release-gate checks for `moon fmt --check`, `moon info`, `moon package`, committed generated `.mbti` files, and changed the module name to `123123213weqw/moon_proto` for mooncakes packaging.
 - Documented repository migration from the unavailable original GitHub account to Gitlink as canonical repository plus `123123213weqw/moon_proto` as the new GitHub mirror.
 
 All notable changes to **Moon Proto Lab** are recorded here for contest review,

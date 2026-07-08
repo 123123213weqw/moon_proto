@@ -16,6 +16,9 @@ Closes #
 
 ## Verification
 
+- [ ] `moon fmt --check`
+- [ ] `moon info`
+- [ ] `moon package`
 - [ ] `moon check`
 - [ ] `moon build`
 - [ ] `moon test`

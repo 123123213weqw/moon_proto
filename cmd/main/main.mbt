@@ -97,7 +97,11 @@ fn scalar_type_name(typ : @proto.ScalarType) -> String {
     @proto.EnumType(name) => "enum " + name
     @proto.NamedType(name) => name
     @proto.MapType(key_typ, value_typ) =>
-      "map<" + scalar_type_name(key_typ) + ", " + scalar_type_name(value_typ) + ">"
+      "map<" +
+      scalar_type_name(key_typ) +
+      ", " +
+      scalar_type_name(value_typ) +
+      ">"
   }
 }
 
@@ -171,7 +175,9 @@ fn inspect_report(file : @proto.ProtoFile) -> String {
   lines.push("package: " + file.package_name)
   lines.push("messages: " + file.messages.length().to_string())
   for msg in file.messages {
-    lines.push("message " + msg.name + " fields=" + msg.fields.length().to_string())
+    lines.push(
+      "message " + msg.name + " fields=" + msg.fields.length().to_string(),
+    )
     for field in msg.fields {
       lines.push(
         "  " +
@@ -186,10 +192,14 @@ fn inspect_report(file : @proto.ProtoFile) -> String {
     }
     let reservation = reservation_for_owner(file.message_reservations, msg.name)
     if reservation.numbers.length() > 0 {
-      lines.push("  reserved numbers: " + reserved_ranges_text(reservation.numbers))
+      lines.push(
+        "  reserved numbers: " + reserved_ranges_text(reservation.numbers),
+      )
     }
     if reservation.names.length() > 0 {
-      lines.push("  reserved names: " + join_lines_with(reservation.names, ", "))
+      lines.push(
+        "  reserved names: " + join_lines_with(reservation.names, ", "),
+      )
     }
   }
   lines.push("enums: " + file.enums.length().to_string())
@@ -205,12 +215,19 @@ fn inspect_report(file : @proto.ProtoFile) -> String {
     for value in enum_desc.values {
       lines.push("  " + value.number.to_string() + " " + value.name)
     }
-    let reservation = reservation_for_owner(file.enum_reservations, enum_desc.name)
+    let reservation = reservation_for_owner(
+      file.enum_reservations,
+      enum_desc.name,
+    )
     if reservation.numbers.length() > 0 {
-      lines.push("  reserved numbers: " + reserved_ranges_text(reservation.numbers))
+      lines.push(
+        "  reserved numbers: " + reserved_ranges_text(reservation.numbers),
+      )
     }
     if reservation.names.length() > 0 {
-      lines.push("  reserved names: " + join_lines_with(reservation.names, ", "))
+      lines.push(
+        "  reserved names: " + join_lines_with(reservation.names, ", "),
+      )
     }
   }
   join_lines(lines)
@@ -433,11 +450,7 @@ fn append_validation_issues(
     @proto.SchemaValid => ()
     @proto.SchemaInvalid(schema_issues) =>
       for issue in schema_issues {
-        push_compat_issue(
-          issues,
-          prefix + "." + issue.path,
-          issue.message,
-        )
+        push_compat_issue(issues, prefix + "." + issue.path, issue.message)
       }
   }
 }
@@ -450,7 +463,10 @@ fn compare_field_compat(
   new_fields : Array[@proto.FieldDescriptor],
   new_reservation : @proto.ReservedDescriptor,
 ) -> Unit {
-  let path = "message." + message_name + ".field." + old_field.number.to_string()
+  let path = "message." +
+    message_name +
+    ".field." +
+    old_field.number.to_string()
   match find_field_by_number(new_fields, old_field.number) {
     Some(new_field) => {
       if new_field.name != old_field.name {
@@ -591,8 +607,10 @@ fn compare_enum_compat(
   new_reservation : @proto.ReservedDescriptor,
 ) -> Unit {
   for old_value in old_enum.values {
-    let path =
-      "enum." + old_enum.name + ".value." + old_value.number.to_string()
+    let path = "enum." +
+      old_enum.name +
+      ".value." +
+      old_value.number.to_string()
     match find_enum_value_by_number(new_enum.values, old_value.number) {
       Some(new_value) =>
         if new_value.name != old_value.name {
@@ -679,16 +697,8 @@ fn compatibility_issues(
   new_file : @proto.ProtoFile,
 ) -> Array[String] {
   let issues : Array[String] = []
-  append_validation_issues(
-    issues,
-    "old",
-    @proto.validate_proto_file(old_file),
-  )
-  append_validation_issues(
-    issues,
-    "new",
-    @proto.validate_proto_file(new_file),
-  )
+  append_validation_issues(issues, "old", @proto.validate_proto_file(old_file))
+  append_validation_issues(issues, "new", @proto.validate_proto_file(new_file))
   if issues.length() > 0 {
     return issues
   }
@@ -709,11 +719,7 @@ fn compatibility_issues(
   for old_msg in old_file.messages {
     match find_message(new_file.messages, old_msg.name) {
       None =>
-        push_compat_issue(
-          issues,
-          "message." + old_msg.name,
-          "message removed",
-        )
+        push_compat_issue(issues, "message." + old_msg.name, "message removed")
       Some(new_msg) =>
         compare_message_compat(
           issues,
@@ -726,12 +732,7 @@ fn compatibility_issues(
   }
   for old_enum in old_file.enums {
     match find_enum(new_file.enums, old_enum.name) {
-      None =>
-        push_compat_issue(
-          issues,
-          "enum." + old_enum.name,
-          "enum removed",
-        )
+      None => push_compat_issue(issues, "enum." + old_enum.name, "enum removed")
       Some(new_enum) =>
         compare_enum_compat(
           issues,
@@ -746,7 +747,10 @@ fn compatibility_issues(
 }
 
 ///|
-fn compat_report(old_file : @proto.ProtoFile, new_file : @proto.ProtoFile) -> String {
+fn compat_report(
+  old_file : @proto.ProtoFile,
+  new_file : @proto.ProtoFile,
+) -> String {
   let issues = compatibility_issues(old_file, new_file)
   let lines : Array[String] = []
   if issues.length() == 0 {
@@ -767,11 +771,13 @@ fn compat_report(old_file : @proto.ProtoFile, new_file : @proto.ProtoFile) -> St
 
 ///|
 fn compat(old_schema : String, new_schema : String) -> Unit {
-  match (
-    parse_or_print_named_error("old", old_schema),
-    parse_or_print_named_error("new", new_schema),
-  ) {
-    (Some(old_file), Some(new_file)) => println(compat_report(old_file, new_file))
+  match
+    (
+      parse_or_print_named_error("old", old_schema),
+      parse_or_print_named_error("new", new_schema),
+    ) {
+    (Some(old_file), Some(new_file)) =>
+      println(compat_report(old_file, new_file))
     _ => ()
   }
 }
@@ -810,18 +816,29 @@ fn json_roundtrip(
             Some(desc) =>
               match
                 @proto.json_to_message_with_schema(
-                  desc, file.messages, file.enums, json_input,
+                  desc,
+                  file.messages,
+                  file.enums,
+                  json_input,
                 ) {
                 @proto.JsonDecodeErr(err) =>
-                  println("error: json decode failed: " + decode_error_text(err))
+                  println(
+                    "error: json decode failed: " + decode_error_text(err),
+                  )
                 @proto.JsonDecodeOk(message) => {
                   let encoded = if lower_camel {
                     @proto.message_to_json_lower_camel_with_schema(
-                      desc, file.messages, file.enums, message,
+                      desc,
+                      file.messages,
+                      file.enums,
+                      message,
                     )
                   } else {
                     @proto.message_to_json_with_schema(
-                      desc, file.messages, file.enums, message,
+                      desc,
+                      file.messages,
+                      file.enums,
+                      message,
                     )
                   }
                   match encoded {
@@ -868,21 +885,27 @@ fn main {
         _ => println(usage())
       }
     Some("compat") =>
-      match (arg_at(args, 2), arg_at(args, 3), arg_at(args, 4), arg_at(args, 5)) {
-        (Some("--old-schema"), Some(old_schema), Some("--new-schema"), Some(new_schema)) =>
-          compat(old_schema, new_schema)
+      match
+        (arg_at(args, 2), arg_at(args, 3), arg_at(args, 4), arg_at(args, 5)) {
+        (
+          Some("--old-schema"),
+          Some(old_schema),
+          Some("--new-schema"),
+          Some(new_schema),
+        ) => compat(old_schema, new_schema)
         _ => println(usage())
       }
     Some("json-roundtrip") =>
-      match (
-        arg_at(args, 2),
-        arg_at(args, 3),
-        arg_at(args, 4),
-        arg_at(args, 5),
-        arg_at(args, 6),
-        arg_at(args, 7),
-        arg_at(args, 8),
-      ) {
+      match
+        (
+          arg_at(args, 2),
+          arg_at(args, 3),
+          arg_at(args, 4),
+          arg_at(args, 5),
+          arg_at(args, 6),
+          arg_at(args, 7),
+          arg_at(args, 8),
+        ) {
         (
           Some("--schema"),
           Some(schema),
@@ -891,8 +914,7 @@ fn main {
           Some("--json"),
           Some(json_input),
           None,
-        ) =>
-          json_roundtrip(schema, message_name, json_input, false)
+        ) => json_roundtrip(schema, message_name, json_input, false)
         (
           Some("--schema"),
           Some(schema),
@@ -901,8 +923,7 @@ fn main {
           Some("--json"),
           Some(json_input),
           Some("--lower-camel"),
-        ) =>
-          json_roundtrip(schema, message_name, json_input, true)
+        ) => json_roundtrip(schema, message_name, json_input, true)
         _ => println(usage())
       }
     Some("--help") | Some("help") | None => println(usage())

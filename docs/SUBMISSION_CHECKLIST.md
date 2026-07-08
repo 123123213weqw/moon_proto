@@ -9,6 +9,7 @@
 | GitHub | https://github.com/123123213weqw/moon_proto |
 | Gitlink | https://gitlink.org.cn/wangyue111/moon_proto |
 | 默认分支 | GitHub `main` / Gitlink `master` |
+| Mooncakes 模块名 | `123123213weqw/moon_proto` |
 | 最新同步提交 | 以仓库当前 HEAD 为准；GitHub/Gitlink 推送后通过 `git ls-remote` 核对 |
 | 许可证 | MIT |
 | 项目名称 | Moon Proto Lab |
@@ -60,6 +61,9 @@
 | --- | --- |
 | Python oracle | `python3 tests/oracle/python_protobuf_oracle.py` |
 | Go oracle | `(cd tests/oracle && go run .)` |
+| Format check | `moon fmt --check` |
+| Public interface check | `moon info` and `git diff --exit-code -- pkg.generated.mbti cmd/main/pkg.generated.mbti` |
+| Package metadata check | `moon package` |
 | MoonBit check | `moon check` |
 | MoonBit build | `moon build` |
 | MoonBit tests | `moon test`，当前 `60/60 passed` |
@@ -99,6 +103,9 @@
 ```bash
 python3 tests/oracle/python_protobuf_oracle.py
 (cd tests/oracle && go run .)
+moon fmt --check
+moon info
+moon package
 moon check
 moon build
 moon test

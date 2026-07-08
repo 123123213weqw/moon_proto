@@ -6,6 +6,7 @@ The repository name remains `moon_proto`, but the project is now deliberately po
 
 ## Repository links
 
+- Mooncakes module: `123123213weqw/moon_proto`
 - Gitlink（主仓库）: https://gitlink.org.cn/wangyue111/moon_proto
 - GitHub（新镜像）: https://github.com/123123213weqw/moon_proto
 
@@ -209,6 +210,9 @@ match parse_proto(src) {
 ```bash
 python3 tests/oracle/python_protobuf_oracle.py
 (cd tests/oracle && go run .)
+moon fmt --check
+moon info
+moon package
 moon check
 moon build
 moon test

@@ -679,7 +679,8 @@ fn ProtoParser::parse_enum(self : ProtoParser) -> ParsedEnum? {
       Some(Ident(word)) =>
         if word == "reserved" {
           let _ = self.advance()
-          match self.parse_reserved_clause(name, 2147483647, allow_negative=true) {
+          match
+            self.parse_reserved_clause(name, 2147483647, allow_negative=true) {
             Some(reserved) => {
               for range in reserved.numbers {
                 reserved_numbers.push(range)
@@ -706,10 +707,7 @@ fn ProtoParser::parse_enum(self : ProtoParser) -> ParsedEnum? {
                 return None
               }
             }
-            _ =>
-              if !self.skip_until_semicolon() {
-                return None
-              }
+            _ => if !self.skip_until_semicolon() { return None }
           }
         } else {
           match self.parse_enum_value() {
@@ -749,10 +747,7 @@ fn terminal_qualified_name(name : String) -> String {
 }
 
 ///|
-fn canonical_enum_name(
-  enums : Array[EnumDescriptor],
-  name : String,
-) -> String? {
+fn canonical_enum_name(enums : Array[EnumDescriptor], name : String) -> String? {
   let terminal = terminal_qualified_name(name)
   for e in enums {
     if e.name == name || e.name == terminal {
@@ -863,17 +858,15 @@ pub fn parse_proto(src : String) -> ParseProtoResult {
         }
         let _ = p.consume_sym(";")
       }
-      Some("import") => {
+      Some("import") =>
         if !p.skip_until_semicolon() {
           return ProtoErr(Expected("import statement"))
         }
-      }
-      Some("option") => {
+      Some("option") =>
         if !p.skip_until_semicolon() {
           return ProtoErr(Expected("option statement"))
         }
-      }
-      Some("service") => {
+      Some("service") =>
         match p.consume_ident() {
           Some(_) =>
             if !p.skip_braced_block() {
@@ -881,8 +874,7 @@ pub fn parse_proto(src : String) -> ParseProtoResult {
             }
           None => return ProtoErr(Expected("service name"))
         }
-      }
-      Some("extend") => {
+      Some("extend") =>
         match p.parse_qualified_name() {
           Some(_) =>
             if !p.skip_braced_block() {
@@ -890,7 +882,6 @@ pub fn parse_proto(src : String) -> ParseProtoResult {
             }
           None => return ProtoErr(Expected("extend name"))
         }
-      }
       Some("message") =>
         match p.parse_message() {
           Some(parsed) =>

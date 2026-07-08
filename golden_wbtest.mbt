@@ -160,8 +160,7 @@ test "parser tolerates imports options reserved and field options" {
       assert_true(fields[0].typ == UInt64Type)
       assert_true(fields[1].typ == NamedType(".demo.v1.External"))
       assert_true(
-        fields[2].typ ==
-        MapType(StringType, NamedType(".demo.v1.External")),
+        fields[2].typ == MapType(StringType, NamedType(".demo.v1.External")),
       )
     }
     ProtoErr(_) => fail("expected parser to accept decorated proto schema")
@@ -316,7 +315,9 @@ test "parser resolves qualified nested type references" {
       assert_true(generated.contains("payload : Payload"))
       assert_true(generated.contains("kind : Kind"))
       assert_true(generated.contains("history : Array[Payload]"))
-      assert_true(generated.contains("MapType(StringType, NamedType(\"Payload\"))"))
+      assert_true(
+        generated.contains("MapType(StringType, NamedType(\"Payload\"))"),
+      )
     }
   }
 }
@@ -606,12 +607,7 @@ test "32-bit numeric bounds are enforced" {
         number: 1,
         label: Singular,
       },
-      FieldDescriptor::{
-        name: "i",
-        typ: Int32Type,
-        number: 2,
-        label: Singular,
-      },
+      FieldDescriptor::{ name: "i", typ: Int32Type, number: 2, label: Singular },
       FieldDescriptor::{
         name: "s",
         typ: SInt32Type,
@@ -942,12 +938,16 @@ test "enum fields encode as protobuf varints" {
   }
   match
     json_to_message_with_schema(
-      desc, [], [enum_desc], "{\"history\":[\"RED\",2],\"color\":\"BLUE\"}",
+      desc,
+      [],
+      [enum_desc],
+      "{\"history\":[\"RED\",2],\"color\":\"BLUE\"}",
     ) {
     JsonDecodeErr(_) => fail("enum-name json parse failed")
     JsonDecodeOk(decoded) => assert_true(decoded == msg)
   }
-  match json_to_message_with_schema(desc, [], [enum_desc], "{\"color\":\"GREEN\"}") {
+  match
+    json_to_message_with_schema(desc, [], [enum_desc], "{\"color\":\"GREEN\"}") {
     JsonDecodeOk(_) => fail("unknown enum JSON name should be rejected")
     JsonDecodeErr(Unsupported(_)) => ()
     JsonDecodeErr(_) => fail("unexpected enum-name JSON error")
@@ -1058,7 +1058,8 @@ test "json string escaping and base64" {
     JsonDecodeErr(_) => fail("URL-safe unpadded base64 JSON should parse")
     JsonDecodeOk(msg) =>
       assert_true(
-        msg == message_value([message_field("payload", BytesValue(b"\xff\x00"))]),
+        msg ==
+        message_value([message_field("payload", BytesValue(b"\xff\x00"))]),
       )
   }
   let text_desc = MessageDescriptor::{
@@ -1077,11 +1078,13 @@ test "json string escaping and base64" {
     JsonDecodeErr(_) => fail("standard JSON string escapes should parse")
     JsonDecodeOk(msg) => {
       assert_true(
-        msg == message_value([message_field("text", StringValue("A/BA\b\f中😀"))]),
+        msg ==
+        message_value([message_field("text", StringValue("A/BA\b\f中😀"))]),
       )
       match message_to_json(text_desc, msg) {
         JsonErr(_) => fail("escaped string should render")
-        JsonOk(json) => assert_eq(json, "{\"text\":\"A/BA\\u0008\\u000c中😀\"}")
+        JsonOk(json) =>
+          assert_eq(json, "{\"text\":\"A/BA\\u0008\\u000c中😀\"}")
       }
     }
   }
@@ -1096,7 +1099,8 @@ test "json string escaping and base64" {
     JsonDecodeErr(_) => fail("unexpected surrogate escape error")
   }
   match json_to_message(text_desc, "{\"text\":\"line\nbreak\"}") {
-    JsonDecodeOk(_) => fail("unescaped JSON control characters should be rejected")
+    JsonDecodeOk(_) =>
+      fail("unescaped JSON control characters should be rejected")
     JsonDecodeErr(Unsupported(_)) => ()
     JsonDecodeErr(_) => fail("unexpected control-character JSON error")
   }
@@ -1276,12 +1280,7 @@ test "protobuf style json parser accepts integer exponent notation" {
         number: 1,
         label: Singular,
       },
-      FieldDescriptor::{
-        name: "i",
-        typ: Int64Type,
-        number: 2,
-        label: Singular,
-      },
+      FieldDescriptor::{ name: "i", typ: Int64Type, number: 2, label: Singular },
       FieldDescriptor::{
         name: "i32",
         typ: Int32Type,
@@ -1438,7 +1437,8 @@ test "protobuf style json parser treats null as absent" {
       )
       match message_to_json(desc, msg) {
         JsonErr(_) => fail("JSON writer failed after null parse")
-        JsonOk(canonical) => assert_eq(canonical, "{\"name\":\"Alice\",\"phone\":\"123\"}")
+        JsonOk(canonical) =>
+          assert_eq(canonical, "{\"name\":\"Alice\",\"phone\":\"123\"}")
       }
     }
   }
@@ -1448,7 +1448,8 @@ test "protobuf style json parser treats null as absent" {
     JsonDecodeErr(_) => fail("unexpected duplicate null-field error")
   }
   match json_to_message(desc, "{\"tags\":[null]}") {
-    JsonDecodeOk(_) => fail("null inside repeated JSON array should be rejected")
+    JsonDecodeOk(_) =>
+      fail("null inside repeated JSON array should be rejected")
     JsonDecodeErr(Unsupported(_)) => ()
     JsonDecodeErr(_) => fail("unexpected repeated null error")
   }
@@ -1481,8 +1482,7 @@ test "protobuf style json parser accepts lower camel field names" {
   }
   match
     json_to_message(
-      desc,
-      "{\"displayName\":\"Alice\",\"phoneNumber\":\"123\",\"userId\":\"150\"}",
+      desc, "{\"displayName\":\"Alice\",\"phoneNumber\":\"123\",\"userId\":\"150\"}",
     ) {
     JsonDecodeErr(_) => fail("lowerCamel JSON field names should parse")
     JsonDecodeOk(msg) => {
@@ -1498,22 +1498,21 @@ test "protobuf style json parser accepts lower camel field names" {
         JsonErr(_) => fail("JSON writer failed after lowerCamel parse")
         JsonOk(canonical) =>
           assert_eq(
-            canonical,
-            "{\"user_id\":\"150\",\"display_name\":\"Alice\",\"phone_number\":\"123\"}",
+            canonical, "{\"user_id\":\"150\",\"display_name\":\"Alice\",\"phone_number\":\"123\"}",
           )
       }
       match message_to_json_lower_camel(desc, msg) {
         JsonErr(_) => fail("lowerCamel JSON writer failed")
         JsonOk(canonical) =>
           assert_eq(
-            canonical,
-            "{\"userId\":\"150\",\"displayName\":\"Alice\",\"phoneNumber\":\"123\"}",
+            canonical, "{\"userId\":\"150\",\"displayName\":\"Alice\",\"phoneNumber\":\"123\"}",
           )
       }
     }
   }
   match json_to_message(desc, "{\"user_id\":\"1\",\"userId\":\"2\"}") {
-    JsonDecodeOk(_) => fail("snake_case and lowerCamel aliases should duplicate")
+    JsonDecodeOk(_) =>
+      fail("snake_case and lowerCamel aliases should duplicate")
     JsonDecodeErr(Unsupported(_)) => ()
     JsonDecodeErr(_) => fail("unexpected lowerCamel duplicate error")
   }
@@ -1553,13 +1552,14 @@ test "protobuf style json parser accepts lower camel field names" {
   ])
   match
     message_to_json_lower_camel_with_descriptors(
-      wrapper_desc, [desc, wrapper_desc], wrapper,
+      wrapper_desc,
+      [desc, wrapper_desc],
+      wrapper,
     ) {
     JsonErr(_) => fail("nested lowerCamel JSON writer failed")
     JsonOk(canonical) =>
       assert_eq(
-        canonical,
-        "{\"profile\":{\"userId\":\"150\",\"displayName\":\"Alice\"},\"auditLog\":[\"created\"]}",
+        canonical, "{\"profile\":{\"userId\":\"150\",\"displayName\":\"Alice\"},\"auditLog\":[\"created\"]}",
       )
   }
 }
@@ -1712,8 +1712,7 @@ test "upstream-style wire decode edge vector" {
   }
   // Duplicate singular field 1 keeps the final value, field 99 is unknown and
   // skipped, and repeated field 7 arrives once unpacked and once packed.
-  let wire =
-    b"\x08\x01\x98\x06\xb9\x60\x38\x01\x38\x96\x01\x3a\x02\x02\x03\x12\x03Bob\x08\x96\x01"
+  let wire = b"\x08\x01\x98\x06\xb9\x60\x38\x01\x38\x96\x01\x3a\x02\x02\x03\x12\x03Bob\x08\x96\x01"
   match decode_message(desc, wire) {
     DecodeMessageErr(_) => fail("wire edge vector decode failed")
     DecodeMessageOk(decoded, next) => {
@@ -1735,8 +1734,7 @@ test "upstream-style wire decode edge vector" {
         JsonErr(_) => fail("wire edge vector JSON render failed")
         JsonOk(json) =>
           assert_eq(
-            json,
-            "{\"id\":\"150\",\"name\":\"Bob\",\"samples\":[\"1\",\"150\",\"2\",\"3\"]}",
+            json, "{\"id\":\"150\",\"name\":\"Bob\",\"samples\":[\"1\",\"150\",\"2\",\"3\"]}",
           )
       }
     }
@@ -1754,12 +1752,7 @@ test "official python protobuf oracle 32-bit numeric bytes and json" {
         number: 1,
         label: Singular,
       },
-      FieldDescriptor::{
-        name: "i",
-        typ: Int32Type,
-        number: 2,
-        label: Singular,
-      },
+      FieldDescriptor::{ name: "i", typ: Int32Type, number: 2, label: Singular },
       FieldDescriptor::{
         name: "s",
         typ: SInt32Type,
@@ -1817,12 +1810,7 @@ test "official python protobuf oracle float and double bytes and json" {
   let desc = MessageDescriptor::{
     name: "Floats",
     fields: [
-      FieldDescriptor::{
-        name: "f",
-        typ: FloatType,
-        number: 1,
-        label: Singular,
-      },
+      FieldDescriptor::{ name: "f", typ: FloatType, number: 1, label: Singular },
       FieldDescriptor::{
         name: "d",
         typ: DoubleType,
@@ -1886,8 +1874,14 @@ test "official python protobuf oracle float special JSON strings" {
     ],
   }
   let msg = message_value([
-    message_field("f_nan", FloatValue(Float::reinterpret_from_uint(0x7fc00000U))),
-    message_field("f_inf", FloatValue(Float::reinterpret_from_uint(0x7f800000U))),
+    message_field(
+      "f_nan",
+      FloatValue(Float::reinterpret_from_uint(0x7fc00000U)),
+    ),
+    message_field(
+      "f_inf",
+      FloatValue(Float::reinterpret_from_uint(0x7f800000U)),
+    ),
     message_field(
       "d_neg_inf",
       DoubleValue(0xfff0000000000000UL.reinterpret_as_double()),
@@ -2060,10 +2054,12 @@ test "enum duplicate number requires allow_alias" {
     #|  STATUS_SUCCESS = 1;
     #|}
   match parse_proto(src) {
-    ProtoErr(_) => fail("duplicate enum number schema should parse then validate")
+    ProtoErr(_) =>
+      fail("duplicate enum number schema should parse then validate")
     ProtoOk(file) =>
       match validate_proto_file(file) {
-        SchemaValid => fail("duplicate enum number should fail without allow_alias")
+        SchemaValid =>
+          fail("duplicate enum number should fail without allow_alias")
         SchemaInvalid(issues) => {
           assert_eq(issues.length(), 1)
           assert_eq(issues[0].message, "duplicate enum value number")
@@ -2360,7 +2356,10 @@ test "map numeric JSON keys use exact integer normalization" {
         msg ==
         message_value([
           repeated_message_field("u64", [
-            map_entry_value(UInt64Value(0xffffffffffffffffUL), StringValue("max")),
+            map_entry_value(
+              UInt64Value(0xffffffffffffffffUL),
+              StringValue("max"),
+            ),
           ]),
           repeated_message_field("i64", [
             map_entry_value(
@@ -2423,16 +2422,14 @@ test "map enum values use schema-aware json names" {
     JsonErr(_) => fail("map enum JSON encode failed")
     JsonOk(json) =>
       assert_eq(
-        json,
-        "{\"favorite_colors\":{\"primary\":\"BLUE\",\"backup\":\"RED\"}}",
+        json, "{\"favorite_colors\":{\"primary\":\"BLUE\",\"backup\":\"RED\"}}",
       )
   }
   match message_to_json_lower_camel_with_schema(desc, [], [enum_desc], msg) {
     JsonErr(_) => fail("map enum lowerCamel JSON encode failed")
     JsonOk(json) =>
       assert_eq(
-        json,
-        "{\"favoriteColors\":{\"primary\":\"BLUE\",\"backup\":\"RED\"}}",
+        json, "{\"favoriteColors\":{\"primary\":\"BLUE\",\"backup\":\"RED\"}}",
       )
   }
   match
@@ -2447,7 +2444,10 @@ test "map enum values use schema-aware json names" {
   }
   match
     json_to_message_with_schema(
-      desc, [], [enum_desc], "{\"favoriteColors\":{\"primary\":\"GREEN\"}}",
+      desc,
+      [],
+      [enum_desc],
+      "{\"favoriteColors\":{\"primary\":\"GREEN\"}}",
     ) {
     JsonDecodeOk(_) => fail("unknown map enum JSON name should be rejected")
     JsonDecodeErr(Unsupported(_)) => ()
