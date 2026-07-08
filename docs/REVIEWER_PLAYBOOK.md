@@ -2,6 +2,17 @@
 
 这份文档面向比赛评审，目标是在 5 分钟内看清 Moon Proto Lab 的项目价值、差异化和可复现性。
 
+## 0. 先看可视化成果
+
+README 顶部的 `Visual proof for reviewers` 区域包含 4 张仓库内 SVG 成果图：
+
+- `docs/assets/moon_proto_pipeline.svg`：产品闭环；
+- `docs/assets/release_gate_dashboard.svg`：一键验收通过截图式看板；
+- `docs/assets/schema_doctor_diagnostics.svg`：AI 反例诊断截图式看板；
+- `docs/assets/evidence_matrix.svg`：测试、CI、oracle、mooncakes 证据矩阵。
+
+这些图不依赖外部图床，GitHub/Gitlink README 可直接展示。
+
 ## 1. 项目一句话
 
 Moon Proto Lab 是一个 MoonBit protobuf 生态验证实验室：把 `.proto` schema 从“AI 生成的一段文本”变成可以诊断、可以生成 MoonBit 代码、可以编译、可以做兼容性检查、可以输出报告的工程闭环。

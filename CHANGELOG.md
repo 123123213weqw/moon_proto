@@ -4,6 +4,7 @@
 
 ### Changed
 
+- Added repository-native SVG review visuals to README: pipeline, release gate dashboard, Schema Doctor diagnostics and evidence matrix.
 - Added a pre-acceptance fix note that maps each review comment to concrete repository evidence.
 - Added `scripts/release_gate.sh` as a one-command local acceptance gate.
 - Added AI-generated schema verification fixtures and walkthrough docs.

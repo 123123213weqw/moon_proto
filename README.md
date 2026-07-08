@@ -9,6 +9,27 @@
 
 The repository name remains `moon_proto`, but the project is now deliberately positioned as an ecosystem companion instead of a replacement for the existing MoonBit protobuf implementation.
 
+
+## Visual proof for reviewers
+
+These repository-native visuals summarize the product loop and verification evidence without relying on external image hosting.
+
+<p align="center">
+  <img src="docs/assets/moon_proto_pipeline.svg" alt="Moon Proto Lab verification pipeline" width="920">
+</p>
+
+<p align="center">
+  <img src="docs/assets/release_gate_dashboard.svg" alt="Moon Proto Lab release gate passing dashboard" width="920">
+</p>
+
+<p align="center">
+  <img src="docs/assets/schema_doctor_diagnostics.svg" alt="Schema Doctor diagnostics for an invalid AI-generated schema" width="920">
+</p>
+
+<p align="center">
+  <img src="docs/assets/evidence_matrix.svg" alt="Moon Proto Lab verification evidence matrix" width="920">
+</p>
+
 ## Repository links
 
 - Mooncakes module: [`123123213weqw/moon_proto`](https://mooncakes.io/docs/123123213weqw/moon_proto)

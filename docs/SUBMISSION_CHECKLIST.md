@@ -104,6 +104,7 @@
 | AI schema 验证 walkthrough | `docs/AI_VERIFICATION_WALKTHROUGH.md` |
 | 一键 release gate | `scripts/release_gate.sh` |
 | AI schema fixtures | `examples/ai/good_order.proto`、`examples/ai/good_order_v2.proto`、`examples/ai/bad_order.proto` |
+| README 可视化成果图 | `docs/assets/moon_proto_pipeline.svg`、`docs/assets/release_gate_dashboard.svg`、`docs/assets/schema_doctor_diagnostics.svg`、`docs/assets/evidence_matrix.svg` |
 
 ## 可复现命令
 
