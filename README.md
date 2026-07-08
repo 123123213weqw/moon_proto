@@ -10,6 +10,15 @@
 The repository name remains `moon_proto`, but the project is now deliberately positioned as an ecosystem companion instead of a replacement for the existing MoonBit protobuf implementation.
 
 
+## Agent feedback loop demo
+
+The screenshots below show actual command output.  First, this labeled demo explains the Agent collaboration loop: an Agent proposes a schema, Moon Proto Lab returns structured diagnostics, and the Agent/developer fixes the schema until CI passes.
+
+<p align="center">
+  <img src="docs/diagrams/agent_feedback_loop_demo.png" alt="Agent feedback loop demo for AI-generated schema verification" width="920">
+</p>
+
+
 ## Actual run screenshots for reviewers
 
 These are screenshots rendered from **real command transcripts** produced in this repository, not decorative architecture diagrams.  Each PNG has a matching `.txt` transcript under `docs/screenshots/` so reviewers can audit the exact command, cwd, timestamp and exit code.
@@ -28,15 +37,6 @@ These are screenshots rendered from **real command transcripts** produced in thi
 
 <p align="center">
   <img src="docs/screenshots/moon_package_check.png" alt="Actual moon package run for mooncakes" width="920">
-</p>
-
-
-## Agent feedback loop demo
-
-The screenshots above show actual command output.  The following diagram is a labeled demo that explains the Agent collaboration loop: an Agent proposes a schema, Moon Proto Lab returns structured diagnostics, and the Agent/developer fixes the schema until CI passes.
-
-<p align="center">
-  <img src="docs/diagrams/agent_feedback_loop_demo.png" alt="Agent feedback loop demo for AI-generated schema verification" width="920">
 </p>
 
 ## Repository links

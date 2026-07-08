@@ -2,9 +2,11 @@
 
 这份文档面向比赛评审，目标是在 5 分钟内看清 Moon Proto Lab 的项目价值、差异化和可复现性。
 
-## 0. 先看实际运行截图
+## 0. 先看 Agent 反馈闭环
 
-README 顶部的 `Actual run screenshots for reviewers` 区域包含 4 张由真实命令输出 transcript 渲染得到的 PNG 截图：
+README 顶部首先展示 `docs/diagrams/agent_feedback_loop_demo.png`。这张图明确标注为 demo diagram，用来解释：Agent 生成 schema 后，Moon Proto Lab 如何把诊断转换成可修复反馈，再由 Agent/开发者修复并重新跑 CI。
+
+紧接着的 `Actual run screenshots for reviewers` 区域包含 4 张由真实命令输出 transcript 渲染得到的 PNG 截图，用来证明上面的闭环可以实际运行：
 
 - `docs/screenshots/release_gate_pass.png`：`bash scripts/release_gate.sh` 最终通过；
 - `docs/screenshots/moon_test_all_targets.png`：`moon test --target all` 多后端测试通过；
@@ -14,8 +16,6 @@ README 顶部的 `Actual run screenshots for reviewers` 区域包含 4 张由真
 每张 PNG 都有同名 `.txt` 原始 transcript，包含 command、cwd、timestamp 和 exit code，便于评审核对。
 
 `docs/screenshots/ai_verify_pass.png` 和 `docs/screenshots/schema_doctor_bad_order.png` 仍作为补充证据保留，但不放在 README 首页四图里，避免和 release gate 总览重复。
-
-另外，`docs/diagrams/agent_feedback_loop_demo.png` 是一张明确标注为 demo diagram 的 Agent 反馈闭环图，用来解释：Agent 生成 schema 后，Moon Proto Lab 如何把诊断转换成可修复反馈，再由 Agent/开发者修复并重新跑 CI。
 
 ## 1. 项目一句话
 

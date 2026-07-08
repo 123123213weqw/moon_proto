@@ -4,6 +4,7 @@
 
 ### Changed
 
+- Moved the Agent feedback loop diagram ahead of run screenshots in README so reviewers see the AI collaboration value before verification evidence.
 - Deduplicated README screenshots so the front page shows release gate, multi-target tests, JSON roundtrip and package publishing instead of repeating AI verification snippets already included in the release gate.
 - Added an Agent feedback loop demo diagram to explain how AI-generated schemas receive structured diagnostics, fixes and CI re-validation.
 - Replaced decorative SVG review visuals with actual run screenshots rendered from real command transcripts, with matching `.txt` evidence files.
