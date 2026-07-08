@@ -6,3 +6,5 @@ _build/
 coverage/
 generated/
 tmp/
+__pycache__/
+*.pyc

@@ -48,6 +48,21 @@ jobs:
         run: moon run cmd/main -- gen --example
       - name: Generated code compile check
         run: tests/codegen/compile_generated.sh
+      - name: AI schema verification smoke
+        run: |
+          python3 scripts/moon_proto_lab.py verify \
+            examples/ai/good_order.proto \
+            --report generated/ai_good_order_verify_report.md \
+            --junit-out generated/ai_good_order_verify_report.xml
+          python3 scripts/moon_proto_lab.py compat \
+            examples/ai/good_order.proto \
+            examples/ai/good_order_v2.proto \
+            --report generated/ai_good_order_compat_report.md \
+            --junit-out generated/ai_good_order_compat_report.xml
+          if python3 scripts/moon_proto_lab.py doctor examples/ai/bad_order.proto; then
+            echo "bad_order.proto should be rejected" >&2
+            exit 1
+          fi
       - name: Official differential source contract
         run: |
           git clone --depth 1 https://github.com/moonbitlang/protoc-gen-mbt.git /tmp/protoc-gen-mbt

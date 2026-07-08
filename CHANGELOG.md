@@ -4,6 +4,10 @@
 
 ### Changed
 
+- Added a pre-acceptance fix note that maps each review comment to concrete repository evidence.
+- Added `scripts/release_gate.sh` as a one-command local acceptance gate.
+- Added AI-generated schema verification fixtures and walkthrough docs.
+- Added a reviewer playbook and README badges/shortcuts for faster contest review.
 - Published `123123213weqw/moon_proto` version `0.1.0` to mooncakes; `moon publish` validated the packaged zip and returned `Server status: 200 OK`.
 - Added release-gate checks for `moon fmt --check`, `moon info`, `moon package`, committed generated `.mbti` files, and changed the module name to `123123213weqw/moon_proto` for mooncakes packaging.
 - Documented repository migration from the unavailable original GitHub account to Gitlink as canonical repository plus `123123213weqw/moon_proto` as the new GitHub mirror.

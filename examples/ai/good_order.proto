@@ -1,0 +1,31 @@
+syntax = "proto3";
+package demo.ai;
+
+// A compact schema that represents an AI-generated order event after review.
+// It intentionally uses enum, nested message, map, repeated and oneof features
+// so Moon Proto Lab can exercise schema doctor, codegen and JSON checks.
+enum OrderStatus {
+  ORDER_STATUS_UNSPECIFIED = 0;
+  ORDER_STATUS_CREATED = 1;
+  ORDER_STATUS_PAID = 2;
+  ORDER_STATUS_SHIPPED = 3;
+}
+
+message Money {
+  uint64 cents = 1;
+  string currency = 2;
+}
+
+message Order {
+  uint64 order_id = 1;
+  string buyer_id = 2;
+  OrderStatus status = 3;
+  repeated string item_skus = 4;
+  map<string, uint64> attributes = 5;
+  Money total = 6;
+
+  oneof contact {
+    string email = 7;
+    string phone = 8;
+  }
+}

@@ -1,0 +1,19 @@
+syntax = "proto3";
+package demo.ai;
+
+// A deliberately broken AI-generated schema used as a negative fixture.
+// Schema Doctor should reject it with stable diagnostics.
+enum OrderStatus {
+  ORDER_STATUS_CREATED = 1;
+  ORDER_STATUS_PAID = 1;
+}
+
+message Order {
+  reserved 4;
+  reserved "legacy_note";
+
+  uint64 order_id = 1;
+  string buyer_id = 1;
+  string legacy_note = 4;
+  map<bytes, string> invalid_labels = 5;
+}

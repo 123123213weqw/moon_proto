@@ -39,7 +39,13 @@ Current tests cover:
 - official Python `google.protobuf` and Go `google.golang.org/protobuf` oracle fixtures for full scalar/repeated, map, oneof, 32-bit numeric boundary, float/double, special float and wire-decode edge messages;
 - conformance-lite Markdown/JSON/JUnit evidence report over the same oracle-backed fixture matrix, including upstream-style wire-decode edge vectors, an imported 11-case upstream-lite manifest, expected-fail mutation self-checks for corrupted fixtures and missing artifacts plus semantic-axis coverage gates.
 
-Run the full matrix:
+Run the one-command release gate:
+
+```bash
+bash scripts/release_gate.sh
+```
+
+Run the full matrix command-by-command:
 
 ```bash
 python3 tests/oracle/python_protobuf_oracle.py
@@ -106,3 +112,13 @@ The project is positioned as a protobuf ecosystem verification lab for MoonBit. 
 Completed parser/schema-tool verification now includes old/new compatibility checks, descriptor-set compatibility checks, descriptor-registry release gates, JSON release-policy checks, richer release-policy DSL checks with warning severity, official generated-output contract checks, official scalar-matrix adapter coverage, installed-plugin official generator smoke checks, conformance-lite Markdown/JSON/JUnit evidence reports with expected-fail mutation self-checks and coverage gates, registry adapter publish/push/pull checks over local paths, HTTP, authenticated HTTP, hosted registry profiles, and managed GitHub Contents backend profiles, larger conformance-lite oracle fixtures, upstream-style wire-decode edge vectors, an imported upstream-lite conformance subset, edition/import/option/reserved/service/nested-type/qualified-nested-reference parser tolerance, signed enum value/reserved-range tolerance, enum allow_alias duplicate-number validation, schema-aware protobuf JSON enum-name mapping for fields and map values, string-literal escape/single-quote tolerance, empty-statement tolerance, top-level extend/custom-option block tolerance, oneof option tolerance, protobuf JSON URL-safe/unpadded bytes base64, standard JSON string escapes with Unicode/surrogate-pair decoding and malformed escape/control-character rejection, strict JSON number-token grammar, exact exponent-notation integer parsing with uint64/int64 overflow guards, numeric map-key normalization with canonical duplicate detection, null-as-absent and lowerCamelCase field-name alias/output helpers, block-comment tolerance, and reserved contract validation. Planned next verification:
 
 - differential adapter tests against more official MoonBit protobuf runtime/codegen outputs when stable sample projects are available.
+
+## AI verification regression fixture
+
+Reviewer-facing AI schema checks live in `examples/ai/`:
+
+- `good_order.proto` must pass `verify` and generated-code compile checks;
+- `good_order_v2.proto` must be compatible with `good_order.proto`;
+- `bad_order.proto` must fail Schema Doctor with stable diagnostics for enum, duplicate field, reserved reuse and invalid map-key mistakes.
+
+These checks are included in `scripts/release_gate.sh` and in CI smoke coverage.

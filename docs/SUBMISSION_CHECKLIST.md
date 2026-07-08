@@ -99,8 +99,21 @@
 | 项目申报书 PDF | `output/pdf/MoonProto_王越的战队_项目申报书.pdf` |
 | CI workflow | `.github/workflows/ci.yml` |
 | Upstream-lite conformance manifest | `tests/conformance/upstream_lite_cases.json` |
+| 预验收整改说明 | `docs/PRE_ACCEPTANCE_FIX.md` |
+| 评审 5 分钟手册 | `docs/REVIEWER_PLAYBOOK.md` |
+| AI schema 验证 walkthrough | `docs/AI_VERIFICATION_WALKTHROUGH.md` |
+| 一键 release gate | `scripts/release_gate.sh` |
+| AI schema fixtures | `examples/ai/good_order.proto`、`examples/ai/good_order_v2.proto`、`examples/ai/bad_order.proto` |
 
 ## 可复现命令
+
+推荐一键验收：
+
+```bash
+bash scripts/release_gate.sh
+```
+
+也可逐项执行：
 
 ```bash
 python3 tests/oracle/python_protobuf_oracle.py

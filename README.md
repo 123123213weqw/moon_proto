@@ -1,12 +1,17 @@
 # Moon Proto Lab
 
+[![CI](https://github.com/123123213weqw/moon_proto/actions/workflows/ci.yml/badge.svg)](https://github.com/123123213weqw/moon_proto/actions/workflows/ci.yml)
+![MoonBit](https://img.shields.io/badge/MoonBit-0.1.20260703-blue)
+![Mooncakes](https://img.shields.io/badge/mooncakes-123123213weqw%2Fmoon__proto-brightgreen)
+![License](https://img.shields.io/badge/license-MIT-green)
+
 **Moon Proto Lab** is a MoonBit protobuf ecosystem lab for **dynamic schema parsing, compatibility testing, JSON mapping, code generation experiments, and AI-generated schema/code verification**.
 
 The repository name remains `moon_proto`, but the project is now deliberately positioned as an ecosystem companion instead of a replacement for the existing MoonBit protobuf implementation.
 
 ## Repository links
 
-- Mooncakes module: `123123213weqw/moon_proto`
+- Mooncakes module: [`123123213weqw/moon_proto`](https://mooncakes.io/docs/123123213weqw/moon_proto)
 - Gitlink（主仓库）: https://gitlink.org.cn/wangyue111/moon_proto
 - GitHub（新镜像）: https://github.com/123123213weqw/moon_proto
 
@@ -65,6 +70,9 @@ repository and the new GitHub repository is maintained as a mirror.
 
 - [`CHANGELOG.md`](CHANGELOG.md) for release-level changes;
 - [`docs/ENGINEERING_RECORD.md`](docs/ENGINEERING_RECORD.md) for work-package traceability and verification policy;
+- [`docs/PRE_ACCEPTANCE_FIX.md`](docs/PRE_ACCEPTANCE_FIX.md) for pre-acceptance feedback fixes and evidence;
+- [`docs/AI_VERIFICATION_WALKTHROUGH.md`](docs/AI_VERIFICATION_WALKTHROUGH.md) for the AI-generated schema verification scenario;
+- [`docs/REVIEWER_PLAYBOOK.md`](docs/REVIEWER_PLAYBOOK.md) for a 5-minute reviewer path;
 - [`docs/REPOSITORY_MIGRATION.md`](docs/REPOSITORY_MIGRATION.md) for repository migration notes;
 - GitHub Issues and Pull Requests for future task/bug tracking;
 - GitHub Actions for reproducible CI evidence.
@@ -72,6 +80,18 @@ repository and the new GitHub repository is maintained as a mirror.
 ## Reviewer quick demo
 
 For a short contest-review walkthrough, see [`docs/DEMO.md`](docs/DEMO.md). It provides copy/paste commands for schema doctor, JSON roundtrip normalization, generated-code compile checks, compatibility checks, conformance-lite evidence and official differential reports.
+
+For final review and re-acceptance checks, start with:
+
+- [`docs/REVIEWER_PLAYBOOK.md`](docs/REVIEWER_PLAYBOOK.md) for the 5-minute evaluation path;
+- [`docs/PRE_ACCEPTANCE_FIX.md`](docs/PRE_ACCEPTANCE_FIX.md) for the pre-acceptance feedback fixes;
+- [`docs/AI_VERIFICATION_WALKTHROUGH.md`](docs/AI_VERIFICATION_WALKTHROUGH.md) for the AI-generated schema verification scenario.
+
+Run the full local release gate with:
+
+```bash
+bash scripts/release_gate.sh
+```
 
 ## Example
 
@@ -206,6 +226,14 @@ match parse_proto(src) {
 ```
 
 ## Verify
+
+One-command local gate matching the CI/review flow:
+
+```bash
+bash scripts/release_gate.sh
+```
+
+Individual commands:
 
 ```bash
 python3 tests/oracle/python_protobuf_oracle.py
