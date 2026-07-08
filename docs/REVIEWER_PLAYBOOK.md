@@ -8,10 +8,12 @@ README 顶部的 `Actual run screenshots for reviewers` 区域包含 4 张由真
 
 - `docs/screenshots/release_gate_pass.png`：`bash scripts/release_gate.sh` 最终通过；
 - `docs/screenshots/moon_test_all_targets.png`：`moon test --target all` 多后端测试通过；
-- `docs/screenshots/ai_verify_pass.png`：`good_order.proto` AI schema 验证通过；
-- `docs/screenshots/schema_doctor_bad_order.png`：`bad_order.proto` 被 Schema Doctor 稳定拒绝。
+- `docs/screenshots/json_roundtrip_cli.png`：schema-aware JSON roundtrip 功能演示；
+- `docs/screenshots/moon_package_check.png`：`moon package` 打包 / mooncakes 发布门禁演示。
 
 每张 PNG 都有同名 `.txt` 原始 transcript，包含 command、cwd、timestamp 和 exit code，便于评审核对。
+
+`docs/screenshots/ai_verify_pass.png` 和 `docs/screenshots/schema_doctor_bad_order.png` 仍作为补充证据保留，但不放在 README 首页四图里，避免和 release gate 总览重复。
 
 另外，`docs/diagrams/agent_feedback_loop_demo.png` 是一张明确标注为 demo diagram 的 Agent 反馈闭环图，用来解释：Agent 生成 schema 后，Moon Proto Lab 如何把诊断转换成可修复反馈，再由 Agent/开发者修复并重新跑 CI。
 

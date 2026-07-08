@@ -1,0 +1,8 @@
+Actual run: schema-aware JSON roundtrip
+cwd: /Users/wangyue/Documents/moonbit
+time: 2026-07-08T12:40:40+08:00
+$ moon run cmd/main -- json-roundtrip --schema 'syntax = "proto3"; message Bag { map<uint64, string> u64 = 1; uint64 user_id = 2; }' --message Bag --json '{"u64":{"1.0":"one"},"userId":"150"}' 
+
+{"u64":{"1":"one"},"user_id":"150"}
+
+exit code: 0

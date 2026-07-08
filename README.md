@@ -23,11 +23,11 @@ These are screenshots rendered from **real command transcripts** produced in thi
 </p>
 
 <p align="center">
-  <img src="docs/screenshots/ai_verify_pass.png" alt="Actual AI schema verification run passing" width="920">
+  <img src="docs/screenshots/json_roundtrip_cli.png" alt="Actual schema-aware JSON roundtrip CLI run" width="920">
 </p>
 
 <p align="center">
-  <img src="docs/screenshots/schema_doctor_bad_order.png" alt="Actual Schema Doctor run rejecting an invalid AI-generated schema" width="920">
+  <img src="docs/screenshots/moon_package_check.png" alt="Actual moon package run for mooncakes" width="920">
 </p>
 
 
