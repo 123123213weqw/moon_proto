@@ -105,6 +105,7 @@
 | 一键 release gate | `scripts/release_gate.sh` |
 | AI schema fixtures | `examples/ai/good_order.proto`、`examples/ai/good_order_v2.proto`、`examples/ai/bad_order.proto` |
 | README 实际运行截图 | `docs/screenshots/release_gate_pass.png`、`docs/screenshots/moon_test_all_targets.png`、`docs/screenshots/ai_verify_pass.png`、`docs/screenshots/schema_doctor_bad_order.png`，并附同名 `.txt` transcript |
+| Agent 反馈闭环演示图 | `docs/diagrams/agent_feedback_loop_demo.png`，说明文件 `docs/diagrams/agent_feedback_loop_demo.txt` |
 
 ## 可复现命令
 

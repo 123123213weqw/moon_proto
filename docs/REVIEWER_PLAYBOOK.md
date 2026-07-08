@@ -13,6 +13,8 @@ README 顶部的 `Actual run screenshots for reviewers` 区域包含 4 张由真
 
 每张 PNG 都有同名 `.txt` 原始 transcript，包含 command、cwd、timestamp 和 exit code，便于评审核对。
 
+另外，`docs/diagrams/agent_feedback_loop_demo.png` 是一张明确标注为 demo diagram 的 Agent 反馈闭环图，用来解释：Agent 生成 schema 后，Moon Proto Lab 如何把诊断转换成可修复反馈，再由 Agent/开发者修复并重新跑 CI。
+
 ## 1. 项目一句话
 
 Moon Proto Lab 是一个 MoonBit protobuf 生态验证实验室：把 `.proto` schema 从“AI 生成的一段文本”变成可以诊断、可以生成 MoonBit 代码、可以编译、可以做兼容性检查、可以输出报告的工程闭环。

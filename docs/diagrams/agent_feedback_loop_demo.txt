@@ -1,0 +1,16 @@
+Agent feedback loop demo diagram
+
+This is a deliberately labeled demo diagram, not a terminal screenshot.  It summarizes the AI collaboration flow implemented by the repository:
+
+1. Agent or developer proposes a .proto schema.
+2. Moon Proto Lab runs Schema Doctor, compatibility checks, codegen, generated-code compile checks, and report generation.
+3. Diagnostics such as duplicate field number, invalid map key type, reserved reuse and invalid enum zero value are returned as actionable feedback.
+4. The agent/developer fixes the schema and reruns verify/compat/release gate until PASS.
+
+Concrete evidence files:
+- examples/ai/bad_order.proto
+- examples/ai/good_order.proto
+- examples/ai/good_order_v2.proto
+- docs/screenshots/schema_doctor_bad_order.txt
+- docs/screenshots/ai_verify_pass.txt
+- docs/screenshots/release_gate_pass.txt

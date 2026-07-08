@@ -4,6 +4,7 @@
 
 ### Changed
 
+- Added an Agent feedback loop demo diagram to explain how AI-generated schemas receive structured diagnostics, fixes and CI re-validation.
 - Replaced decorative SVG review visuals with actual run screenshots rendered from real command transcripts, with matching `.txt` evidence files.
 - Added a pre-acceptance fix note that maps each review comment to concrete repository evidence.
 - Added `scripts/release_gate.sh` as a one-command local acceptance gate.

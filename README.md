@@ -30,6 +30,15 @@ These are screenshots rendered from **real command transcripts** produced in thi
   <img src="docs/screenshots/schema_doctor_bad_order.png" alt="Actual Schema Doctor run rejecting an invalid AI-generated schema" width="920">
 </p>
 
+
+## Agent feedback loop demo
+
+The screenshots above show actual command output.  The following diagram is a labeled demo that explains the Agent collaboration loop: an Agent proposes a schema, Moon Proto Lab returns structured diagnostics, and the Agent/developer fixes the schema until CI passes.
+
+<p align="center">
+  <img src="docs/diagrams/agent_feedback_loop_demo.png" alt="Agent feedback loop demo for AI-generated schema verification" width="920">
+</p>
+
 ## Repository links
 
 - Mooncakes module: [`123123213weqw/moon_proto`](https://mooncakes.io/docs/123123213weqw/moon_proto)
