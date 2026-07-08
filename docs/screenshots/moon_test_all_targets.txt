@@ -1,0 +1,11 @@
+Actual run: moon test --target all
+cwd: /Users/wangyue/Documents/moonbit
+time: 2026-07-08T12:24:26+08:00
+$ moon test --target all
+
+Total tests: 60, passed: 60, failed: 0. [wasm]
+Total tests: 60, passed: 60, failed: 0. [wasm-gc]
+Total tests: 60, passed: 60, failed: 0. [js]
+Total tests: 60, passed: 60, failed: 0. [native]
+
+exit code: 0

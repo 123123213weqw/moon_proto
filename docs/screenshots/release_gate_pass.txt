@@ -1,0 +1,40 @@
+Actual run: release gate PASS
+cwd: /Users/wangyue/Documents/moonbit
+time: 2026-07-08T12:24:36+08:00
+$ bash scripts/release_gate.sh
+
+[README screenshot shows final 31 lines from an actual full release gate run.]
+
+
+==> python3 scripts/moon_proto_lab.py verify examples/ai/good_order.proto --report generated/ai_good_order_verify_report.md --junit-out generated/ai_good_order_verify_report.xml
+report: generated/ai_good_order_verify_report.md
+junit: generated/ai_good_order_verify_report.xml
+Moon Proto Lab verify: PASS
+- schema doctor: PASS - schema valid
+- schema inspect: PASS - schema summary generated
+- codegen: PASS - 114 generated lines
+- generated-code compile: PASS - Finished. moon: ran 5 tasks, now up to date
+
+==> python3 scripts/moon_proto_lab.py compat examples/ai/good_order.proto examples/ai/good_order_v2.proto --report generated/ai_good_order_compat_report.md --junit-out generated/ai_good_order_compat_report.xml
+schema compatible
+old messages: 2
+new messages: 2
+old enums: 1
+new enums: 1
+report: generated/ai_good_order_compat_report.md
+junit: generated/ai_good_order_compat_report.xml
+
+==> expected failure: Schema Doctor rejects deliberately broken AI schema
+schema invalid
+issues: 6
+message.Order.field.1: duplicate field number
+message.Order.field.invalid_labels.key: invalid map key type
+message.Order.field.legacy_note.number: field uses reserved number
+message.Order.field.legacy_note.name: field uses reserved name
+enum.OrderStatus.values[0]: proto3 enum first value must be zero
+enum.OrderStatus.value.1: duplicate enum value number
+expected failure observed: Schema Doctor rejects deliberately broken AI schema
+
+Moon Proto Lab release gate: PASS
+
+exit code: 0

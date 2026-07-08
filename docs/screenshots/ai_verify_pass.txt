@@ -1,0 +1,14 @@
+Actual run: AI schema verify PASS
+cwd: /Users/wangyue/Documents/moonbit
+time: 2026-07-08T12:24:26+08:00
+$ python3 scripts/moon_proto_lab.py verify examples/ai/good_order.proto --report generated/ai_good_order_verify_report.md --junit-out generated/ai_good_order_verify_report.xml
+
+report: generated/ai_good_order_verify_report.md
+junit: generated/ai_good_order_verify_report.xml
+Moon Proto Lab verify: PASS
+- schema doctor: PASS - schema valid
+- schema inspect: PASS - schema summary generated
+- codegen: PASS - 114 generated lines
+- generated-code compile: PASS - Finished. moon: ran 5 tasks, now up to date
+
+exit code: 0

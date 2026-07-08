@@ -10,24 +10,24 @@
 The repository name remains `moon_proto`, but the project is now deliberately positioned as an ecosystem companion instead of a replacement for the existing MoonBit protobuf implementation.
 
 
-## Visual proof for reviewers
+## Actual run screenshots for reviewers
 
-These repository-native visuals summarize the product loop and verification evidence without relying on external image hosting.
+These are screenshots rendered from **real command transcripts** produced in this repository, not decorative architecture diagrams.  Each PNG has a matching `.txt` transcript under `docs/screenshots/` so reviewers can audit the exact command, cwd, timestamp and exit code.
 
 <p align="center">
-  <img src="docs/assets/moon_proto_pipeline.svg" alt="Moon Proto Lab verification pipeline" width="920">
+  <img src="docs/screenshots/release_gate_pass.png" alt="Actual release gate run ending with PASS" width="920">
 </p>
 
 <p align="center">
-  <img src="docs/assets/release_gate_dashboard.svg" alt="Moon Proto Lab release gate passing dashboard" width="920">
+  <img src="docs/screenshots/moon_test_all_targets.png" alt="Actual moon test --target all run" width="920">
 </p>
 
 <p align="center">
-  <img src="docs/assets/schema_doctor_diagnostics.svg" alt="Schema Doctor diagnostics for an invalid AI-generated schema" width="920">
+  <img src="docs/screenshots/ai_verify_pass.png" alt="Actual AI schema verification run passing" width="920">
 </p>
 
 <p align="center">
-  <img src="docs/assets/evidence_matrix.svg" alt="Moon Proto Lab verification evidence matrix" width="920">
+  <img src="docs/screenshots/schema_doctor_bad_order.png" alt="Actual Schema Doctor run rejecting an invalid AI-generated schema" width="920">
 </p>
 
 ## Repository links

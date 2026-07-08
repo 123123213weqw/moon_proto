@@ -2,16 +2,16 @@
 
 这份文档面向比赛评审，目标是在 5 分钟内看清 Moon Proto Lab 的项目价值、差异化和可复现性。
 
-## 0. 先看可视化成果
+## 0. 先看实际运行截图
 
-README 顶部的 `Visual proof for reviewers` 区域包含 4 张仓库内 SVG 成果图：
+README 顶部的 `Actual run screenshots for reviewers` 区域包含 4 张由真实命令输出 transcript 渲染得到的 PNG 截图：
 
-- `docs/assets/moon_proto_pipeline.svg`：产品闭环；
-- `docs/assets/release_gate_dashboard.svg`：一键验收通过截图式看板；
-- `docs/assets/schema_doctor_diagnostics.svg`：AI 反例诊断截图式看板；
-- `docs/assets/evidence_matrix.svg`：测试、CI、oracle、mooncakes 证据矩阵。
+- `docs/screenshots/release_gate_pass.png`：`bash scripts/release_gate.sh` 最终通过；
+- `docs/screenshots/moon_test_all_targets.png`：`moon test --target all` 多后端测试通过；
+- `docs/screenshots/ai_verify_pass.png`：`good_order.proto` AI schema 验证通过；
+- `docs/screenshots/schema_doctor_bad_order.png`：`bad_order.proto` 被 Schema Doctor 稳定拒绝。
 
-这些图不依赖外部图床，GitHub/Gitlink README 可直接展示。
+每张 PNG 都有同名 `.txt` 原始 transcript，包含 command、cwd、timestamp 和 exit code，便于评审核对。
 
 ## 1. 项目一句话
 
