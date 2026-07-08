@@ -10,6 +10,7 @@
 | Gitlink | https://gitlink.org.cn/wangyue111/moon_proto |
 | 默认分支 | GitHub `main` / Gitlink `master` |
 | Mooncakes 模块名 | `123123213weqw/moon_proto` |
+| Mooncakes 发布 | `moon publish` returned `Server status: 200 OK` for version `0.1.0` on 2026-07-08 |
 | 最新同步提交 | 以仓库当前 HEAD 为准；GitHub/Gitlink 推送后通过 `git ls-remote` 核对 |
 | 许可证 | MIT |
 | 项目名称 | Moon Proto Lab |
@@ -64,6 +65,7 @@
 | Format check | `moon fmt --check` |
 | Public interface check | `moon info` and `git diff --exit-code -- pkg.generated.mbti cmd/main/pkg.generated.mbti` |
 | Package metadata check | `moon package` |
+| Publish evidence | `moon publish` validates packaged zip and returns `Server status: 200 OK` |
 | MoonBit check | `moon check` |
 | MoonBit build | `moon build` |
 | MoonBit tests | `moon test`，当前 `60/60 passed` |
