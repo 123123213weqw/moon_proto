@@ -9,13 +9,13 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Install Python oracle dependencies
         run: python3 -m pip install --user 'protobuf==3.20.3'
       - name: Python protobuf oracle fixtures
         run: python3 tests/oracle/python_protobuf_oracle.py
       - name: Install Go
-        uses: actions/setup-go@v5
+        uses: actions/setup-go@v6
         with:
           go-version: '1.23'
           cache-dependency-path: tests/oracle/go.sum
