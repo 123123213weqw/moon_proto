@@ -10,11 +10,12 @@ protobuf schemas, JSON mapping, generated-code checks and compatibility review.
 ```bash
 moon fmt --check
 moon info
-moon package
-moon check
+moon package --list
+moon check --deny-warn
 moon build
-moon test
+moon test --deny-warn
 moon test --target all
+moon coverage analyze -p 123123213weqw/moon_proto -- -f summary
 tests/codegen/compile_generated.sh
 ```
 
@@ -22,6 +23,7 @@ Expected evidence:
 
 - `moon test`: `60/60 passed`;
 - all MoonBit targets pass: `wasm`, `wasm-gc`, `js`, `native`;
+- core MoonBit line coverage stays at or above `80%`;
 - generated-code compile check ends with `Generated MoonBit source compiles`.
 
 ## 1. Schema Doctor: reject unsafe `.proto` changes early
@@ -115,8 +117,9 @@ Generate MoonBit code from a `.proto` file:
 python3 scripts/moon_proto_gen.py gen examples/simple/user.proto -o generated/
 moon fmt --check
 moon info
+moon package --list
 moon package
-moon check
+moon check --deny-warn
 ```
 
 Run the higher-level verification report:

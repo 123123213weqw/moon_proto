@@ -45,7 +45,7 @@ Moon Proto Lab 是面向 MoonBit protobuf 生态的动态 schema、兼容性测�
 - file-based generator wrapper：`python3 scripts/moon_proto_gen.py gen schema.proto -o generated/`；
 - MoonBit CLI json-roundtrip：按 schema/message 解析 protobuf JSON 并输出 canonical JSON，用于 smoke-test lowerCamel alias 与 numeric map-key normalization；
 - file-based lab CLI：`python3 scripts/moon_proto_lab.py doctor/inspect/compat/verify schema.proto --report report.md`；
-- official differential harness：`python3 scripts/moon_proto_official_diff.py --report generated/official_diff_report.md --junit-out generated/official_diff_report.xml`，覆盖 simple/map/oneof、decorated enum/optional/reserved/import 和 scalar-matrix 官方适配案例，并在 CI 中克隆 `moonbitlang/protoc-gen-mbt` 校验官方源码/文档契约；也支持 `--official-generated-dir tests/differential/official_generated_fixture` 对预生成官方 `.mbt` 输出执行 generated-output contract 检查；支持 `--official-plugin-bin` 对已安装 `protoc-gen-mbt` 执行 live-generator smoke path；
+- official contract compatibility harness：`python3 scripts/moon_proto_official_diff.py --report generated/official_diff_report.md --junit-out generated/official_diff_report.xml`，覆盖 simple/map/oneof、decorated enum/optional/reserved/import 和 scalar-matrix 契约案例，并在 CI 中克隆 `moonbitlang/protoc-gen-mbt` 校验公开源码/文档契约；`--official-generated-dir tests/differential/official_contract_fixture` 检查明确标注的手写 output-shape contract fixtures；只有 `--official-plugin-bin` / `--run-official-generator` 路径才实际调用官方生成器；
 - descriptor/reflection bridge：`python3 scripts/moon_proto_descriptor.py verify tests/fixtures/user_descriptor_set.hex --report generated/descriptor_verify_report.md --junit-out generated/descriptor_verify_report.xml`；
 - descriptor-set compatibility：`python3 scripts/moon_proto_descriptor.py compat tests/fixtures/user_descriptor_set.hex tests/fixtures/user_descriptor_set_reserved_v2.hex --report generated/descriptor_compat_report.md --junit-out generated/descriptor_compat_report.xml`，覆盖新增字段、removed-but-reserved 与破坏性类型变化报告；
 - descriptor registry workflow：`python3 scripts/moon_proto_descriptor.py registry tests/fixtures/user_descriptor_set.hex tests/fixtures/user_descriptor_set_reserved_v2.hex --name demo-user --report generated/descriptor_registry_report.md --json-out generated/descriptor_registry.json --policy tests/fixtures/descriptor_registry_policy.json --junit-out generated/descriptor_registry_report.xml`，生成版本索引、SHA-256 digest、相邻版本兼容性 release gate 与 JSON manifest；
@@ -69,7 +69,7 @@ Moon Proto Lab 是面向 MoonBit protobuf 生态的动态 schema、兼容性测�
 ├── cmd/main/
 │   └── MoonBit CLI smoke generator, doctor, inspect and json-roundtrip commands
 ├── scripts/moon_proto_gen.py / scripts/moon_proto_lab.py / scripts/moon_proto_official_diff.py / scripts/moon_proto_descriptor.py
-│   └── file-based generator, Schema Doctor, compatibility checks, AI verify, official differential, descriptor reports, registry manifests, policy reports and registry adapter publish/push/pull
+│   └── file-based generator, Schema Doctor, compatibility checks, AI verify, official contract compatibility, descriptor reports, registry manifests, policy reports and registry adapter publish/push/pull
 ├── tests/oracle/
 │   └── Python / Go official protobuf oracle scripts
 ├── tests/conformance/
@@ -94,7 +94,7 @@ Moon Proto Lab 是面向 MoonBit protobuf 生态的动态 schema、兼容性测�
 - parser/codegen snapshot：验证 `.proto` 输入产生稳定 AST 和 MoonBit 源码；
 - negative tests：验证错误输入、类型不匹配、oneof 冲突、非法 map key 等被拒绝；
 - cross-language oracle：Python `google.protobuf` 与 Go `google.golang.org/protobuf`；
-- release gate：执行 `moon fmt --check`、`moon info`、`moon package`、`moon check`，满足格式、接口、打包和编译门禁；
+- release gate：执行 `moon fmt --check`、`moon info`、清洁发布包检查、`moon check --deny-warn`、`moon test --deny-warn` 和核心包 80% 覆盖率门禁；
 - generated-code compile check：实际生成 `.mbt` 文件并在临时项目中执行 `moon check`；
 - AI verify report：生成 Markdown/HTML/JUnit XML 报告，记录 doctor、inspect、codegen 和 compile 结果；
 - CI：GitHub Actions 自动执行完整检查矩阵。
@@ -106,11 +106,13 @@ python3 tests/oracle/python_protobuf_oracle.py
 (cd tests/oracle && go run .)
 moon fmt --check
 moon info
+moon package --list
 moon package
-moon check
+moon check --deny-warn
 moon build
-moon test
+moon test --deny-warn
 moon test --target all
+moon coverage analyze -p 123123213weqw/moon_proto -- -f summary
 moon run cmd/main -- gen --example
 python3 scripts/moon_proto_gen.py gen examples/simple/user.proto -o generated/
 python3 scripts/moon_proto_lab.py doctor examples/simple/user.proto
@@ -134,7 +136,7 @@ python3 scripts/moon_proto_lab.py verify examples/decorated/custom_options.proto
 python3 scripts/moon_proto_lab.py verify examples/decorated/edition_schema.proto --report generated/verify_edition_schema_report.md --junit-out generated/verify_edition_schema_report.xml
 python3 scripts/moon_proto_lab.py verify examples/decorated/oneof_options.proto --report generated/verify_oneof_options_report.md --junit-out generated/verify_oneof_options_report.xml
 python3 scripts/moon_proto_official_diff.py --report generated/official_diff_report.md --junit-out generated/official_diff_report.xml
-python3 scripts/moon_proto_official_diff.py --official-generated-dir tests/differential/official_generated_fixture --report generated/official_generated_diff_report.md --junit-out generated/official_generated_diff_report.xml
+python3 scripts/moon_proto_official_diff.py --official-generated-dir tests/differential/official_contract_fixture --report generated/official_generated_diff_report.md --junit-out generated/official_generated_diff_report.xml
 python3 scripts/moon_proto_official_diff.py --run-official-generator --official-plugin-bin protoc-gen-mbt --protoc-bin protoc --report generated/official_installed_plugin_diff_report.md --junit-out generated/official_installed_plugin_diff_report.xml
 python3 scripts/moon_proto_conformance.py --report generated/conformance_lite_report.md --json-out generated/conformance_lite.json --junit-out generated/conformance_lite.xml
 python3 scripts/moon_proto_descriptor.py verify tests/fixtures/user_descriptor_set.hex --report generated/descriptor_verify_report.md --junit-out generated/descriptor_verify_report.xml
@@ -151,9 +153,9 @@ tests/codegen/compile_generated.sh
 - MoonBit tests: `60/60 passed`；
 - `moon test --target all`: wasm、wasm-gc、js、native 全通过；
 - generated-code compile check 通过，并覆盖 `json-roundtrip` CLI canonical JSON / lowerCamel / duplicate numeric map-key smoke checks；
-- Schema Doctor、AI verify report（含 oneof options、edition declarations、custom option extend blocks、nested qualified references、signed enum、allow_alias 与 string literal 示例）、protobuf JSON enum-name mapping（含 map value）、standard JSON string escape/Unicode/surrogate-pair 测试、strict JSON number grammar 负例、integer exponent notation 与 uint64/int64 overflow guard 测试、numeric map-key normalization/canonical duplicate 测试、null-as-absent 与 lowerCamelCase 字段名输入/输出测试、official differential report（含 scalar-matrix adapter 与 manifest feature coverage gate）、installed-plugin official generator smoke report、conformance-lite evidence report（含 upstream-style wire-decode edge vectors、11-case upstream-lite manifest、expected-fail mutation self-checks 与 coverage gates）、descriptor verify/compat/registry/policy report and JUnit XML 与 CI 官方源码契约检查通过；
+- Schema Doctor、AI verify report（含 oneof options、edition declarations、custom option extend blocks、nested qualified references、signed enum、allow_alias 与 string literal 示例）、protobuf JSON enum-name mapping（含 map value）、standard JSON string escape/Unicode/surrogate-pair 测试、strict JSON number grammar 负例、integer exponent notation 与 uint64/int64 overflow guard 测试、numeric map-key normalization/canonical duplicate 测试、null-as-absent 与 lowerCamelCase 字段名输入/输出测试、official contract compatibility report（含 scalar-matrix adapter 与 manifest feature coverage gate）、installed-plugin adapter smoke report（使用 test double 验证调用路径）、conformance-lite evidence report（含 upstream-style wire-decode edge vectors、11-case upstream-lite manifest、expected-fail mutation self-checks 与 coverage gates）、descriptor verify/compat/registry/policy report and JUnit XML 与 CI 官方源码契约检查通过；
 - GitHub Actions CI 通过；
-- `docs/DEMO.md` 提供 5 分钟评审演示路径，覆盖 doctor、JSON roundtrip、codegen compile、compat、conformance-lite 和 official differential 证据。
+- `docs/DEMO.md` 提供 5 分钟评审演示路径，覆盖 doctor、JSON roundtrip、codegen compile、compat、conformance-lite 和 official contract compatibility 证据。
 
 ## 6. 跨语言兼容 fixtures
 
@@ -200,7 +202,7 @@ Python 与 Go oracle 均会重新构造官方 protobuf descriptors，并验证 c
 - README 使用说明；
 - `docs/ECOSYSTEM_POSITIONING.md` 生态定位说明；
 - `docs/SCHEMA_DOCTOR.md` Schema Doctor 与 verify 报告说明；
-- `docs/OFFICIAL_DIFFERENTIAL.md` 官方 MoonBit protobuf differential harness 说明；
+- `docs/OFFICIAL_DIFFERENTIAL.md` 官方 MoonBit protobuf 公开契约兼容性检查说明；
 - `docs/DESCRIPTOR_SET.md` FileDescriptorSet / reflection bridge 与 descriptor compatibility 说明；
 - `docs/SCHEMA_REGISTRY.md` descriptor registry workflow 与 release policy 说明；
 - `docs/TESTING.md` 测试说明；

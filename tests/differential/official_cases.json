@@ -3,7 +3,7 @@
     "name": "moonbitlang/protoc-gen-mbt",
     "repository": "https://github.com/moonbitlang/protoc-gen-mbt",
     "observed_commit": "9ac87899cf20ea88e31ba77330958ba389eab5fd",
-    "runtime_package": "moonbitlang/protobuf@0.1.3",
+    "runtime_package": "moonbitlang/protobuf@0.1.2",
     "source_files": [
       "README.md",
       "doc/spec.md"

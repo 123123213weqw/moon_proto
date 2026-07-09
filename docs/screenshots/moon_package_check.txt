@@ -1,11 +1,38 @@
-Actual run: moon package for mooncakes
+Actual run: clean Mooncakes package 0.1.1
 cwd: /Users/wangyue/Documents/moonbit
-time: 2026-07-08T12:40:40+08:00
-$ moon package
+time: 2026-07-10T07:43:43+08:00
+$ moon package --list && moon package
 
 Running moon check ...
 Finished. moon: no work to do
 Check passed
-Package to /Users/wangyue/Documents/moonbit/_build/publish/123123213weqw-moon_proto-0.1.0.zip
+CHANGELOG.md
+LICENSE
+README.md
+THIRD_PARTY_NOTICES.md
+bytes.mbt
+cmd/main/main.mbt
+cmd/main/moon.pkg
+cmd/main/pkg.generated.mbti
+codegen.mbt
+error.mbt
+field.mbt
+fixed.mbt
+json.mbt
+moon.mod
+moon.pkg
+parser.mbt
+pkg.generated.mbti
+runtime.mbt
+schema.mbt
+validation.mbt
+varint.mbt
+wire.mbt
+zigzag.mbt
+Package to /Users/wangyue/Documents/moonbit/_build/publish/123123213weqw-moon_proto-0.1.1.zip
+Running moon check ...
+Finished. moon: no work to do
+Check passed
+Package to /Users/wangyue/Documents/moonbit/_build/publish/123123213weqw-moon_proto-0.1.1.zip
 
 exit code: 0

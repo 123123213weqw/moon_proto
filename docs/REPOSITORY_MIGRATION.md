@@ -4,58 +4,37 @@ Date: 2026-07-08
 
 ## Summary
 
-The original GitHub account/repository used during early development became
-unavailable.  The project keeps Gitlink as the canonical public repository and
-uses a new GitHub account as a mirror.
+The original GitHub account used during early development became unavailable. The full Git history was preserved and moved to the contestant's current hosting accounts:
 
-- Canonical Gitlink repository: <https://gitlink.org.cn/wangyue111/moon_proto>
-- New GitHub mirror: <https://github.com/123123213weqw/moon_proto>
+- Gitlink canonical repository: <https://gitlink.org.cn/wangyue111/moon_proto>
+- GitHub repository and CI mirror: <https://github.com/123123213weqw/moon_proto>
 
-## What is preserved
+The applicant, Git author identity and the current GitHub/Gitlink accounts belong to the same contestant. Account names differ from the applicant's real name, but the contribution relationship did not change.
 
-The Git repository history is preserved, including all MoonBit source code, test
-fixtures, documentation, CI workflow files, proposal materials and signed-off
-commits up to the current submission line.
+## Preserved evidence
 
-A local full-history Git bundle backup was also created before changing remotes:
+The mirrored history includes all MoonBit source, tests, fixtures, documentation, CI files and signed-off commits. Repository-host metadata such as old GitHub Issues, Pull Requests and Actions runs is not part of Git and could not be transferred automatically. Long-term traceability therefore uses:
 
-```text
-/Users/wangyue/Documents/moonbit_backups/moon_proto_20260708_081450_00bec76.bundle
-```
-
-## What is not automatically preserved
-
-GitHub issues, pull requests and Actions runs are platform metadata.  They do
-not move automatically when pushing the Git repository to a new GitHub account.
-For that reason, the project does not rely on old GitHub issue numbers as the
-long-term source of truth.  Traceability is preserved through committed files:
-
+- Git commit history on both current repositories;
 - `CHANGELOG.md`;
 - `docs/ENGINEERING_RECORD.md`;
 - `docs/DEVELOPMENT_REPORT.md`;
 - `docs/SUBMISSION_CHECKLIST.md`;
-- Git commit history and test/CI workflow files.
+- current GitHub Actions runs.
 
 ## Current remote policy
 
-Gitlink is the canonical remote.  The new GitHub repository is a mirror for
-review convenience and CI visibility when GitHub access is available.
-
-Recommended local remotes:
+Gitlink is the canonical contest repository; GitHub provides the public mirror and CI. The current local setup is:
 
 ```bash
 git remote -v
-# gitlink   git@code.gitlink.org.cn:wangyue111/moon_proto.git
-# origin    git@github.com:123123213weqw/moon_proto.git
-# github-old git@github.com:dsadsasdaddas/moon_proto.git
+# origin  https://github.com/123123213weqw/moon_proto.git
+# gitlink git@code.gitlink.org.cn:wangyue111/moon_proto.git
 ```
 
-Recommended sync commands:
+After every accepted change, push the same commit to both default branches:
 
 ```bash
-git push gitlink main:master
 git push origin main
+git push gitlink main:master
 ```
-
-If the new GitHub mirror has not been created yet, create it first under account
-`123123213weqw`, then push the existing local repository history.

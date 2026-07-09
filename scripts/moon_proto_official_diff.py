@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Differential harness around the official MoonBit protobuf stack.
+"""Contract-compatibility harness around the official MoonBit protobuf stack.
 
 The default mode is intentionally dependency-light: it verifies that Moon Proto
 Lab can parse, inspect, generate and compile representative schemas that overlap
@@ -90,28 +90,28 @@ def check_official_generated_output(generated_dir_arg: str | None, case: dict) -
     snippets = case.get('expected_official_generated', [])
     if not generated_dir_arg:
         return step(
-            'official generated output contract',
+            'official output-shape contract fixture',
             'SKIP',
-            'pass --official-generated-dir to validate pre-generated official MoonBit output',
+            'pass --official-generated-dir to validate hand-authored output-shape contract fixtures',
         )
     generated_dir = Path(generated_dir_arg)
     if not generated_dir.exists():
-        return step('official generated output contract', 'FAIL', f'generated directory not found: {generated_dir}')
+        return step('official output-shape contract fixture', 'FAIL', f'generated directory not found: {generated_dir}')
     files = sorted(generated_dir.glob('**/*.mbt'))
     if not files:
-        return step('official generated output contract', 'FAIL', f'no .mbt files found under {generated_dir}')
+        return step('official output-shape contract fixture', 'FAIL', f'no .mbt files found under {generated_dir}')
     merged = '\n'.join(path.read_text(encoding='utf-8', errors='replace') for path in files)
     missing = [snippet for snippet in snippets if snippet not in merged]
     if missing:
         return step(
-            'official generated output contract',
+            'official output-shape contract fixture',
             'FAIL',
             'missing: ' + ', '.join(missing),
         )
     return step(
-        'official generated output contract',
+        'official output-shape contract fixture',
         'PASS',
-        f'{len(snippets)} expected snippets found in {len(files)} official generated file(s): ' + ', '.join(snippets),
+        f'{len(snippets)} expected snippets found in {len(files)} contract fixture file(s): ' + ', '.join(snippets),
     )
 
 
@@ -351,7 +351,7 @@ def markdown_report(
         )
     status = 'PASS' if not blocking_failures else 'FAIL'
     lines = [
-        '# Moon Proto Lab official differential report',
+        '# Moon Proto Lab official contract compatibility report',
         '',
         f'- Generated at: `{datetime.now(timezone.utc).isoformat()}`',
         f'- Overall status: **{status}**',
@@ -360,7 +360,7 @@ def markdown_report(
         f'- Runtime package: `{official["runtime_package"]}`',
         f'- Official source required: `{str(require_official).lower()}`',
         f'- Official generator requested: `{str(run_generator).lower()}`',
-        f'- Official generated output directory: `{generated_dir or ""}`',
+        f'- Output-shape contract fixture directory: `{generated_dir or ""}`',
         '',
         '## Official feature contract used by this harness',
         '',
@@ -395,7 +395,7 @@ def markdown_report(
             details = s.details.replace('|', '\\|').replace('\n', '<br>')
             lines.append(f'| {result.name} | `{result.proto}` | {s.name} | {s.status} | {details} |')
     lines.extend(['', '## Interpretation', ''])
-    lines.append('`PASS` means Moon Proto Lab can independently verify the schema/codegen contract for that case.')
+    lines.append('`PASS` means the selected local schema/codegen and public contract checks passed; it does not claim full official runtime equivalence.')
     lines.append('The official source contract step is blocking when `--require-official` is used. The generator step is only blocking when both `--require-official` and `--run-official-generator` are used.')
     lines.append('Intentional differences are expected: Moon Proto Lab keeps descriptor-driven `MessageValue` helpers for dynamic verification, while the official generator emits production typed structs, maps and oneof enums.')
     return '\n'.join(lines) + '\n'
@@ -404,7 +404,7 @@ def markdown_report(
 def html_report(md: str) -> str:
     return f'''<!doctype html>
 <html lang="en">
-<head><meta charset="utf-8"><title>Moon Proto Lab official differential report</title></head>
+<head><meta charset="utf-8"><title>Moon Proto Lab official contract compatibility report</title></head>
 <body><pre>{html.escape(md)}</pre></body>
 </html>
 '''
@@ -513,7 +513,7 @@ def write_report(path: Path, text: str) -> None:
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        description='Run Moon Proto Lab differential checks against the public moonbitlang/protoc-gen-mbt feature contract.',
+        description='Run Moon Proto Lab contract checks against the public moonbitlang/protoc-gen-mbt feature surface.',
     )
     parser.add_argument('--manifest', default='tests/differential/official_cases.json')
     parser.add_argument('--report', help='write Markdown/HTML report')
@@ -522,7 +522,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument('--protoc-bin', default='protoc')
     parser.add_argument('--official-repo', help='optional path to a moonbitlang/protoc-gen-mbt checkout')
     parser.add_argument('--official-plugin-bin', help='optional installed protoc-gen-mbt executable path or PATH name')
-    parser.add_argument('--official-generated-dir', help='optional directory containing pre-generated official .mbt output to validate against the manifest contract')
+    parser.add_argument('--official-generated-dir', help='optional directory containing hand-authored .mbt output-shape contract fixtures')
     parser.add_argument('--require-official', action='store_true', help='fail if the official source contract is skipped or fails; also require generator success when --run-official-generator is used')
     parser.add_argument('--run-official-generator', action='store_true', help='run official protoc-gen-mbt from --official-plugin-bin, PATH, or a --official-repo build')
     parser.add_argument('--skip-compile', action='store_true', help='skip Moon Proto Lab generated-code compile checks')

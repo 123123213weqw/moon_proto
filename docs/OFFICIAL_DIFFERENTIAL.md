@@ -1,6 +1,6 @@
-# Official MoonBit protobuf differential harness
+# Official MoonBit protobuf contract compatibility harness
 
-Moon Proto Lab includes a lightweight differential harness around the public `moonbitlang/protoc-gen-mbt` / `moonbitlang/protobuf` ecosystem.
+Moon Proto Lab includes a lightweight contract-compatibility harness around the public `moonbitlang/protoc-gen-mbt` / `moonbitlang/protobuf` ecosystem. The default path validates public source documentation and output-shape expectations; it is not presented as a full runtime differential test.
 
 The goal is not to replace the official production generator. The goal is to make Moon Proto Lab useful as a verification layer around it:
 
@@ -25,7 +25,7 @@ It records the observed official repository and feature contract used by the har
 
 - official repository: https://github.com/moonbitlang/protoc-gen-mbt
 - observed commit: `9ac87899cf20ea88e31ba77330958ba389eab5fd`
-- runtime package: `moonbitlang/protobuf@0.1.3`
+- runtime package: `moonbitlang/protobuf@0.1.2`
 - source files: `README.md` and `doc/spec.md`
 
 Current cases:
@@ -90,18 +90,20 @@ python3 scripts/moon_proto_official_diff.py \
 
 This installed-plugin path is useful for CI images or developer machines that cache the official generator executable. It still marks the source-contract step as `SKIP` unless `--official-repo` is also provided, but the generator step itself can pass and is emitted to Markdown/JUnit.
 
-## Validate pre-generated official output
+The repository regression suite uses a small test double to verify argument forwarding, output discovery and JUnit reporting for this adapter path. That adapter smoke test is not reported as an execution of the real official generator; real execution requires the explicit command above with an actual `protoc-gen-mbt` binary.
 
-When the official generator has already been run in another environment, point the harness at the generated `.mbt` tree:
+## Validate hand-authored output-shape contract fixtures
+
+The repository includes explicitly labeled, hand-authored `.mbt` fixtures for stable output-shape assertions:
 
 ```bash
 python3 scripts/moon_proto_official_diff.py \
-  --official-generated-dir tests/differential/official_generated_fixture \
+  --official-generated-dir tests/differential/official_contract_fixture \
   --report generated/official_generated_diff_report.md \
   --junit-out generated/official_generated_diff_report.xml
 ```
 
-The harness checks each case against `expected_official_generated` snippets in `tests/differential/official_cases.json`. It also verifies the manifest-level `required_feature_coverage` gate so scalar, numeric, bytes, optional, repeated, map, oneof, enum, import and reserved features remain represented by at least one differential case. This mode is useful for CI environments that can consume cached official-generator artifacts but should not rebuild the official generator on every run.
+The harness checks each case against `expected_official_generated` snippets in `tests/differential/official_cases.json`. It also verifies the manifest-level `required_feature_coverage` gate so scalar, numeric, bytes, optional, repeated, map, oneof, enum, import and reserved features remain represented. These fixtures are not copied from or produced by the official generator. Actual generator execution is a separate path enabled with `--run-official-generator`.
 
 ## Why this matters
 
@@ -110,6 +112,6 @@ This turns the project into ecosystem infrastructure rather than another protobu
 - Moon Proto Lab can verify schemas before official code generation;
 - the manifest makes overlap with official capabilities explicit and CI-enforced;
 - generated Markdown/HTML/JUnit reports are suitable for CI artifacts and contest demos;
-- pre-generated official output can be checked without requiring `protoc` or official generator dependencies in the same job;
+- hand-authored output-shape contract fixtures can be checked without requiring `protoc` or official generator dependencies in the same job;
 - installed official generator binaries can be smoke-tested directly with `--official-plugin-bin`;
 - intentional differences are documented instead of hidden: Moon Proto Lab focuses on descriptor-driven dynamic `MessageValue` verification, while the official generator emits production typed MoonBit structs, maps and oneof enums.

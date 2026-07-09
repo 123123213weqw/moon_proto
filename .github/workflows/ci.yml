@@ -7,6 +7,7 @@ on:
 jobs:
   moonbit:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
       - name: Install Python oracle dependencies
@@ -35,15 +36,40 @@ jobs:
           moon info
           git diff --exit-code -- pkg.generated.mbti cmd/main/pkg.generated.mbti
       - name: Package metadata check
-        run: moon package
+        run: |
+          moon package --list 2>&1 | tee /tmp/moon-package-files.txt
+          moon package
+          for forbidden in PROPOSAL.md output/ docs/ examples/ scripts/ tests/ golden_wbtest.mbt; do
+            if grep -Fxq "$forbidden" /tmp/moon-package-files.txt || grep -q "^${forbidden}" /tmp/moon-package-files.txt; then
+              echo "publish package unexpectedly contains: $forbidden" >&2
+              exit 1
+            fi
+          done
       - name: Check
-        run: moon check
+        run: moon check --deny-warn
       - name: Build
         run: moon build
       - name: Test
-        run: moon test
+        run: moon test --deny-warn
       - name: Test all targets
         run: moon test --target all
+      - name: Core package coverage gate
+        run: |
+          moon coverage analyze -p 123123213weqw/moon_proto -- -f summary | tee /tmp/moon-coverage.txt
+          python3 - <<'PY'
+          import re
+          from pathlib import Path
+
+          text = Path('/tmp/moon-coverage.txt').read_text()
+          match = re.search(r'Total:\s+(\d+)/(\d+)', text)
+          if not match:
+              raise SystemExit('coverage total not found')
+          covered, total = map(int, match.groups())
+          ratio = covered / total
+          print(f'core MoonBit line coverage: {covered}/{total} ({ratio:.1%})')
+          if ratio < 0.80:
+              raise SystemExit('core MoonBit line coverage is below 80%')
+          PY
       - name: CLI smoke
         run: moon run cmd/main -- gen --example
       - name: Generated code compile check
@@ -63,7 +89,7 @@ jobs:
             echo "bad_order.proto should be rejected" >&2
             exit 1
           fi
-      - name: Official differential source contract
+      - name: Official source contract compatibility
         run: |
           git clone --depth 1 https://github.com/moonbitlang/protoc-gen-mbt.git /tmp/protoc-gen-mbt
           python3 scripts/moon_proto_official_diff.py \

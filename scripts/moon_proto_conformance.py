@@ -376,7 +376,7 @@ def load_upstream_lite_cases(path: Path) -> tuple[str, list[UpstreamLiteCase]]:
             UpstreamLiteCase(
                 name=str(raw["name"]),
                 fixture=str(raw["fixture"]),
-                category=str(raw.get("category", "upstream-lite imported subset")),
+                category=str(raw.get("category", "upstream-style modeled subset")),
                 feature=str(raw.get("feature", raw["name"])),
                 required_json=dict(raw.get("required_json", {})),
                 axes=axes,
@@ -546,7 +546,7 @@ def conformance_report(
         f"- Overall status: **{'PASS' if ok else 'FAIL'}**",
         f"- Cases: `{sum(1 for result in results if result.ok)}/{len(results)}` passing",
         "- Oracle: Python `google.protobuf` dynamic descriptors; Go oracle is run separately in CI against the same fixtures.",
-        f"- Upstream-lite imported subset: `{sum(1 for result in results if 'upstream-lite' in result.axes)}` case(s).",
+        f"- Upstream-style modeled subset: `{sum(1 for result in results if 'upstream-lite' in result.axes)}` case(s).",
         "",
         "| Case | Category | Fixture | Status | Evidence |",
         "| --- | --- | --- | --- | --- |",
@@ -586,7 +586,7 @@ def conformance_report(
         "- 32-bit numeric boundary values;",
         "- float/double finite and special JSON values;",
         "- upstream-style wire decode edges: unknown fields, duplicate singular last-one-wins, and mixed packed/unpacked repeated input;",
-        "- imported upstream-lite conformance subset over protobuf-input to JSON-output acceptance cases;",
+        "- modeled upstream-style conformance subset over protobuf-input to JSON-output acceptance cases;",
         "- negative mutation self-checks for fixture corruption, missing artifacts and JSON evidence loss.",
         "",
     ])
@@ -676,8 +676,8 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--json-out", help="write machine-readable JSON result")
     parser.add_argument("--junit-out", help="write JUnit XML result")
     parser.add_argument("--skip-negative-self-checks", action="store_true", help="only run positive oracle fixtures")
-    parser.add_argument("--upstream-lite-cases", default=str(UPSTREAM_LITE_CASES), help="JSON manifest for imported upstream-lite conformance cases")
-    parser.add_argument("--skip-upstream-lite", action="store_true", help="skip imported upstream-lite conformance manifest cases")
+    parser.add_argument("--upstream-lite-cases", default=str(UPSTREAM_LITE_CASES), help="JSON manifest for modeled upstream-style conformance cases")
+    parser.add_argument("--skip-upstream-lite", action="store_true", help="skip modeled upstream-style conformance manifest cases")
     args = parser.parse_args(argv)
 
     fixtures_dir = Path(args.fixtures_dir)

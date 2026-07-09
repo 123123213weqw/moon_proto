@@ -369,11 +369,11 @@ grep -q 'failures="0"' generated/official_diff_report.xml
 grep -q '<skipped' generated/official_diff_report.xml
 
 python3 scripts/moon_proto_official_diff.py \
-  --official-generated-dir tests/differential/official_generated_fixture \
+  --official-generated-dir tests/differential/official_contract_fixture \
   --report generated/official_generated_diff_report.md \
   --junit-out generated/official_generated_diff_report.xml
 grep -Fq 'Overall status: **PASS**' generated/official_generated_diff_report.md
-grep -q 'official generated output contract' generated/official_generated_diff_report.md
+grep -q 'official output-shape contract fixture' generated/official_generated_diff_report.md
 grep -q 'scalar_matrix' generated/official_generated_diff_report.md
 grep -q 'pub struct ScalarMatrix' generated/official_generated_diff_report.md
 grep -q 'expected snippets found' generated/official_generated_diff_report.md
@@ -398,7 +398,7 @@ if out_root is None:
     raise SystemExit("--mbt_out is required")
 target = out_root / project / "fake_official_output.mbt"
 target.parent.mkdir(parents=True, exist_ok=True)
-target.write_text("// fake official protoc-gen-mbt output for installed-plugin smoke test\n", encoding="utf-8")
+target.write_text("// test-double output for plugin-adapter smoke test\n", encoding="utf-8")
 PY
 cat > generated/fake_protoc_gen_mbt <<'SH'
 #!/usr/bin/env sh
@@ -409,13 +409,13 @@ python3 scripts/moon_proto_official_diff.py \
   --run-official-generator \
   --official-plugin-bin generated/fake_protoc_gen_mbt \
   --protoc-bin generated/fake_protoc \
-  --report generated/official_installed_plugin_diff_report.md \
-  --junit-out generated/official_installed_plugin_diff_report.xml
-grep -Fq 'Overall status: **PASS**' generated/official_installed_plugin_diff_report.md
-grep -q 'Official generator requested: `true`' generated/official_installed_plugin_diff_report.md
-grep -q 'official protoc-gen-mbt | PASS' generated/official_installed_plugin_diff_report.md
-grep -q 'generated 1 file' generated/official_installed_plugin_diff_report.md
-grep -q 'failures="0"' generated/official_installed_plugin_diff_report.xml
+  --report generated/official_plugin_adapter_smoke_report.md \
+  --junit-out generated/official_plugin_adapter_smoke_report.xml
+grep -Fq 'Overall status: **PASS**' generated/official_plugin_adapter_smoke_report.md
+grep -q 'Official generator requested: `true`' generated/official_plugin_adapter_smoke_report.md
+grep -q 'official protoc-gen-mbt | PASS' generated/official_plugin_adapter_smoke_report.md
+grep -q 'generated 1 file' generated/official_plugin_adapter_smoke_report.md
+grep -q 'failures="0"' generated/official_plugin_adapter_smoke_report.xml
 
 python3 scripts/moon_proto_conformance.py \
   --report generated/conformance_lite_report.md \

@@ -51,11 +51,38 @@ fi
 run moon fmt --check
 run moon info
 run git diff --exit-code -- pkg.generated.mbti cmd/main/pkg.generated.mbti
-run moon package
-run moon check
+run bash -lc '
+  set -euo pipefail
+  moon package --list 2>&1 | tee /tmp/moon-proto-package-files.txt
+  moon package
+  for forbidden in PROPOSAL.md output/ docs/ examples/ scripts/ tests/ golden_wbtest.mbt; do
+    if grep -Fxq "$forbidden" /tmp/moon-proto-package-files.txt || grep -q "^${forbidden}" /tmp/moon-proto-package-files.txt; then
+      echo "publish package unexpectedly contains: $forbidden" >&2
+      exit 1
+    fi
+  done
+'
+run moon check --deny-warn
 run moon build
-run moon test
+run moon test --deny-warn
 run moon test --target all
+run bash -lc '
+  set -euo pipefail
+  moon coverage analyze -p 123123213weqw/moon_proto -- -f summary | tee /tmp/moon-proto-coverage.txt
+  python3 - <<"PY"
+import re
+from pathlib import Path
+text = Path("/tmp/moon-proto-coverage.txt").read_text()
+match = re.search(r"Total:\s+(\d+)/(\d+)", text)
+if not match:
+    raise SystemExit("coverage total not found")
+covered, total = map(int, match.groups())
+ratio = covered / total
+print(f"core MoonBit line coverage: {covered}/{total} ({ratio:.1%})")
+if ratio < 0.80:
+    raise SystemExit("core MoonBit line coverage is below 80%")
+PY
+'
 run moon run cmd/main -- gen --example
 run tests/codegen/compile_generated.sh
 

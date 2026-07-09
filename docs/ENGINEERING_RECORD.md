@@ -49,7 +49,7 @@ account migration.
 | WP3 validation and doctor | Schema validator, reserved contracts, diagnostic CLI and verify reports | `6d50012`, `4e88bf3`, `d16c366` | `doctor`, `verify`, JUnit XML reports |
 | WP4 runtime and JSON mapping | Dynamic message runtime, nested/map/oneof support and protobuf JSON behavior | `3a6a1ef`..`269d782`, `bb6ae7e`..`adcae4f` | `moon test`, JSON roundtrip CLI |
 | WP5 code generation | MoonBit source generation, file generator and generated-code compile checks | `c7fd09d`, `980780a`, `97deb37`, `938bf33` | `tests/codegen/compile_generated.sh` |
-| WP6 compatibility and conformance | Python/Go oracle, official differential, conformance-lite and coverage gates | `7be37d0`, `f0b38c7`, `9470434`..`d0f0e52` | oracle scripts, conformance reports, CI |
+| WP6 compatibility and conformance | Python/Go oracle, official contract compatibility, conformance-lite and coverage gates | `7be37d0`, `f0b38c7`, `9470434`..`d0f0e52` | oracle scripts, conformance reports, CI |
 | WP7 descriptor registry | Descriptor-set bridge, registry release gates, policy DSL and publish/pull adapters | `7fb538a`..`28da0c1` | descriptor reports and registry tests |
 | WP8 contest readiness | Ecosystem positioning, development report, checklist and reviewer demo | `6ba9cb5`, `7824fbb`, `3f7bf87`, `cd5d403` | docs and final validation logs |
 
@@ -72,11 +72,13 @@ Every future change should follow this flow:
 ```bash
 moon fmt --check
 moon info
+moon package --list
 moon package
-moon check
+moon check --deny-warn
 moon build
-moon test
+moon test --deny-warn
 moon test --target all
+moon coverage analyze -p 123123213weqw/moon_proto -- -f summary
 tests/codegen/compile_generated.sh
 python3 scripts/moon_proto_lab.py verify examples/simple/user.proto --report generated/verify_report.md --junit-out generated/verify_report.xml
 python3 scripts/moon_proto_lab.py compat examples/simple/user.proto examples/simple/user_v2.proto --report generated/compat_report.md --junit-out generated/compat_report.xml
@@ -99,6 +101,6 @@ Good regression candidates include:
 
 ## Contest submission status
 
-The current submission line is frozen at the completed 0.1.0 scope.  Additional
+The current submission line is frozen at the completed 0.1.1 scope. Additional
 work before review should be limited to bug fixes, documentation, test evidence,
 presentation materials and repository hygiene.

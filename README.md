@@ -1,389 +1,246 @@
 # Moon Proto Lab
 
 [![CI](https://github.com/123123213weqw/moon_proto/actions/workflows/ci.yml/badge.svg)](https://github.com/123123213weqw/moon_proto/actions/workflows/ci.yml)
+[![Mooncakes](https://img.shields.io/badge/mooncakes-123123213weqw%2Fmoon__proto-brightgreen)](https://mooncakes.io/docs/123123213weqw/moon_proto)
 ![MoonBit](https://img.shields.io/badge/MoonBit-0.1.20260703-blue)
-![Mooncakes](https://img.shields.io/badge/mooncakes-123123213weqw%2Fmoon__proto-brightgreen)
 ![License](https://img.shields.io/badge/license-MIT-green)
 
-**Moon Proto Lab** is a MoonBit protobuf ecosystem lab for **dynamic schema parsing, compatibility testing, JSON mapping, code generation experiments, and AI-generated schema/code verification**.
+**Moon Proto Lab 是面向 MoonBit protobuf 生态的 schema 验证、兼容性检查与 AI 代码验证工具链。**
 
-The repository name remains `moon_proto`, but the project is now deliberately positioned as an ecosystem companion instead of a replacement for the existing MoonBit protobuf implementation.
+它把 `.proto` 从“看起来正确的文本”变成可诊断、可生成、可编译、可回归、可报告的工程资产：
 
+```text
+.proto -> Schema Doctor -> compatibility check -> dynamic binary/JSON runtime
+       -> MoonBit codegen -> generated-code compile -> Markdown/JUnit/CI evidence
+```
 
-## Agent feedback loop demo
+本项目不替代现有的 `moonbitlang/protobuf` 或 `moonbitlang/protoc-gen-mbt`。它提供的是围绕官方 protobuf 栈的**验证与工具层**，重点解决 AI 生成 schema/代码难以确认、schema 演进容易破坏兼容性、生成代码缺少持续验证等问题。
 
-The screenshots below show actual command output.  First, this labeled demo explains the Agent collaboration loop: an Agent proposes a schema, Moon Proto Lab returns structured diagnostics, and the Agent/developer fixes the schema until CI passes.
+## 30 秒快速开始
 
-<p align="center">
-  <img src="docs/diagrams/agent_feedback_loop_demo.png" alt="Agent feedback loop demo for AI-generated schema verification" width="920">
-</p>
+### 作为 MoonBit 库安装
 
+```bash
+moon add 123123213weqw/moon_proto
+```
 
-## Actual run screenshots for reviewers
+在使用该库的 `moon.pkg` 中导入：
 
-These are screenshots rendered from **real command transcripts** produced in this repository, not decorative architecture diagrams.  Each PNG has a matching `.txt` transcript under `docs/screenshots/` so reviewers can audit the exact command, cwd, timestamp and exit code.
+```moonbit
+import {
+  "123123213weqw/moon_proto" @proto,
+}
+```
 
-<p align="center">
-  <img src="docs/screenshots/release_gate_pass.png" alt="Actual release gate run ending with PASS" width="920">
-</p>
+最小示例：
 
-<p align="center">
-  <img src="docs/screenshots/moon_test_all_targets.png" alt="Actual moon test --target all run" width="920">
-</p>
+```moonbit
+fn main {
+  let encoded = @proto.encode_varint_u64(300UL)
+  println(encoded.length()) // 2
+}
+```
 
-<p align="center">
-  <img src="docs/screenshots/json_roundtrip_cli.png" alt="Actual schema-aware JSON roundtrip CLI run" width="920">
-</p>
+### 使用完整验证工具
 
-<p align="center">
-  <img src="docs/screenshots/moon_package_check.png" alt="Actual moon package run for mooncakes" width="920">
-</p>
+```bash
+git clone https://github.com/123123213weqw/moon_proto.git
+cd moon_proto
 
-## Repository links
+# 检查 AI/人工生成的 schema
+python3 scripts/moon_proto_lab.py doctor examples/ai/good_order.proto
 
-- Mooncakes module: [`123123213weqw/moon_proto`](https://mooncakes.io/docs/123123213weqw/moon_proto)
-- Gitlink（主仓库）: https://gitlink.org.cn/wangyue111/moon_proto
-- GitHub（新镜像）: https://github.com/123123213weqw/moon_proto
+# 完成 doctor、inspect、codegen、生成代码编译并输出报告
+python3 scripts/moon_proto_lab.py verify \
+  examples/ai/good_order.proto \
+  --report generated/verify_report.md \
+  --junit-out generated/verify_report.xml
 
-## Ecosystem positioning
+# 检查 old/new schema 是否兼容
+python3 scripts/moon_proto_lab.py compat \
+  examples/ai/good_order.proto \
+  examples/ai/good_order_v2.proto \
+  --report generated/compat_report.md
+```
 
-Before submission we checked the MoonBit package ecosystem and found existing protobuf-related packages, including `moonbitlang/protobuf` (https://mooncakes.io/docs/moonbitlang/protobuf) and `moonbitlang/protoc-gen-mbt` (https://github.com/moonbitlang/protoc-gen-mbt).
-
-Moon Proto Lab therefore does **not** claim to replace the official/runtime-oriented protobuf stack. Its independent value is the verification and tooling layer around protobuf usage in MoonBit:
-
-- parse and validate `.proto` schemas before code generation;
-- provide a dynamic descriptor/message runtime for debugging and schema experiments;
-- check protobuf binary and JSON mapping behavior against Python/Go official protobuf oracles;
-- provide conformance-lite fixtures for scalar, repeated, packed repeated, enum, nested, map, oneof and upstream-style wire-decode edge cases;
-- compile-check generated MoonBit source so AI-generated schema/code changes are not only syntactically plausible but actually buildable;
-- keep the door open for future adapters to official MoonBit protobuf packages.
-
-This makes the project fit the contest theme of improving MoonBit open-source infrastructure and addressing the problem that AI-generated code is hard to verify and maintain over time.
-
-## Current scope
-
-The project has a small but end-to-end verifiable protobuf laboratory pipeline:
-
-- protobuf wire type model;
-- key packing/parsing;
-- UInt64 varint encode/decode;
-- zig-zag signed integer mapping;
-- fixed32/fixed64 little-endian helpers;
-- length-delimited bytes/string helpers;
-- field-level helpers for `uint64`, `bool`, `sint64`, `string`, `bytes`;
-- proto3 schema model for messages, fields, labels, scalar types, enums, named messages, maps and oneof groups;
-- `.proto` lexer/parser for `syntax`, `edition` declaration tolerance, dotted `package` names, `import`, top-level/message/enum `option`, real `reserved` number/name descriptors, `extensions`, `message`, `enum`, nested message/enum definitions, qualified nested type references, scalar/named fields, field/enum options, signed enum values and enum reserved ranges, enum `allow_alias` duplicate-number semantics, single-quoted/escaped string literals, empty statements, `optional`, `repeated`, `map`, `oneof`, oneof options, block comments, and ignored `service`/`rpc`/`extend` blocks;
-- schema validator for field numbers, duplicate names/numbers, proto3 enum invariants, top-level conflicts, map constraints, and field/enum reserved-number/name reuse;
-- schema-driven dynamic message encode/decode for scalar, repeated, packed repeated, enum, nested message, map and oneof fields;
-- unknown-field skipping during decode;
-- protobuf-style JSON writer/parser for scalar/repeated/map/nested/oneof dynamic messages, including enum-name schema mapping for fields and map values, numeric map-key normalization with canonical duplicate detection, URL-safe/unpadded bytes base64 input, standard JSON string escapes with Unicode/surrogate-pair decoding, strict JSON number grammar, exponent-notation integer input with overflow-safe range checks, `null`-as-absent parsing semantics and lowerCamelCase input/output helpers;
-- MoonBit source generator for message structs, enums, descriptor registries and helper functions;
-- file-based generator wrapper for `.proto` input and generated `.mbt` output;
-- schema-aware MoonBit CLI JSON roundtrip/normalization smoke command for protobuf JSON fixtures;
-- file-based Schema Doctor CLI for stable diagnostics on valid and invalid schemas;
-- AI verification CLI that runs doctor, schema inspection, codegen, generated-code compile checks, and Markdown/HTML/JUnit XML report generation;
-- old/new schema compatibility checker for detecting field, enum, package, type and reserved-contract breaking changes;
-- official MoonBit protobuf differential harness manifest/report for schemas overlapping with `moonbitlang/protoc-gen-mbt`, including manifest feature coverage gates, scalar-matrix adapter coverage, source-contract, pre-generated output and installed-plugin live-generator smoke paths;
-- FileDescriptorSet descriptor/reflection bridge for `.pb`/`.hex`/`.json` descriptor imports, proto reconstruction, verification reports, old/new descriptor-set compatibility reports, descriptor-registry release gates, JSON release-policy checks with rule-based severity/warning support, and file/HTTP/authenticated/profile/GitHub Contents managed-backend registry adapter publish/push/pull verification;
-- Python and Go official protobuf oracle fixtures for cross-language compatibility checks, including 32-bit numeric boundary values, float/double values, special NaN/Infinity JSON values, and upstream-style wire-decode edge vectors;
-- conformance-lite evidence report with Markdown/JSON/JUnit output for scalar/repeated/packed, map, oneof, numeric-boundary, float/double, special-float, wire-decode edge cases and an imported upstream-lite conformance manifest, expected-fail mutation self-checks, and coverage-gate taxonomy;
-- deterministic property-style roundtrip corpora for binary and JSON paths;
-- generated-code compile checks and GitHub Actions CI.
-
-
-## Engineering records
-
-For contest traceability, the repository keeps public engineering records in these files.
-Early work is primarily evidenced by the commit log and CI history.  After the
-original GitHub account became unavailable, Gitlink remains the canonical public
-repository and the new GitHub repository is maintained as a mirror.
-
-- [`CHANGELOG.md`](CHANGELOG.md) for release-level changes;
-- [`docs/ENGINEERING_RECORD.md`](docs/ENGINEERING_RECORD.md) for work-package traceability and verification policy;
-- [`docs/PRE_ACCEPTANCE_FIX.md`](docs/PRE_ACCEPTANCE_FIX.md) for pre-acceptance feedback fixes and evidence;
-- [`docs/AI_VERIFICATION_WALKTHROUGH.md`](docs/AI_VERIFICATION_WALKTHROUGH.md) for the AI-generated schema verification scenario;
-- [`docs/REVIEWER_PLAYBOOK.md`](docs/REVIEWER_PLAYBOOK.md) for a 5-minute reviewer path;
-- [`docs/REPOSITORY_MIGRATION.md`](docs/REPOSITORY_MIGRATION.md) for repository migration notes;
-- GitHub Issues and Pull Requests for future task/bug tracking;
-- GitHub Actions for reproducible CI evidence.
-
-## Reviewer quick demo
-
-For a short contest-review walkthrough, see [`docs/DEMO.md`](docs/DEMO.md). It provides copy/paste commands for schema doctor, JSON roundtrip normalization, generated-code compile checks, compatibility checks, conformance-lite evidence and official differential reports.
-
-For final review and re-acceptance checks, start with:
-
-- [`docs/REVIEWER_PLAYBOOK.md`](docs/REVIEWER_PLAYBOOK.md) for the 5-minute evaluation path;
-- [`docs/PRE_ACCEPTANCE_FIX.md`](docs/PRE_ACCEPTANCE_FIX.md) for the pre-acceptance feedback fixes;
-- [`docs/AI_VERIFICATION_WALKTHROUGH.md`](docs/AI_VERIFICATION_WALKTHROUGH.md) for the AI-generated schema verification scenario.
-
-Run the full local release gate with:
+完整本地验收：
 
 ```bash
 bash scripts/release_gate.sh
 ```
 
-## Example
+运行要求：MoonBit；文件版报告工具需要 Python 3；完整跨语言 oracle 还需要 Python `protobuf` 与 Go。
 
-Encode a small hand-written message:
+## Agent 反馈闭环
 
-```moonbit
-let user = concat_bytes([
-  encode_uint64_field(1, 150UL),
-  encode_string_field(2, "Alice"),
-  encode_bool_field(3, true),
-])
-// b"\x08\x96\x01\x12\x05Alice\x18\x01"
+下图展示 AI Agent 生成 schema 后，Moon Proto Lab 如何返回稳定诊断并驱动修复。它是工作流说明图；后面的终端图来自仓库真实命令记录。
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/123123213weqw/moon_proto/main/docs/diagrams/agent_feedback_loop_demo.png" alt="Agent feedback loop demo" width="920">
+</p>
+
+## 实际运行证据
+
+每张图都有同名 `.txt` 命令记录，可核对命令、工作目录、时间和退出码。
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/123123213weqw/moon_proto/main/docs/screenshots/release_gate_pass.png" alt="Actual release gate run ending with PASS" width="920">
+</p>
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/123123213weqw/moon_proto/main/docs/screenshots/json_roundtrip_cli.png" alt="Actual schema-aware JSON roundtrip CLI run" width="920">
+</p>
+
+补充证据：[`moon test --target all`](https://github.com/123123213weqw/moon_proto/blob/main/docs/screenshots/moon_test_all_targets.txt)、[`moon package`](https://github.com/123123213weqw/moon_proto/blob/main/docs/screenshots/moon_package_check.txt)、[`Schema Doctor 负例`](https://github.com/123123213weqw/moon_proto/blob/main/docs/screenshots/schema_doctor_bad_order.txt)。
+
+## 核心能力
+
+| 能力 | 当前实现 |
+| --- | --- |
+| Wire/runtime | varint、zig-zag、fixed32/64、length-delimited、unknown-field skip |
+| Schema | proto3 message、enum、optional/repeated、map、oneof、reserved、nested type、常见声明容错 |
+| 动态消息 | descriptor-driven scalar、repeated、packed、enum、nested、map、oneof 二进制编解码 |
+| Protobuf JSON | enum name、64-bit integer、base64、Unicode、lowerCamel、map key normalization、严格数字语法 |
+| Schema Doctor | 字段号/名称冲突、enum 规则、map 约束、reserved 复用等稳定诊断 |
+| 兼容性检查 | old/new `.proto` 与 FileDescriptorSet 的破坏性变更检查 |
+| Codegen | MoonBit struct、enum、descriptor、动态 runtime helper，并执行真实 `moon check` |
+| 工程证据 | Python/Go oracle、建模的 conformance-lite 用例、官方接口契约检查、Markdown/JSON/JUnit 报告 |
+| Registry adapter | descriptor registry、release policy、文件/HTTP/profile/GitHub Contents 适配验证 |
+
+## 一个完整场景
+
+故意错误的 schema：
+
+```proto
+syntax = "proto3";
+message Order {
+  reserved 7;
+  reserved "legacy_note";
+  uint64 id = 1;
+  string duplicate = 1;
+  bytes legacy_note = 7;
+  map<bytes, string> invalid_labels = 8;
+}
 ```
 
-Parse a small schema:
+运行：
 
-```moonbit
-let src = #|syntax = "proto3";
-  #|package demo;
-  #|message User {
-  #|  uint32 id = 1;
-  #|  string name = 2;
-  #|  repeated string tags = 3;
-  #|}
-let ast = parse_proto(src)
+```bash
+python3 scripts/moon_proto_lab.py doctor examples/ai/bad_order.proto
 ```
 
-Encode/decode through a descriptor:
+输出包含稳定路径：
+
+```text
+schema invalid
+issues: 6
+message.Order.field.1: duplicate field number
+message.Order.field.invalid_labels.key: invalid map key type
+message.Order.field.legacy_note.number: field uses reserved number
+message.Order.field.legacy_note.name: field uses reserved name
+```
+
+修复后再执行 `verify` 与 `compat`，生成代码必须真实编译，schema 演进也必须通过兼容性门禁。
+
+## MoonBit API 示例
 
 ```moonbit
-let desc = MessageDescriptor::{
-  name : "User",
-  fields : [
-    FieldDescriptor::{ name : "id", typ : UInt64Type, number : 1, label : Singular },
-    FieldDescriptor::{ name : "name", typ : StringType, number : 2, label : Singular },
+let desc = @proto.MessageDescriptor::{
+  name: "User",
+  fields: [
+    @proto.FieldDescriptor::{
+      name: "id",
+      typ: @proto.UInt64Type,
+      number: 1,
+      label: @proto.Singular,
+    },
+    @proto.FieldDescriptor::{
+      name: "name",
+      typ: @proto.StringType,
+      number: 2,
+      label: @proto.Singular,
+    },
   ],
 }
-let msg = message_value([
-  message_field("id", UInt64Value(150UL)),
-  message_field("name", StringValue("Alice")),
+
+let msg = @proto.message_value([
+  @proto.message_field("id", @proto.UInt64Value(150UL)),
+  @proto.message_field("name", @proto.StringValue("Alice")),
 ])
-let encoded = encode_message(desc, msg)
+
+let encoded = @proto.encode_message(desc, msg)
 ```
 
-Generate MoonBit source from a parsed proto:
+## 验证与质量
 
-```moonbit
-match parse_proto(src) {
-  ProtoOk(file) => println(generate_moonbit_source(file))
-  ProtoErr(_) => println("invalid schema")
-}
-```
+当前提交线的可复现结果：
 
-Run the bundled CLI smoke generator and schema tools:
+- `moon check --deny-warn`：通过；
+- `moon test --deny-warn`：`60/60 passed`；
+- `moon test --target all`：wasm、wasm-gc、JS、native 全通过；
+- MoonBit 核心包行覆盖率：`1935/2388`，约 `81.0%`；
+- generated-code compile check：通过；
+- Python/Go protobuf oracle：通过；
+- AI schema 正例、兼容演进与故意错误负例：通过；
+- GitHub Actions：通过。
+
+常用命令：
 
 ```bash
-moon run cmd/main -- gen --example
-moon run cmd/main -- gen --schema 'syntax = "proto3"; message User { uint64 id = 1; }'
-moon run cmd/main -- doctor --schema 'syntax = "proto3"; message User { uint64 id = 1; }'
-moon run cmd/main -- inspect --schema 'syntax = "proto3"; message User { uint64 id = 1; }'
-moon run cmd/main -- json-roundtrip --schema 'syntax = "proto3"; message Bag { map<uint64, string> u64 = 1; uint64 user_id = 2; }' --message Bag --json '{"u64":{"1.0":"one"},"userId":"150"}'
-```
-
-Generate from a `.proto` file into a project directory:
-
-```bash
-python3 scripts/moon_proto_gen.py gen examples/simple/user.proto -o generated/
-```
-
-Run the file-based Schema Doctor and AI verification report workflow:
-
-```bash
-python3 scripts/moon_proto_lab.py doctor examples/simple/user.proto
-python3 scripts/moon_proto_lab.py doctor examples/decorated/telemetry.proto
-python3 scripts/moon_proto_lab.py doctor examples/decorated/telemetry_service.proto
-python3 scripts/moon_proto_lab.py doctor examples/decorated/nested_types.proto
-python3 scripts/moon_proto_lab.py doctor examples/decorated/nested_qualified.proto
-python3 scripts/moon_proto_lab.py doctor examples/decorated/enum_numbers.proto
-python3 scripts/moon_proto_lab.py doctor examples/decorated/enum_alias.proto
-python3 scripts/moon_proto_lab.py doctor examples/decorated/string_literals.proto
-python3 scripts/moon_proto_lab.py doctor examples/decorated/custom_options.proto
-python3 scripts/moon_proto_lab.py doctor examples/decorated/edition_schema.proto
-python3 scripts/moon_proto_lab.py doctor examples/decorated/oneof_options.proto
-python3 scripts/moon_proto_lab.py inspect examples/decorated/telemetry.proto
-python3 scripts/moon_proto_lab.py inspect examples/simple/user.proto
-python3 scripts/moon_proto_lab.py inspect examples/decorated/enum_numbers.proto
-python3 scripts/moon_proto_lab.py inspect examples/decorated/enum_alias.proto
-python3 scripts/moon_proto_lab.py inspect examples/decorated/string_literals.proto
-python3 scripts/moon_proto_lab.py inspect examples/decorated/custom_options.proto
-python3 scripts/moon_proto_lab.py inspect examples/decorated/edition_schema.proto
-python3 scripts/moon_proto_lab.py inspect examples/decorated/oneof_options.proto
-python3 scripts/moon_proto_lab.py compat examples/simple/user.proto examples/simple/user_v2.proto --report generated/compat_report.md --junit-out generated/compat_report.xml
-python3 scripts/moon_proto_lab.py verify examples/simple/user.proto --report generated/verify_report.md --junit-out generated/verify_report.xml
-python3 scripts/moon_proto_lab.py verify examples/decorated/enum_numbers.proto --report generated/verify_enum_numbers_report.md --junit-out generated/verify_enum_numbers_report.xml
-python3 scripts/moon_proto_lab.py verify examples/decorated/enum_alias.proto --report generated/verify_enum_alias_report.md --junit-out generated/verify_enum_alias_report.xml
-python3 scripts/moon_proto_lab.py verify examples/decorated/string_literals.proto --report generated/verify_string_literals_report.md --junit-out generated/verify_string_literals_report.xml
-python3 scripts/moon_proto_lab.py verify examples/decorated/nested_qualified.proto --report generated/verify_nested_qualified_report.md --junit-out generated/verify_nested_qualified_report.xml
-python3 scripts/moon_proto_lab.py verify examples/decorated/custom_options.proto --report generated/verify_custom_options_report.md --junit-out generated/verify_custom_options_report.xml
-python3 scripts/moon_proto_lab.py verify examples/decorated/edition_schema.proto --report generated/verify_edition_schema_report.md --junit-out generated/verify_edition_schema_report.xml
-python3 scripts/moon_proto_lab.py verify examples/decorated/oneof_options.proto --report generated/verify_oneof_options_report.md --junit-out generated/verify_oneof_options_report.xml
-python3 scripts/moon_proto_lab.py verify examples/simple/user.proto --report generated/verify_report.html
-python3 scripts/moon_proto_official_diff.py --report generated/official_diff_report.md --junit-out generated/official_diff_report.xml
-python3 scripts/moon_proto_official_diff.py --official-generated-dir tests/differential/official_generated_fixture --report generated/official_generated_diff_report.md --junit-out generated/official_generated_diff_report.xml
-python3 scripts/moon_proto_official_diff.py --run-official-generator --official-plugin-bin protoc-gen-mbt --protoc-bin protoc --report generated/official_installed_plugin_diff_report.md --junit-out generated/official_installed_plugin_diff_report.xml
-python3 scripts/moon_proto_conformance.py --report generated/conformance_lite_report.md --json-out generated/conformance_lite.json --junit-out generated/conformance_lite.xml
-git clone --depth 1 https://github.com/moonbitlang/protoc-gen-mbt /tmp/protoc-gen-mbt
-python3 scripts/moon_proto_official_diff.py --official-repo /tmp/protoc-gen-mbt --require-official --report generated/official_source_diff_report.md --junit-out generated/official_source_diff_report.xml
-python3 scripts/moon_proto_descriptor.py verify tests/fixtures/user_descriptor_set.hex --report generated/descriptor_verify_report.md --junit-out generated/descriptor_verify_report.xml
-python3 scripts/moon_proto_descriptor.py compat tests/fixtures/user_descriptor_set.hex tests/fixtures/user_descriptor_set_reserved_v2.hex --report generated/descriptor_compat_report.md --junit-out generated/descriptor_compat_report.xml
-python3 scripts/moon_proto_descriptor.py registry tests/fixtures/user_descriptor_set.hex tests/fixtures/user_descriptor_set_reserved_v2.hex --name demo-user --report generated/descriptor_registry_report.md --json-out generated/descriptor_registry.json --policy tests/fixtures/descriptor_registry_policy.json --junit-out generated/descriptor_registry_report.xml
-python3 scripts/moon_proto_descriptor.py policy generated/descriptor_registry.json tests/fixtures/descriptor_registry_policy.json --report generated/descriptor_policy_report.md --json-out generated/descriptor_policy.json --junit-out generated/descriptor_policy_report.xml
-python3 scripts/moon_proto_descriptor.py publish generated/descriptor_registry.json --store generated/schema_registry_store --base-dir . --report generated/descriptor_registry_publish_report.md --json-out generated/descriptor_registry_published.json --junit-out generated/descriptor_registry_publish_report.xml
-python3 scripts/moon_proto_descriptor.py pull generated/schema_registry_store/registries/demo-user.json --output-dir generated/schema_registry_pull --report generated/descriptor_registry_pull_report.md --json-out generated/descriptor_registry_pulled.json --junit-out generated/descriptor_registry_pull_report.xml
-```
-
-Convert a dynamic message to protobuf-style JSON:
-
-```moonbit
-match message_to_json(desc, msg) {
-  JsonOk(text) => println(text)
-  JsonErr(_) => println("message cannot be rendered as JSON")
-}
-```
-
-Validate parsed schemas before codegen:
-
-```moonbit
-match parse_proto(src) {
-  ProtoOk(file) => assert_true(schema_is_valid(file))
-  ProtoErr(_) => println("invalid schema syntax")
-}
-```
-
-## Verify
-
-One-command local gate matching the CI/review flow:
-
-```bash
-bash scripts/release_gate.sh
-```
-
-Individual commands:
-
-```bash
-python3 tests/oracle/python_protobuf_oracle.py
-(cd tests/oracle && go run .)
 moon fmt --check
 moon info
-moon package
-moon check
+moon package --list
+moon check --deny-warn
 moon build
-moon test
+moon test --deny-warn
 moon test --target all
-moon run cmd/main -- gen --example
-python3 scripts/moon_proto_gen.py gen examples/simple/user.proto -o generated/
-python3 scripts/moon_proto_lab.py doctor examples/simple/user.proto
-python3 scripts/moon_proto_lab.py doctor examples/decorated/telemetry.proto
-python3 scripts/moon_proto_lab.py doctor examples/decorated/telemetry_service.proto
-python3 scripts/moon_proto_lab.py doctor examples/decorated/nested_types.proto
-python3 scripts/moon_proto_lab.py doctor examples/decorated/nested_qualified.proto
-python3 scripts/moon_proto_lab.py doctor examples/decorated/enum_numbers.proto
-python3 scripts/moon_proto_lab.py doctor examples/decorated/enum_alias.proto
-python3 scripts/moon_proto_lab.py doctor examples/decorated/string_literals.proto
-python3 scripts/moon_proto_lab.py compat examples/simple/user.proto examples/simple/user_v2.proto --report generated/compat_report.md --junit-out generated/compat_report.xml
-python3 scripts/moon_proto_lab.py verify examples/simple/user.proto --report generated/verify_report.md --junit-out generated/verify_report.xml
-python3 scripts/moon_proto_lab.py verify examples/decorated/enum_numbers.proto --report generated/verify_enum_numbers_report.md --junit-out generated/verify_enum_numbers_report.xml
-python3 scripts/moon_proto_lab.py verify examples/decorated/enum_alias.proto --report generated/verify_enum_alias_report.md --junit-out generated/verify_enum_alias_report.xml
-python3 scripts/moon_proto_lab.py verify examples/decorated/string_literals.proto --report generated/verify_string_literals_report.md --junit-out generated/verify_string_literals_report.xml
-python3 scripts/moon_proto_lab.py verify examples/decorated/nested_qualified.proto --report generated/verify_nested_qualified_report.md --junit-out generated/verify_nested_qualified_report.xml
-python3 scripts/moon_proto_official_diff.py --report generated/official_diff_report.md --junit-out generated/official_diff_report.xml
-python3 scripts/moon_proto_official_diff.py --official-generated-dir tests/differential/official_generated_fixture --report generated/official_generated_diff_report.md --junit-out generated/official_generated_diff_report.xml
-python3 scripts/moon_proto_official_diff.py --run-official-generator --official-plugin-bin protoc-gen-mbt --protoc-bin protoc --report generated/official_installed_plugin_diff_report.md --junit-out generated/official_installed_plugin_diff_report.xml
-python3 scripts/moon_proto_conformance.py --report generated/conformance_lite_report.md --json-out generated/conformance_lite.json --junit-out generated/conformance_lite.xml
-git clone --depth 1 https://github.com/moonbitlang/protoc-gen-mbt /tmp/protoc-gen-mbt
-python3 scripts/moon_proto_official_diff.py --official-repo /tmp/protoc-gen-mbt --require-official --report generated/official_source_diff_report.md --junit-out generated/official_source_diff_report.xml
-python3 scripts/moon_proto_descriptor.py verify tests/fixtures/user_descriptor_set.hex --report generated/descriptor_verify_report.md --junit-out generated/descriptor_verify_report.xml
-python3 scripts/moon_proto_descriptor.py compat tests/fixtures/user_descriptor_set.hex tests/fixtures/user_descriptor_set_reserved_v2.hex --report generated/descriptor_compat_report.md --junit-out generated/descriptor_compat_report.xml
-python3 scripts/moon_proto_descriptor.py registry tests/fixtures/user_descriptor_set.hex tests/fixtures/user_descriptor_set_reserved_v2.hex --name demo-user --report generated/descriptor_registry_report.md --json-out generated/descriptor_registry.json --policy tests/fixtures/descriptor_registry_policy.json --junit-out generated/descriptor_registry_report.xml
-python3 scripts/moon_proto_descriptor.py policy generated/descriptor_registry.json tests/fixtures/descriptor_registry_policy.json --report generated/descriptor_policy_report.md --json-out generated/descriptor_policy.json --junit-out generated/descriptor_policy_report.xml
-python3 scripts/moon_proto_descriptor.py publish generated/descriptor_registry.json --store generated/schema_registry_store --base-dir . --report generated/descriptor_registry_publish_report.md --json-out generated/descriptor_registry_published.json --junit-out generated/descriptor_registry_publish_report.xml
-python3 scripts/moon_proto_descriptor.py pull generated/schema_registry_store/registries/demo-user.json --output-dir generated/schema_registry_pull --report generated/descriptor_registry_pull_report.md --json-out generated/descriptor_registry_pulled.json --junit-out generated/descriptor_registry_pull_report.xml
+moon coverage analyze -p 123123213weqw/moon_proto -- -f summary
 tests/codegen/compile_generated.sh
 ```
 
-## Documentation
+## 与现有 MoonBit protobuf 项目的关系
 
-- [Ecosystem positioning](docs/ECOSYSTEM_POSITIONING.md)
-- [Schema Doctor and verify reports](docs/SCHEMA_DOCTOR.md)
-- [Official differential harness](docs/OFFICIAL_DIFFERENTIAL.md)
-- [Descriptor set bridge](docs/DESCRIPTOR_SET.md)
-- [Descriptor registry workflow](docs/SCHEMA_REGISTRY.md)
-- [Testing strategy](docs/TESTING.md)
-- [Development report](docs/DEVELOPMENT_REPORT.md)
-- [Submission checklist](docs/SUBMISSION_CHECKLIST.md)
-- Proposal PDF: `output/pdf/MoonProto_王越的战队_项目申报书.pdf`
+MoonBit 生态已有：
 
-## Roadmap
+- [`moonbitlang/protobuf`](https://mooncakes.io/docs/moonbitlang/protobuf)：生产 runtime；
+- [`moonbitlang/protoc-gen-mbt`](https://github.com/moonbitlang/protoc-gen-mbt)：官方代码生成器。
 
-- M1: wire runtime + schema parser + tests. Done.
-- M2: schema-driven dynamic encode/decode for scalar and repeated fields. Done.
-- M3: generated MoonBit structs and descriptor functions. Done.
-- M4: packed repeated numeric scalar encoding/decoding. Done.
-- M5: protobuf-style JSON writer/parser for scalar/repeated messages. Done.
-- M6: top-level enum parser and codegen. Done.
-- M7: enum field runtime/JSON support. Done.
-- M8: Python/Go protobuf oracle compatibility fixtures. Done.
-- M9: schema validator for AI/codegen safety. Done.
-- M10: nested message dynamic runtime/JSON support. Done.
-- M11: CLI smoke generator and runtime helper codegen. Done.
-- M12: generated-code compile check. Done.
-- M13: proto3 maps. Done.
-- M14: oneof groups. Done.
-- M15: file-based CLI wrapper `moon_proto gen schema.proto -o generated/`. Done.
-- M16: Schema Doctor CLI for stable diagnostics. Done.
-- M17: AI verify command with generated-code compile check and Markdown/HTML reports. Done.
-- M18: old/new schema compatibility checking with Markdown/HTML reports. Done.
-- M19: larger conformance-lite corpus and float/double/special-float oracle fixtures. Done.
-- M20: import/option/reserved/extensions/field-option parser tolerance for real-world `.proto` files. Done.
-- M21: reserved number/name validation and compatibility contracts. Done.
-- M22: official MoonBit protobuf differential harness manifest and report. Done.
-- M23: CI-enforced official source contract check against `moonbitlang/protoc-gen-mbt`. Done.
-- M24: official generated-output differential contract for pre-generated or installed-generator output. Done.
-- M25: descriptor set / reflection import path with descriptor reports. Done.
-- M26: descriptor-set compatibility checks with reserved-field migration reports. Done.
-- M27: descriptor registry imports, version indexes and adjacent compatibility release gates. Done.
-- M28: JSON release-policy gate for descriptor registry manifests. Done.
-- M29: JUnit XML outputs for CI/test dashboards. Done.
-- M30a: richer descriptor registry release-policy DSL with warning severity and breaking-change budgets. Done.
-- M30b: file/HTTP descriptor registry adapter publish/pull with artifact digest verification. Done.
-- M31: authenticated HTTP registry pull with bearer-token/header support. Done.
-- M32: authenticated HTTP registry push with PUT upload and digest verification. Done.
-- M33: hosted registry profiles for reusable base URL, registry, token and header configuration. Done.
-- M34: managed hosted registry backend integration via GitHub Contents API profiles. Done.
-- M35: conformance-lite evidence report with Markdown/JSON/JUnit output. Done.
-- M36: conformance-lite expected-fail mutation self-checks for corrupted fixtures. Done.
-- M37: conformance-lite semantic-axis coverage gates in Markdown/JSON/JUnit reports. Done.
-- M38: installed official protoc-gen-mbt plugin live-generator smoke path. Done.
-- M39: upstream-style wire-decode conformance vectors for duplicate singular last-one-wins, unknown-field skipping, and mixed packed/unpacked repeated input. Done.
-- M40: imported upstream-lite conformance manifest with 11 protobuf-input/JSON-output acceptance cases and CI coverage gates. Done.
-- M41: official differential scalar-matrix adapter case with manifest feature coverage gate. Done.
-- M42: real-world service/rpc block and block-comment parser tolerance with verify-report coverage. Done.
-- M43: nested message/enum parser lifting with generated-code verify coverage. Done.
-- M44: signed enum values, signed enum reserved ranges and empty-statement parser tolerance with generated-code verify coverage. Done.
-- M45: enum `allow_alias` parser, validation and generated-code verify coverage. Done.
-- M46: single-quoted and escaped `.proto` string literal parser tolerance with generated-code verify coverage. Done.
-- M47: qualified nested message/enum type reference resolution with generated-code verify coverage. Done.
-- M48: top-level `extend` custom-option block parser tolerance with generated-code verify coverage. Done.
-- M49: protobuf `edition = "2023"` declaration parser tolerance with generated-code verify coverage. Done.
-- M50: oneof option statement parser tolerance with generated-code verify coverage. Done.
-- M51: protobuf JSON `null` parsing as absent fields, with duplicate-field and repeated-element guards. Done.
-- M52: protobuf JSON lowerCamelCase field-name alias parsing with canonical duplicate detection. Done.
-- M53: protobuf JSON lowerCamelCase output helpers, including generated runtime helper coverage. Done.
-- M54: protobuf JSON bytes parser accepts URL-safe base64 and omitted final padding. Done.
-- M55: protobuf JSON enum-name schema mapping with generated enum descriptor registry coverage. Done.
-- M56: schema-aware protobuf JSON enum-name coverage for map values. Done.
-- M57: protobuf JSON string parser accepts standard escapes, Unicode `\uXXXX` sequences and UTF-16 surrogate pairs while rejecting malformed escapes/control characters. Done.
-- M58: protobuf JSON integer parser accepts exact exponent/decimal notation for signed and unsigned integer fields, including overflow-safe uint64/int64 boundary checks. Done.
-- M59: protobuf JSON number tokenizer enforces JSON grammar and rejects leading plus, leading-zero, missing fraction and missing exponent digit forms. Done.
-- M60: protobuf JSON numeric map keys use exact integer exponent/decimal normalization, overflow guards and canonical duplicate-key rejection. Done.
-- M61: schema-aware CLI `json-roundtrip` command normalizes protobuf JSON and smoke-tests lowerCamel/numeric map-key duplicate behavior. Done.
-- M62: reviewer-facing 5-minute demo guide covering doctor, JSON roundtrip, codegen compile, compat, conformance-lite and official differential evidence. Done.
+Moon Proto Lab 的独立贡献是：
+
+1. 在生成前检查 schema，并为 AI 输出提供稳定诊断；
+2. 在 schema 演进时检查字段号、类型、reserved 等兼容性合同；
+3. 在生成后真实编译 MoonBit 代码，而不是只做文本快照；
+4. 使用 Python/Go oracle 与 MoonBit golden tests 验证 wire/JSON 行为；
+5. 输出适合 CI、代码审查和 Agent 消费的 Markdown/JSON/JUnit 证据。
+
+## 已知边界
+
+当前版本是面向验证场景的 proto3 子集，不宣称完整 protobuf conformance：
+
+- `service`、`rpc`、custom option 等主要做解析容错，不生成完整 RPC 实现；
+- typed struct 的生产级 encode/decode 能力不替代官方生成器，核心验证路径使用动态 `MessageValue`；
+- `conformance-lite` 是基于公开 protobuf 语义建模的小型 fixture 集，不是上游官方 conformance suite 的镜像；
+- `official source/output-shape contract` 检查验证公开接口契约；只有显式启用 live-generator 路径时才会实际运行官方生成器；
+- FileDescriptorSet、报告和 registry adapter 目前由 Python 集成层承载，MoonBit 核心实现集中在 parser/runtime/JSON/codegen/compat CLI。
+
+## 文档
+
+- [5 分钟评审演示](https://github.com/123123213weqw/moon_proto/blob/main/docs/DEMO.md)
+- [AI 验证 walkthrough](https://github.com/123123213weqw/moon_proto/blob/main/docs/AI_VERIFICATION_WALKTHROUGH.md)
+- [测试策略](https://github.com/123123213weqw/moon_proto/blob/main/docs/TESTING.md)
+- [开发报告](https://github.com/123123213weqw/moon_proto/blob/main/docs/DEVELOPMENT_REPORT.md)
+- [Schema Doctor](https://github.com/123123213weqw/moon_proto/blob/main/docs/SCHEMA_DOCTOR.md)
+- [官方接口契约检查](https://github.com/123123213weqw/moon_proto/blob/main/docs/OFFICIAL_DIFFERENTIAL.md)
+- [Descriptor set bridge](https://github.com/123123213weqw/moon_proto/blob/main/docs/DESCRIPTOR_SET.md)
+- [Descriptor registry](https://github.com/123123213weqw/moon_proto/blob/main/docs/SCHEMA_REGISTRY.md)
+- [第三方来源与许可证](https://github.com/123123213weqw/moon_proto/blob/main/THIRD_PARTY_NOTICES.md)
+
+## 仓库与发布
+
+- Mooncakes：[`123123213weqw/moon_proto`](https://mooncakes.io/docs/123123213weqw/moon_proto)
+- GitHub：<https://github.com/123123213weqw/moon_proto>
+- Gitlink（赛事主仓库）：<https://gitlink.org.cn/wangyue111/moon_proto>
 
 ## License
 
-MIT.
+项目原创代码采用 MIT License。第三方依赖、公开规范、测试 oracle 和契约 fixture 的来源与许可证见 [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md)。

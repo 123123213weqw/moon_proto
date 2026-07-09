@@ -1,0 +1,858 @@
+
+==> moon version
+moon 0.1.20260703 (6fbf8c3 2026-07-03)
+
+Feature flags enabled: rr_moon_mod,rr_moon_pkg
+
+==> python3 tests/oracle/python_protobuf_oracle.py
+Python protobuf oracle fixtures verified
+user_full.hex 0896011209416c696365202241221801220561646d696e220674657374657228033202ff003a0301960142020104
+user_full.json {"id":"150","name":"Alice \"A\"","active":true,"tags":["admin","tester"],"score":"-2","blob":"/wA=","samples":["1","150"],"deltas":["-1","2"]}
+bag_maps.hex 0a0a0a05616c6963651096010a070a03626f62100712070802120374776f120908071205736576656e
+bag_maps.json {"scores":{"alice":"150","bob":"7"},"labels":{"2":"two","7":"seven"}}
+contact_oneof.hex 08011a03313233
+contact_oneof.json {"id":"1","phone":"123"}
+numbers32.hex 08ffffffff0f10ffffffffffffffffff01180325ffffffff2dfdffffff
+numbers32.json {"u":4294967295,"i":-1,"s":-2,"f":4294967295,"sf":-3}
+floats.hex 0d0000c03f1100000000000002c0
+floats.json {"f":1.5,"d":-2.25}
+float_specials.hex 0d0000c07f150000807f19000000000000f0ff
+float_specials.json {"f_nan":"NaN","f_inf":"Infinity","d_neg_inf":"-Infinity"}
+user_wire_edges.hex 08019806b96038013896013a0202031203426f62089601
+user_wire_edges.json {"id":"150","name":"Bob","samples":["1","150","2","3"]}
+
+==> bash -lc cd tests/oracle && go run .
+Go protobuf oracle fixtures verified
+user_full.hex 0896011209416c696365202241221801220561646d696e220674657374657228033202ff003a0301960142020104
+user_full.json {"id":"150","name":"Alice \"A\"","active":true,"tags":["admin","tester"],"score":"-2","blob":"/wA=","samples":["1","150"],"deltas":["-1","2"]}
+bag_maps.hex 0a0a0a05616c6963651096010a070a03626f62100712070802120374776f120908071205736576656e
+bag_maps.json {"scores":{"alice":"150","bob":"7"},"labels":{"2":"two","7":"seven"}}
+contact_oneof.hex 08011a03313233
+contact_oneof.json {"id":"1","phone":"123"}
+numbers32.hex 08ffffffff0f10ffffffffffffffffff01180325ffffffff2dfdffffff
+numbers32.json {"u":4294967295,"i":-1,"s":-2,"f":4294967295,"sf":-3}
+floats.hex 0d0000c03f1100000000000002c0
+floats.json {"f":1.5,"d":-2.25}
+float_specials.hex 0d0000c07f150000807f19000000000000f0ff
+float_specials.json {"f_nan":"NaN","f_inf":"Infinity","d_neg_inf":"-Infinity"}
+user_wire_edges.hex 08019806b96038013896013a0202031203426f62089601
+user_wire_edges.json {"id":"150","name":"Bob","samples":["1","150","2","3"]}
+
+==> moon fmt --check
+Finished. moon: no work to do
+
+==> moon info
+Finished. moon: no work to do
+
+==> git diff --exit-code -- pkg.generated.mbti cmd/main/pkg.generated.mbti
+
+==> bash -lc
+  set -euo pipefail
+  moon package --list 2>&1 | tee /tmp/moon-proto-package-files.txt
+  moon package
+  for forbidden in PROPOSAL.md output/ docs/ examples/ scripts/ tests/ golden_wbtest.mbt; do
+    if grep -Fxq "$forbidden" /tmp/moon-proto-package-files.txt || grep -q "^${forbidden}" /tmp/moon-proto-package-files.txt; then
+      echo "publish package unexpectedly contains: $forbidden" >&2
+      exit 1
+    fi
+  done
+
+Running moon check ...
+Finished. moon: no work to do
+Check passed
+CHANGELOG.md
+LICENSE
+README.md
+THIRD_PARTY_NOTICES.md
+bytes.mbt
+cmd/main/main.mbt
+cmd/main/moon.pkg
+cmd/main/pkg.generated.mbti
+codegen.mbt
+error.mbt
+field.mbt
+fixed.mbt
+json.mbt
+moon.mod
+moon.pkg
+parser.mbt
+pkg.generated.mbti
+runtime.mbt
+schema.mbt
+validation.mbt
+varint.mbt
+wire.mbt
+zigzag.mbt
+Package to /Users/wangyue/Documents/moonbit/_build/publish/123123213weqw-moon_proto-0.1.1.zip
+Running moon check ...
+Finished. moon: no work to do
+Check passed
+Package to /Users/wangyue/Documents/moonbit/_build/publish/123123213weqw-moon_proto-0.1.1.zip
+
+==> moon check --deny-warn
+Finished. moon: ran 5 tasks, now up to date
+
+==> moon build
+Finished. moon: no work to do
+
+==> moon test --deny-warn
+Total tests: 60, passed: 60, failed: 0.
+
+==> moon test --target all
+Total tests: 60, passed: 60, failed: 0. [wasm]
+Total tests: 60, passed: 60, failed: 0. [wasm-gc]
+Total tests: 60, passed: 60, failed: 0. [js]
+Total tests: 60, passed: 60, failed: 0. [native]
+
+==> bash -lc
+  set -euo pipefail
+  moon coverage analyze -p 123123213weqw/moon_proto -- -f summary | tee /tmp/moon-proto-coverage.txt
+  python3 - <<"PY"
+import re
+from pathlib import Path
+text = Path("/tmp/moon-proto-coverage.txt").read_text()
+match = re.search(r"Total:\s+(\d+)/(\d+)", text)
+if not match:
+    raise SystemExit("coverage total not found")
+covered, total = map(int, match.groups())
+ratio = covered / total
+print(f"core MoonBit line coverage: {covered}/{total} ({ratio:.1%})")
+if ratio < 0.80:
+    raise SystemExit("core MoonBit line coverage is below 80%")
+PY
+
+bytes.mbt: 26/30
+codegen.mbt: 137/162
+field.mbt: 8/16
+fixed.mbt: 32/34
+json.mbt: 784/961
+parser.mbt: 436/565
+runtime.mbt: 276/346
+schema.mbt: 21/33
+validation.mbt: 165/179
+varint.mbt: 16/21
+wire.mbt: 24/31
+Total: 1935/2388
+core MoonBit line coverage: 1935/2388 (81.0%)
+
+==> moon run cmd/main -- gen --example
+pub(all) enum Color {
+  COLOR_UNSPECIFIED
+  RED
+} derive(Debug, Eq)
+
+pub fn descriptor_Color() -> EnumDescriptor {
+  EnumDescriptor::{
+    name : "Color",
+    allow_alias : false,
+    values : [
+      EnumValueDescriptor::{ name : "COLOR_UNSPECIFIED", number : 0 },
+      EnumValueDescriptor::{ name : "RED", number : 1 },
+    ],
+  }
+}
+
+pub(all) struct Address {
+  street : String
+  zip : UInt64
+} derive(Debug, Eq)
+
+pub fn descriptor_Address() -> MessageDescriptor {
+  MessageDescriptor::{
+    name : "Address",
+    fields : [
+      FieldDescriptor::{ name : "street", typ : StringType, number : 1, label : Singular },
+      FieldDescriptor::{ name : "zip", typ : UInt64Type, number : 2, label : Singular },
+    ],
+  }
+}
+
+pub(all) struct User {
+  id : UInt64
+  name : String
+  tags : Array[String]
+  favorite : Color
+  address : Address
+  counters : Array[MessageValue]
+  email : String?
+  phone : String?
+} derive(Debug, Eq)
+
+pub fn descriptor_User() -> MessageDescriptor {
+  MessageDescriptor::{
+    name : "User",
+    fields : [
+      FieldDescriptor::{ name : "id", typ : UInt64Type, number : 1, label : Singular },
+      FieldDescriptor::{ name : "name", typ : StringType, number : 2, label : Singular },
+      FieldDescriptor::{ name : "tags", typ : StringType, number : 3, label : Repeated },
+      FieldDescriptor::{ name : "favorite", typ : EnumType("Color"), number : 4, label : Singular },
+      FieldDescriptor::{ name : "address", typ : NamedType("Address"), number : 5, label : Singular },
+      FieldDescriptor::{ name : "counters", typ : MapType(StringType, UInt64Type), number : 6, label : Repeated },
+      FieldDescriptor::{ name : "email", typ : StringType, number : 7, label : Oneof("contact") },
+      FieldDescriptor::{ name : "phone", typ : StringType, number : 8, label : Oneof("contact") },
+    ],
+  }
+}
+
+pub fn message_descriptors() -> Array[MessageDescriptor] {
+  [
+    descriptor_Address(),
+    descriptor_User(),
+  ]
+}
+
+pub fn enum_descriptors() -> Array[EnumDescriptor] {
+  [
+    descriptor_Color(),
+  ]
+}
+
+pub fn encode_Address(value : MessageValue) -> EncodeMessageResult {
+  encode_message_with_descriptors(descriptor_Address(), message_descriptors(), value)
+}
+
+pub fn decode_Address(input : Bytes) -> DecodeMessageResult {
+  decode_message_with_descriptors(descriptor_Address(), message_descriptors(), input)
+}
+
+pub fn to_json_Address(value : MessageValue) -> JsonEncodeResult {
+  message_to_json_with_schema(descriptor_Address(), message_descriptors(), enum_descriptors(), value)
+}
+
+pub fn to_json_lower_camel_Address(value : MessageValue) -> JsonEncodeResult {
+  message_to_json_lower_camel_with_schema(descriptor_Address(), message_descriptors(), enum_descriptors(), value)
+}
+
+pub fn from_json_Address(input : String) -> JsonDecodeResult {
+  json_to_message_with_schema(descriptor_Address(), message_descriptors(), enum_descriptors(), input)
+}
+
+pub fn encode_User(value : MessageValue) -> EncodeMessageResult {
+  encode_message_with_descriptors(descriptor_User(), message_descriptors(), value)
+}
+
+pub fn decode_User(input : Bytes) -> DecodeMessageResult {
+  decode_message_with_descriptors(descriptor_User(), message_descriptors(), input)
+}
+
+pub fn to_json_User(value : MessageValue) -> JsonEncodeResult {
+  message_to_json_with_schema(descriptor_User(), message_descriptors(), enum_descriptors(), value)
+}
+
+pub fn to_json_lower_camel_User(value : MessageValue) -> JsonEncodeResult {
+  message_to_json_lower_camel_with_schema(descriptor_User(), message_descriptors(), enum_descriptors(), value)
+}
+
+pub fn from_json_User(input : String) -> JsonDecodeResult {
+  json_to_message_with_schema(descriptor_User(), message_descriptors(), enum_descriptors(), input)
+}
+
+==> tests/codegen/compile_generated.sh
+Finished. moon: ran 5 tasks, now up to date
+Finished. moon: ran 5 tasks, now up to date
+generated/user.mbt
+Finished. moon: ran 5 tasks, now up to date
+report: generated/verify_service_report.md
+junit: generated/verify_service_report.xml
+Moon Proto Lab verify: PASS
+- schema doctor: PASS - schema valid
+- schema inspect: PASS - schema summary generated
+- codegen: PASS - 77 generated lines
+- generated-code compile: PASS - Finished. moon: ran 5 tasks, now up to date
+report: generated/verify_nested_types_report.md
+junit: generated/verify_nested_types_report.xml
+Moon Proto Lab verify: PASS
+- schema doctor: PASS - schema valid
+- schema inspect: PASS - schema summary generated
+- codegen: PASS - 102 generated lines
+- generated-code compile: PASS - Finished. moon: ran 5 tasks, now up to date
+report: generated/verify_nested_qualified_report.md
+junit: generated/verify_nested_qualified_report.xml
+Moon Proto Lab verify: PASS
+- schema doctor: PASS - schema valid
+- schema inspect: PASS - schema summary generated
+- codegen: PASS - 136 generated lines
+- generated-code compile: PASS - Finished. moon: ran 5 tasks, now up to date
+report: generated/verify_enum_numbers_report.md
+junit: generated/verify_enum_numbers_report.xml
+Moon Proto Lab verify: PASS
+- schema doctor: PASS - schema valid
+- schema inspect: PASS - schema summary generated
+- codegen: PASS - 62 generated lines
+- generated-code compile: PASS - Finished. moon: ran 5 tasks, now up to date
+report: generated/verify_enum_alias_report.md
+junit: generated/verify_enum_alias_report.xml
+Moon Proto Lab verify: PASS
+- schema doctor: PASS - schema valid
+- schema inspect: PASS - schema summary generated
+- codegen: PASS - 64 generated lines
+- generated-code compile: PASS - Finished. moon: ran 5 tasks, now up to date
+report: generated/verify_string_literals_report.md
+junit: generated/verify_string_literals_report.xml
+Moon Proto Lab verify: PASS
+- schema doctor: PASS - schema valid
+- schema inspect: PASS - schema summary generated
+- codegen: PASS - 43 generated lines
+- generated-code compile: PASS - Finished. moon: ran 5 tasks, now up to date
+report: generated/verify_custom_options_report.md
+junit: generated/verify_custom_options_report.xml
+Moon Proto Lab verify: PASS
+- schema doctor: PASS - schema valid
+- schema inspect: PASS - schema summary generated
+- codegen: PASS - 43 generated lines
+- generated-code compile: PASS - Finished. moon: ran 5 tasks, now up to date
+report: generated/verify_edition_schema_report.md
+junit: generated/verify_edition_schema_report.xml
+Moon Proto Lab verify: PASS
+- schema doctor: PASS - schema valid
+- schema inspect: PASS - schema summary generated
+- codegen: PASS - 45 generated lines
+- generated-code compile: PASS - Finished. moon: ran 5 tasks, now up to date
+report: generated/verify_oneof_options_report.md
+junit: generated/verify_oneof_options_report.xml
+Moon Proto Lab verify: PASS
+- schema doctor: PASS - schema valid
+- schema inspect: PASS - schema summary generated
+- codegen: PASS - 45 generated lines
+- generated-code compile: PASS - Finished. moon: ran 5 tasks, now up to date
+schema compatible
+old messages: 1
+new messages: 1
+old enums: 0
+new enums: 0
+report: generated/compat_report.md
+junit: generated/compat_report.xml
+report: generated/verify_report.md
+junit: generated/verify_report.xml
+Moon Proto Lab verify: PASS
+- schema doctor: PASS - schema valid
+- schema inspect: PASS - schema summary generated
+- codegen: PASS - 53 generated lines
+- generated-code compile: PASS - Finished. moon: ran 5 tasks, now up to date
+report: generated/verify_report.html
+Moon Proto Lab verify: PASS
+- schema doctor: PASS - schema valid
+- schema inspect: PASS - schema summary generated
+- codegen: PASS - 53 generated lines
+- generated-code compile: PASS - skipped by --skip-compile
+report: generated/official_diff_report.md
+junit: generated/official_diff_report.xml
+# Moon Proto Lab official contract compatibility report
+
+- Generated at: `2026-07-09T23:51:40.910113+00:00`
+- Overall status: **PASS**
+- Official project: [moonbitlang/protoc-gen-mbt](https://github.com/moonbitlang/protoc-gen-mbt)
+- Observed official commit: `9ac87899cf20ea88e31ba77330958ba389eab5fd`
+- Runtime package: `moonbitlang/protobuf@0.1.2`
+- Official source required: `false`
+- Official generator requested: `false`
+- Output-shape contract fixture directory: ``
+
+## Official feature contract used by this harness
+
+- scalars map to MoonBit numeric/string/bool/bytes types;
+- optional maps to Option-style fields;
+- repeated maps to Array;
+- oneof maps to an enum in the official generator;
+- map fields map to Map in the official generator;
+- extensions and custom options are documented as ignored by the official generator;
+- source note: README says extensions and custom options are ignored.
+- source note: doc/spec.md documents scalar, optional, repeated, oneof and map MoonBit mappings.
+
+## Official source checkout
+
+| Step | Status | Details |
+| --- | --- | --- |
+| official source contract | SKIP | pass --official-repo to validate an official checkout |
+
+## Manifest feature coverage
+
+| Step | Status | Details |
+| --- | --- | --- |
+| official feature coverage | PASS | 20 manifest feature(s) covered; extra: option ignored by generator |
+
+## Case results
+
+| Case | Proto | Step | Status | Details |
+| --- | --- | --- | --- | --- |
+| simple_user | `/private/var/folders/jb/vq4jn1w94dsc2tt35tfkrvkr0000gn/T/moon_proto_codegen_check_31933/examples/simple/user.proto` | schema doctor | PASS | schema valid |
+| simple_user | `/private/var/folders/jb/vq4jn1w94dsc2tt35tfkrvkr0000gn/T/moon_proto_codegen_check_31933/examples/simple/user.proto` | schema inspect | PASS | schema summary generated |
+| simple_user | `/private/var/folders/jb/vq4jn1w94dsc2tt35tfkrvkr0000gn/T/moon_proto_codegen_check_31933/examples/simple/user.proto` | inspect contract | PASS | 4 expected snippets found: message User fields=6, 4 counters : repeated map<string, uint64>, 5 email : oneof contact string, 6 phone : oneof contact string |
+| simple_user | `/private/var/folders/jb/vq4jn1w94dsc2tt35tfkrvkr0000gn/T/moon_proto_codegen_check_31933/examples/simple/user.proto` | Moon Proto Lab codegen | PASS | 53 generated lines |
+| simple_user | `/private/var/folders/jb/vq4jn1w94dsc2tt35tfkrvkr0000gn/T/moon_proto_codegen_check_31933/examples/simple/user.proto` | generated-code compile | PASS | Finished. moon: ran 5 tasks, now up to date |
+| simple_user | `/private/var/folders/jb/vq4jn1w94dsc2tt35tfkrvkr0000gn/T/moon_proto_codegen_check_31933/examples/simple/user.proto` | official protoc-gen-mbt | SKIP | pass --run-official-generator with --official-plugin-bin, PATH protoc-gen-mbt, or --official-repo |
+| simple_user | `/private/var/folders/jb/vq4jn1w94dsc2tt35tfkrvkr0000gn/T/moon_proto_codegen_check_31933/examples/simple/user.proto` | official output-shape contract fixture | SKIP | pass --official-generated-dir to validate hand-authored output-shape contract fixtures |
+| decorated_telemetry | `/private/var/folders/jb/vq4jn1w94dsc2tt35tfkrvkr0000gn/T/moon_proto_codegen_check_31933/examples/decorated/telemetry.proto` | schema doctor | PASS | schema valid |
+| decorated_telemetry | `/private/var/folders/jb/vq4jn1w94dsc2tt35tfkrvkr0000gn/T/moon_proto_codegen_check_31933/examples/decorated/telemetry.proto` | schema inspect | PASS | schema summary generated |
+| decorated_telemetry | `/private/var/folders/jb/vq4jn1w94dsc2tt35tfkrvkr0000gn/T/moon_proto_codegen_check_31933/examples/decorated/telemetry.proto` | inspect contract | PASS | 6 expected snippets found: package: moon.proto.lab.demo.v1, message TelemetryEvent fields=7, reserved numbers: 7, 9 to 12, reserved names: old_payload, enum Severity values=4, reserved numbers: 9 to 12 |
+| decorated_telemetry | `/private/var/folders/jb/vq4jn1w94dsc2tt35tfkrvkr0000gn/T/moon_proto_codegen_check_31933/examples/decorated/telemetry.proto` | Moon Proto Lab codegen | PASS | 112 generated lines |
+| decorated_telemetry | `/private/var/folders/jb/vq4jn1w94dsc2tt35tfkrvkr0000gn/T/moon_proto_codegen_check_31933/examples/decorated/telemetry.proto` | generated-code compile | PASS | Finished. moon: ran 5 tasks, now up to date |
+| decorated_telemetry | `/private/var/folders/jb/vq4jn1w94dsc2tt35tfkrvkr0000gn/T/moon_proto_codegen_check_31933/examples/decorated/telemetry.proto` | official protoc-gen-mbt | SKIP | pass --run-official-generator with --official-plugin-bin, PATH protoc-gen-mbt, or --official-repo |
+| decorated_telemetry | `/private/var/folders/jb/vq4jn1w94dsc2tt35tfkrvkr0000gn/T/moon_proto_codegen_check_31933/examples/decorated/telemetry.proto` | official output-shape contract fixture | SKIP | pass --official-generated-dir to validate hand-authored output-shape contract fixtures |
+| scalar_matrix | `/private/var/folders/jb/vq4jn1w94dsc2tt35tfkrvkr0000gn/T/moon_proto_codegen_check_31933/examples/official/scalar_matrix.proto` | schema doctor | PASS | schema valid |
+| scalar_matrix | `/private/var/folders/jb/vq4jn1w94dsc2tt35tfkrvkr0000gn/T/moon_proto_codegen_check_31933/examples/official/scalar_matrix.proto` | schema inspect | PASS | schema summary generated |
+| scalar_matrix | `/private/var/folders/jb/vq4jn1w94dsc2tt35tfkrvkr0000gn/T/moon_proto_codegen_check_31933/examples/official/scalar_matrix.proto` | inspect contract | PASS | 8 expected snippets found: message ScalarMatrix fields=17, 1 d : singular double, 2 f : singular float, 3 i32 : singular int32, 4 i64 : singular int64, 15 payload : singular bytes, 16 note : optional string, 17 samples : repeated uint32 |
+| scalar_matrix | `/private/var/folders/jb/vq4jn1w94dsc2tt35tfkrvkr0000gn/T/moon_proto_codegen_check_31933/examples/official/scalar_matrix.proto` | Moon Proto Lab codegen | PASS | 75 generated lines |
+| scalar_matrix | `/private/var/folders/jb/vq4jn1w94dsc2tt35tfkrvkr0000gn/T/moon_proto_codegen_check_31933/examples/official/scalar_matrix.proto` | generated-code compile | PASS | Finished. moon: ran 5 tasks, now up to date |
+| scalar_matrix | `/private/var/folders/jb/vq4jn1w94dsc2tt35tfkrvkr0000gn/T/moon_proto_codegen_check_31933/examples/official/scalar_matrix.proto` | official protoc-gen-mbt | SKIP | pass --run-official-generator with --official-plugin-bin, PATH protoc-gen-mbt, or --official-repo |
+| scalar_matrix | `/private/var/folders/jb/vq4jn1w94dsc2tt35tfkrvkr0000gn/T/moon_proto_codegen_check_31933/examples/official/scalar_matrix.proto` | official output-shape contract fixture | SKIP | pass --official-generated-dir to validate hand-authored output-shape contract fixtures |
+
+## Interpretation
+
+`PASS` means the selected local schema/codegen and public contract checks passed; it does not claim full official runtime equivalence.
+The official source contract step is blocking when `--require-official` is used. The generator step is only blocking when both `--require-official` and `--run-official-generator` are used.
+Intentional differences are expected: Moon Proto Lab keeps descriptor-driven `MessageValue` helpers for dynamic verification, while the official generator emits production typed structs, maps and oneof enums.
+report: generated/official_generated_diff_report.md
+junit: generated/official_generated_diff_report.xml
+# Moon Proto Lab official contract compatibility report
+
+- Generated at: `2026-07-09T23:51:41.523008+00:00`
+- Overall status: **PASS**
+- Official project: [moonbitlang/protoc-gen-mbt](https://github.com/moonbitlang/protoc-gen-mbt)
+- Observed official commit: `9ac87899cf20ea88e31ba77330958ba389eab5fd`
+- Runtime package: `moonbitlang/protobuf@0.1.2`
+- Official source required: `false`
+- Official generator requested: `false`
+- Output-shape contract fixture directory: `tests/differential/official_contract_fixture`
+
+## Official feature contract used by this harness
+
+- scalars map to MoonBit numeric/string/bool/bytes types;
+- optional maps to Option-style fields;
+- repeated maps to Array;
+- oneof maps to an enum in the official generator;
+- map fields map to Map in the official generator;
+- extensions and custom options are documented as ignored by the official generator;
+- source note: README says extensions and custom options are ignored.
+- source note: doc/spec.md documents scalar, optional, repeated, oneof and map MoonBit mappings.
+
+## Official source checkout
+
+| Step | Status | Details |
+| --- | --- | --- |
+| official source contract | SKIP | pass --official-repo to validate an official checkout |
+
+## Manifest feature coverage
+
+| Step | Status | Details |
+| --- | --- | --- |
+| official feature coverage | PASS | 20 manifest feature(s) covered; extra: option ignored by generator |
+
+## Case results
+
+| Case | Proto | Step | Status | Details |
+| --- | --- | --- | --- | --- |
+| simple_user | `/private/var/folders/jb/vq4jn1w94dsc2tt35tfkrvkr0000gn/T/moon_proto_codegen_check_31933/examples/simple/user.proto` | schema doctor | PASS | schema valid |
+| simple_user | `/private/var/folders/jb/vq4jn1w94dsc2tt35tfkrvkr0000gn/T/moon_proto_codegen_check_31933/examples/simple/user.proto` | schema inspect | PASS | schema summary generated |
+| simple_user | `/private/var/folders/jb/vq4jn1w94dsc2tt35tfkrvkr0000gn/T/moon_proto_codegen_check_31933/examples/simple/user.proto` | inspect contract | PASS | 4 expected snippets found: message User fields=6, 4 counters : repeated map<string, uint64>, 5 email : oneof contact string, 6 phone : oneof contact string |
+| simple_user | `/private/var/folders/jb/vq4jn1w94dsc2tt35tfkrvkr0000gn/T/moon_proto_codegen_check_31933/examples/simple/user.proto` | Moon Proto Lab codegen | PASS | 53 generated lines |
+| simple_user | `/private/var/folders/jb/vq4jn1w94dsc2tt35tfkrvkr0000gn/T/moon_proto_codegen_check_31933/examples/simple/user.proto` | generated-code compile | PASS | Finished. moon: ran 5 tasks, now up to date |
+| simple_user | `/private/var/folders/jb/vq4jn1w94dsc2tt35tfkrvkr0000gn/T/moon_proto_codegen_check_31933/examples/simple/user.proto` | official protoc-gen-mbt | SKIP | pass --run-official-generator with --official-plugin-bin, PATH protoc-gen-mbt, or --official-repo |
+| simple_user | `/private/var/folders/jb/vq4jn1w94dsc2tt35tfkrvkr0000gn/T/moon_proto_codegen_check_31933/examples/simple/user.proto` | official output-shape contract fixture | PASS | 4 expected snippets found in 3 contract fixture file(s): pub struct User, Map[String, UInt64], enum UserContact, fn encode_json |
+| decorated_telemetry | `/private/var/folders/jb/vq4jn1w94dsc2tt35tfkrvkr0000gn/T/moon_proto_codegen_check_31933/examples/decorated/telemetry.proto` | schema doctor | PASS | schema valid |
+| decorated_telemetry | `/private/var/folders/jb/vq4jn1w94dsc2tt35tfkrvkr0000gn/T/moon_proto_codegen_check_31933/examples/decorated/telemetry.proto` | schema inspect | PASS | schema summary generated |
+| decorated_telemetry | `/private/var/folders/jb/vq4jn1w94dsc2tt35tfkrvkr0000gn/T/moon_proto_codegen_check_31933/examples/decorated/telemetry.proto` | inspect contract | PASS | 6 expected snippets found: package: moon.proto.lab.demo.v1, message TelemetryEvent fields=7, reserved numbers: 7, 9 to 12, reserved names: old_payload, enum Severity values=4, reserved numbers: 9 to 12 |
+| decorated_telemetry | `/private/var/folders/jb/vq4jn1w94dsc2tt35tfkrvkr0000gn/T/moon_proto_codegen_check_31933/examples/decorated/telemetry.proto` | Moon Proto Lab codegen | PASS | 112 generated lines |
+| decorated_telemetry | `/private/var/folders/jb/vq4jn1w94dsc2tt35tfkrvkr0000gn/T/moon_proto_codegen_check_31933/examples/decorated/telemetry.proto` | generated-code compile | PASS | Finished. moon: ran 5 tasks, now up to date |
+| decorated_telemetry | `/private/var/folders/jb/vq4jn1w94dsc2tt35tfkrvkr0000gn/T/moon_proto_codegen_check_31933/examples/decorated/telemetry.proto` | official protoc-gen-mbt | SKIP | pass --run-official-generator with --official-plugin-bin, PATH protoc-gen-mbt, or --official-repo |
+| decorated_telemetry | `/private/var/folders/jb/vq4jn1w94dsc2tt35tfkrvkr0000gn/T/moon_proto_codegen_check_31933/examples/decorated/telemetry.proto` | official output-shape contract fixture | PASS | 4 expected snippets found in 3 contract fixture file(s): pub enum Severity, pub struct TelemetryEvent, Option[String], Map[String, String] |
+| scalar_matrix | `/private/var/folders/jb/vq4jn1w94dsc2tt35tfkrvkr0000gn/T/moon_proto_codegen_check_31933/examples/official/scalar_matrix.proto` | schema doctor | PASS | schema valid |
+| scalar_matrix | `/private/var/folders/jb/vq4jn1w94dsc2tt35tfkrvkr0000gn/T/moon_proto_codegen_check_31933/examples/official/scalar_matrix.proto` | schema inspect | PASS | schema summary generated |
+| scalar_matrix | `/private/var/folders/jb/vq4jn1w94dsc2tt35tfkrvkr0000gn/T/moon_proto_codegen_check_31933/examples/official/scalar_matrix.proto` | inspect contract | PASS | 8 expected snippets found: message ScalarMatrix fields=17, 1 d : singular double, 2 f : singular float, 3 i32 : singular int32, 4 i64 : singular int64, 15 payload : singular bytes, 16 note : optional string, 17 samples : repeated uint32 |
+| scalar_matrix | `/private/var/folders/jb/vq4jn1w94dsc2tt35tfkrvkr0000gn/T/moon_proto_codegen_check_31933/examples/official/scalar_matrix.proto` | Moon Proto Lab codegen | PASS | 75 generated lines |
+| scalar_matrix | `/private/var/folders/jb/vq4jn1w94dsc2tt35tfkrvkr0000gn/T/moon_proto_codegen_check_31933/examples/official/scalar_matrix.proto` | generated-code compile | PASS | Finished. moon: ran 5 tasks, now up to date |
+| scalar_matrix | `/private/var/folders/jb/vq4jn1w94dsc2tt35tfkrvkr0000gn/T/moon_proto_codegen_check_31933/examples/official/scalar_matrix.proto` | official protoc-gen-mbt | SKIP | pass --run-official-generator with --official-plugin-bin, PATH protoc-gen-mbt, or --official-repo |
+| scalar_matrix | `/private/var/folders/jb/vq4jn1w94dsc2tt35tfkrvkr0000gn/T/moon_proto_codegen_check_31933/examples/official/scalar_matrix.proto` | official output-shape contract fixture | PASS | 10 expected snippets found in 3 contract fixture file(s): pub struct ScalarMatrix, d : Double, f : Float, i32 : Int, i64 : Int64, u32 : UInt, u64 : UInt64, payload : Bytes, note : Option[String], samples : Array[UInt] |
+
+## Interpretation
+
+`PASS` means the selected local schema/codegen and public contract checks passed; it does not claim full official runtime equivalence.
+The official source contract step is blocking when `--require-official` is used. The generator step is only blocking when both `--require-official` and `--run-official-generator` are used.
+Intentional differences are expected: Moon Proto Lab keeps descriptor-driven `MessageValue` helpers for dynamic verification, while the official generator emits production typed structs, maps and oneof enums.
+report: generated/official_plugin_adapter_smoke_report.md
+junit: generated/official_plugin_adapter_smoke_report.xml
+# Moon Proto Lab official contract compatibility report
+
+- Generated at: `2026-07-09T23:51:42.634855+00:00`
+- Overall status: **PASS**
+- Official project: [moonbitlang/protoc-gen-mbt](https://github.com/moonbitlang/protoc-gen-mbt)
+- Observed official commit: `9ac87899cf20ea88e31ba77330958ba389eab5fd`
+- Runtime package: `moonbitlang/protobuf@0.1.2`
+- Official source required: `false`
+- Official generator requested: `true`
+- Output-shape contract fixture directory: ``
+
+## Official feature contract used by this harness
+
+- scalars map to MoonBit numeric/string/bool/bytes types;
+- optional maps to Option-style fields;
+- repeated maps to Array;
+- oneof maps to an enum in the official generator;
+- map fields map to Map in the official generator;
+- extensions and custom options are documented as ignored by the official generator;
+- source note: README says extensions and custom options are ignored.
+- source note: doc/spec.md documents scalar, optional, repeated, oneof and map MoonBit mappings.
+
+## Official source checkout
+
+| Step | Status | Details |
+| --- | --- | --- |
+| official source contract | SKIP | pass --official-repo to validate an official checkout |
+
+## Manifest feature coverage
+
+| Step | Status | Details |
+| --- | --- | --- |
+| official feature coverage | PASS | 20 manifest feature(s) covered; extra: option ignored by generator |
+
+## Case results
+
+| Case | Proto | Step | Status | Details |
+| --- | --- | --- | --- | --- |
+| simple_user | `/private/var/folders/jb/vq4jn1w94dsc2tt35tfkrvkr0000gn/T/moon_proto_codegen_check_31933/examples/simple/user.proto` | schema doctor | PASS | schema valid |
+| simple_user | `/private/var/folders/jb/vq4jn1w94dsc2tt35tfkrvkr0000gn/T/moon_proto_codegen_check_31933/examples/simple/user.proto` | schema inspect | PASS | schema summary generated |
+| simple_user | `/private/var/folders/jb/vq4jn1w94dsc2tt35tfkrvkr0000gn/T/moon_proto_codegen_check_31933/examples/simple/user.proto` | inspect contract | PASS | 4 expected snippets found: message User fields=6, 4 counters : repeated map<string, uint64>, 5 email : oneof contact string, 6 phone : oneof contact string |
+| simple_user | `/private/var/folders/jb/vq4jn1w94dsc2tt35tfkrvkr0000gn/T/moon_proto_codegen_check_31933/examples/simple/user.proto` | Moon Proto Lab codegen | PASS | 53 generated lines |
+| simple_user | `/private/var/folders/jb/vq4jn1w94dsc2tt35tfkrvkr0000gn/T/moon_proto_codegen_check_31933/examples/simple/user.proto` | generated-code compile | PASS | Finished. moon: ran 5 tasks, now up to date |
+| simple_user | `/private/var/folders/jb/vq4jn1w94dsc2tt35tfkrvkr0000gn/T/moon_proto_codegen_check_31933/examples/simple/user.proto` | official protoc-gen-mbt | PASS | generated 1 file(s): fake_official_output.mbt |
+| simple_user | `/private/var/folders/jb/vq4jn1w94dsc2tt35tfkrvkr0000gn/T/moon_proto_codegen_check_31933/examples/simple/user.proto` | official output-shape contract fixture | SKIP | pass --official-generated-dir to validate hand-authored output-shape contract fixtures |
+| decorated_telemetry | `/private/var/folders/jb/vq4jn1w94dsc2tt35tfkrvkr0000gn/T/moon_proto_codegen_check_31933/examples/decorated/telemetry.proto` | schema doctor | PASS | schema valid |
+| decorated_telemetry | `/private/var/folders/jb/vq4jn1w94dsc2tt35tfkrvkr0000gn/T/moon_proto_codegen_check_31933/examples/decorated/telemetry.proto` | schema inspect | PASS | schema summary generated |
+| decorated_telemetry | `/private/var/folders/jb/vq4jn1w94dsc2tt35tfkrvkr0000gn/T/moon_proto_codegen_check_31933/examples/decorated/telemetry.proto` | inspect contract | PASS | 6 expected snippets found: package: moon.proto.lab.demo.v1, message TelemetryEvent fields=7, reserved numbers: 7, 9 to 12, reserved names: old_payload, enum Severity values=4, reserved numbers: 9 to 12 |
+| decorated_telemetry | `/private/var/folders/jb/vq4jn1w94dsc2tt35tfkrvkr0000gn/T/moon_proto_codegen_check_31933/examples/decorated/telemetry.proto` | Moon Proto Lab codegen | PASS | 112 generated lines |
+| decorated_telemetry | `/private/var/folders/jb/vq4jn1w94dsc2tt35tfkrvkr0000gn/T/moon_proto_codegen_check_31933/examples/decorated/telemetry.proto` | generated-code compile | PASS | Finished. moon: ran 5 tasks, now up to date |
+| decorated_telemetry | `/private/var/folders/jb/vq4jn1w94dsc2tt35tfkrvkr0000gn/T/moon_proto_codegen_check_31933/examples/decorated/telemetry.proto` | official protoc-gen-mbt | PASS | generated 1 file(s): fake_official_output.mbt |
+| decorated_telemetry | `/private/var/folders/jb/vq4jn1w94dsc2tt35tfkrvkr0000gn/T/moon_proto_codegen_check_31933/examples/decorated/telemetry.proto` | official output-shape contract fixture | SKIP | pass --official-generated-dir to validate hand-authored output-shape contract fixtures |
+| scalar_matrix | `/private/var/folders/jb/vq4jn1w94dsc2tt35tfkrvkr0000gn/T/moon_proto_codegen_check_31933/examples/official/scalar_matrix.proto` | schema doctor | PASS | schema valid |
+| scalar_matrix | `/private/var/folders/jb/vq4jn1w94dsc2tt35tfkrvkr0000gn/T/moon_proto_codegen_check_31933/examples/official/scalar_matrix.proto` | schema inspect | PASS | schema summary generated |
+| scalar_matrix | `/private/var/folders/jb/vq4jn1w94dsc2tt35tfkrvkr0000gn/T/moon_proto_codegen_check_31933/examples/official/scalar_matrix.proto` | inspect contract | PASS | 8 expected snippets found: message ScalarMatrix fields=17, 1 d : singular double, 2 f : singular float, 3 i32 : singular int32, 4 i64 : singular int64, 15 payload : singular bytes, 16 note : optional string, 17 samples : repeated uint32 |
+| scalar_matrix | `/private/var/folders/jb/vq4jn1w94dsc2tt35tfkrvkr0000gn/T/moon_proto_codegen_check_31933/examples/official/scalar_matrix.proto` | Moon Proto Lab codegen | PASS | 75 generated lines |
+| scalar_matrix | `/private/var/folders/jb/vq4jn1w94dsc2tt35tfkrvkr0000gn/T/moon_proto_codegen_check_31933/examples/official/scalar_matrix.proto` | generated-code compile | PASS | Finished. moon: ran 5 tasks, now up to date |
+| scalar_matrix | `/private/var/folders/jb/vq4jn1w94dsc2tt35tfkrvkr0000gn/T/moon_proto_codegen_check_31933/examples/official/scalar_matrix.proto` | official protoc-gen-mbt | PASS | generated 1 file(s): fake_official_output.mbt |
+| scalar_matrix | `/private/var/folders/jb/vq4jn1w94dsc2tt35tfkrvkr0000gn/T/moon_proto_codegen_check_31933/examples/official/scalar_matrix.proto` | official output-shape contract fixture | SKIP | pass --official-generated-dir to validate hand-authored output-shape contract fixtures |
+
+## Interpretation
+
+`PASS` means the selected local schema/codegen and public contract checks passed; it does not claim full official runtime equivalence.
+The official source contract step is blocking when `--require-official` is used. The generator step is only blocking when both `--require-official` and `--run-official-generator` are used.
+Intentional differences are expected: Moon Proto Lab keeps descriptor-driven `MessageValue` helpers for dynamic verification, while the official generator emits production typed structs, maps and oneof enums.
+report: generated/conformance_lite_report.md
+json: generated/conformance_lite.json
+junit: generated/conformance_lite.xml
+Moon Proto Lab conformance-lite: PASS
+- proto3_scalar_repeated_packed_bytes_json64: PASS - uint64/string/bool/bytes/repeated/packed sint64 + protobuf JSON 64-bit strings; bytes=46; sha256=d6cdceb77a9b4e39; fixtures=user_full.bin,user_full.hex,user_full.json
+- proto3_wire_decode_unknown_duplicate_packed_unpacked: PASS - duplicate singular last-one-wins, unknown field skip, and mixed unpacked/packed repeated numeric input; bytes=23; sha256=95a27c976895be5c; fixtures=user_wire_edges.bin,user_wire_edges.hex,user_wire_edges.json
+- proto3_map_string_and_int64_keys: PASS - map<string,uint64> and map<int64,string> deterministic binary + JSON object mapping; bytes=41; sha256=cd166f89f23944a6; fixtures=bag_maps.bin,bag_maps.hex,bag_maps.json
+- proto3_oneof_last_selected_json: PASS - oneof selected field binary encoding and JSON emission; bytes=7; sha256=75feb025e1dc029b; fixtures=contact_oneof.bin,contact_oneof.hex,contact_oneof.json
+- proto3_32bit_numeric_boundaries: PASS - uint32/int32/sint32/fixed32/sfixed32 boundary values; bytes=29; sha256=e18838a3166088d0; fixtures=numbers32.bin,numbers32.hex,numbers32.json
+- proto3_float_double_roundtrip: PASS - float and double finite numeric values; bytes=14; sha256=3a1b53a148b63bcd; fixtures=floats.bin,floats.hex,floats.json
+- proto3_float_special_json_strings: PASS - NaN, Infinity and -Infinity protobuf JSON string mapping; bytes=19; sha256=eef5c04c88cd2a47; fixtures=float_specials.bin,float_specials.hex,float_specials.json
+- Required.Proto3.ScalarRepeatedPacked.BinaryInput: PASS - proto3 scalar, bytes, repeated string and packed numeric fields accepted from protobuf input; upstream_ref=ConformanceRequest.protobuf_payload -> ConformanceResponse.json_payload; bytes=46; sha256=d6cdceb77a9b4e39; fixture=user_full
+- Required.Proto3.JsonInt64BytesEscaping.JsonOutput: PASS - protobuf JSON 64-bit integers are strings and bytes are base64 while string escaping is preserved; upstream_ref=JSON mapping for int64/uint64/bytes/string fields; bytes=46; sha256=d6cdceb77a9b4e39; fixture=user_full
+- Required.Proto3.UnknownFieldsAreSkipped.BinaryInput: PASS - unknown binary field 99 is skipped and does not appear in JSON output; upstream_ref=Binary parser accepts unknown fields and drops them for JSON output; bytes=23; sha256=95a27c976895be5c; fixture=user_wire_edges
+- Required.Proto3.DuplicateSingularLastOneWins.BinaryInput: PASS - duplicate singular uint64 field keeps the final decoded value; upstream_ref=Last value wins for duplicate singular non-message fields; bytes=23; sha256=95a27c976895be5c; fixture=user_wire_edges
+- Required.Proto3.PackedAndUnpackedRepeatedAccepted.BinaryInput: PASS - repeated numeric field accepts both unpacked occurrences and packed payload in one stream; upstream_ref=Repeated primitive numeric fields accept packed and unpacked encodings; bytes=23; sha256=95a27c976895be5c; fixture=user_wire_edges
+- Required.Proto3.MapStringUInt64.JsonOutput: PASS - map<string,uint64> renders as a JSON object with uint64 string values; upstream_ref=Proto3 JSON map field object mapping; bytes=41; sha256=cd166f89f23944a6; fixture=bag_maps
+- Required.Proto3.MapInt64Keys.JsonOutput: PASS - map<int64,string> renders integer keys as JSON object string properties; upstream_ref=Proto3 JSON map keys are strings; bytes=41; sha256=cd166f89f23944a6; fixture=bag_maps
+- Required.Proto3.OneofSelectedField.JsonOutput: PASS - oneof emits only the selected field in JSON output; upstream_ref=Oneof JSON mapping selected field semantics; bytes=7; sha256=75feb025e1dc029b; fixture=contact_oneof
+- Required.Proto3.Numeric32Boundaries.JsonOutput: PASS - uint32/int32/sint32/fixed32/sfixed32 boundary values preserve protobuf JSON numeric forms; upstream_ref=32-bit numeric scalar JSON mapping; bytes=29; sha256=e18838a3166088d0; fixture=numbers32
+- Required.Proto3.FloatDouble.JsonOutput: PASS - finite float and double values preserve JSON numeric output; upstream_ref=float/double JSON mapping; bytes=14; sha256=3a1b53a148b63bcd; fixture=floats
+- Required.Proto3.SpecialFloatJsonStrings.JsonOutput: PASS - NaN, Infinity and -Infinity render as protobuf JSON strings; upstream_ref=Special float JSON string mapping; bytes=19; sha256=eef5c04c88cd2a47; fixture=float_specials
+- reject_hex_binary_mismatch: PASS - expected rejection observed via hex_mismatch: /var/folders/jb/vq4jn1w94dsc2tt35tfkrvkr0000gn/T/moon_proto_conformance_negative_43gqyxv5/user_full.hex differs from Python protobuf oracle; hex fixture does not decode to the binary fixture
+- reject_json_missing_required_evidence: PASS - expected rejection observed via json_missing_required_evidence: /var/folders/jb/vq4jn1w94dsc2tt35tfkrvkr0000gn/T/moon_proto_conformance_negative_niik457m/user_full.json differs from Python protobuf oracle; $.id: missing; $.name: missing; $.active: missing; $.tags: missing; $.score: missing; $.blob: missing; $.samples: missing; $.deltas: missing
+- reject_missing_binary_fixture: PASS - expected rejection observed via missing_bin: [Errno 2] No such file or directory: '/var/folders/jb/vq4jn1w94dsc2tt35tfkrvkr0000gn/T/moon_proto_conformance_negative_wz2o2ge9/contact_oneof.bin'
+- reject_corrupt_binary_fixture: PASS - expected rejection observed via corrupt_bin: /var/folders/jb/vq4jn1w94dsc2tt35tfkrvkr0000gn/T/moon_proto_conformance_negative_eouj641d/floats.bin differs from Python protobuf oracle; /var/folders/jb/vq4jn1w94dsc2tt35tfkrvkr0000gn/T/moon_proto_conformance_negative_eouj641d/floats.hex differs from Python protobuf oracle
+coverage gates: PASS
+- coverage:oracle: PASS - 7 passing case(s) for axis oracle; required >= 7
+- coverage:binary: PASS - 7 passing case(s) for axis binary; required >= 7
+- coverage:json: PASS - 7 passing case(s) for axis json; required >= 7
+- coverage:map: PASS - 3 passing case(s) for axis map; required >= 1
+- coverage:oneof: PASS - 2 passing case(s) for axis oneof; required >= 1
+- coverage:numeric32: PASS - 2 passing case(s) for axis numeric32; required >= 1
+- coverage:float: PASS - 4 passing case(s) for axis float; required >= 2
+- coverage:float-special: PASS - 2 passing case(s) for axis float-special; required >= 1
+- coverage:wire-decode: PASS - 4 passing case(s) for axis wire-decode; required >= 1
+- coverage:unknown-field: PASS - 2 passing case(s) for axis unknown-field; required >= 1
+- coverage:last-one-wins: PASS - 2 passing case(s) for axis last-one-wins; required >= 1
+- coverage:unpacked-input: PASS - 2 passing case(s) for axis unpacked-input; required >= 1
+- coverage:upstream-lite: PASS - 11 passing case(s) for axis upstream-lite; required >= 11
+- coverage:protobuf-input: PASS - 10 passing case(s) for axis protobuf-input; required >= 10
+- coverage:json-output: PASS - 11 passing case(s) for axis json-output; required >= 11
+- coverage:negative: PASS - 4 passing case(s) for axis negative; required >= 4
+- coverage:fixture-integrity: PASS - 4 passing case(s) for axis fixture-integrity; required >= 4
+generated/user_descriptor_set.json
+generated/user_descriptor_set.hex
+generated/user_descriptor_set_reserved_v2.json
+generated/user_descriptor_set_reserved_v2.hex
+generated/user_descriptor_set_breaking.json
+generated/user_descriptor_set_breaking.hex
+descriptor set valid
+files: 1
+file: examples/simple/user.proto
+  syntax: proto3
+  package: demo
+  messages: 1
+  enums: 0
+  message User fields=6 nested=1 oneofs=1
+report: generated/descriptor_report.md
+generated/user_from_descriptor.proto
+report: generated/descriptor_verify_report.md
+junit: generated/descriptor_verify_report.xml
+Moon Proto Lab descriptor verify: PASS
+- descriptor parse: PASS - 1 file(s) parsed
+- descriptor to proto: PASS - 13 proto lines
+- schema doctor: PASS - schema valid
+- schema inspect: PASS - syntax: proto3
+- codegen: PASS - 53 generated lines
+- generated-code compile: PASS - Finished. moon: ran 5 tasks, now up to date
+report: generated/descriptor_compat_report.md
+junit: generated/descriptor_compat_report.xml
+schema compatible
+old messages: 1
+new messages: 1
+old enums: 0
+new enums: 0
+Moon Proto Lab descriptor compat: PASS
+report: generated/descriptor_breaking_report.md
+junit: generated/descriptor_breaking_report.xml
+schema incompatible
+issues: 1
+message.User.field.1: field type changed from uint32 to string
+Moon Proto Lab descriptor compat: FAIL
+report: generated/descriptor_registry_report.md
+json: generated/descriptor_registry.json
+junit: generated/descriptor_registry_report.xml
+Moon Proto Lab descriptor registry: PASS
+versions: 2
+compatibility edges: 1
+- version 0: PASS tests/fixtures/user_descriptor_set.hex schema valid
+- version 1: PASS tests/fixtures/user_descriptor_set_reserved_v2.hex schema valid
+- edge 0->1: PASS schema compatible
+policy: PASS
+- policy registry status: PASS overall_status=PASS
+- policy minimum versions: PASS 2 >= 2
+- policy minimum compatibility edges: PASS 1 >= 1
+- policy no breaking adjacent changes: PASS all adjacent edges pass
+- policy unique descriptor digests: PASS 2 unique / 2 total
+- policy required files: PASS present: examples/simple/user.proto
+- policy required packages: PASS present: demo
+- policy required messages: PASS present: User
+report: generated/descriptor_policy_report.md
+json: generated/descriptor_policy.json
+junit: generated/descriptor_policy_report.xml
+Moon Proto Lab registry policy: PASS
+- registry status: PASS - overall_status=PASS
+- minimum versions: PASS - 2 >= 2
+- minimum compatibility edges: PASS - 1 >= 1
+- no breaking adjacent changes: PASS - all adjacent edges pass
+- unique descriptor digests: PASS - 2 unique / 2 total
+- required files: PASS - present: examples/simple/user.proto
+- required packages: PASS - present: demo
+- required messages: PASS - present: User
+report: generated/descriptor_registry_breaking_report.md
+json: generated/descriptor_registry_breaking.json
+junit: generated/descriptor_registry_breaking_report.xml
+Moon Proto Lab descriptor registry: FAIL
+versions: 2
+compatibility edges: 1
+- version 0: PASS tests/fixtures/user_descriptor_set.hex schema valid
+- version 1: PASS tests/fixtures/user_descriptor_set_breaking.hex schema valid
+- edge 0->1: FAIL schema incompatible
+policy: FAIL
+- policy registry status: FAIL overall_status=FAIL
+- policy minimum versions: PASS 2 >= 2
+- policy minimum compatibility edges: PASS 1 >= 1
+- policy no breaking adjacent changes: FAIL breaking edges: 0->1
+- policy unique descriptor digests: PASS 2 unique / 2 total
+- policy required files: PASS present: examples/simple/user.proto
+- policy required packages: PASS present: demo
+- policy required messages: PASS present: User
+report: generated/descriptor_policy_breaking_report.md
+json: generated/descriptor_policy_breaking.json
+junit: generated/descriptor_policy_breaking_report.xml
+Moon Proto Lab registry policy: FAIL
+- registry status: FAIL - overall_status=FAIL
+- minimum versions: PASS - 2 >= 2
+- minimum compatibility edges: PASS - 1 >= 1
+- no breaking adjacent changes: FAIL - breaking edges: 0->1
+- unique descriptor digests: PASS - 2 unique / 2 total
+- required files: PASS - present: examples/simple/user.proto
+- required packages: PASS - present: demo
+- required messages: PASS - present: User
+report: generated/descriptor_registry_relaxed_report.md
+json: generated/descriptor_registry_relaxed.json
+junit: generated/descriptor_registry_relaxed_report.xml
+Moon Proto Lab descriptor registry: PASS
+versions: 2
+compatibility edges: 1
+- version 0: PASS tests/fixtures/user_descriptor_set.hex schema valid
+- version 1: PASS tests/fixtures/user_descriptor_set_breaking.hex schema valid
+- edge 0->1: FAIL schema incompatible
+policy: PASS
+- policy minimum versions: PASS 2 >= 2
+- policy maximum breaking adjacent changes: PASS 1 <= 1; breaking edges: 0->1
+- policy unique digests via DSL: PASS 2 unique / 2 total
+- policy required User message via DSL: PASS present: User
+- policy warning when demo package is still present: WARN found: demo
+report: generated/descriptor_policy_relaxed_report.md
+json: generated/descriptor_policy_relaxed.json
+junit: generated/descriptor_policy_relaxed_report.xml
+Moon Proto Lab registry policy: PASS
+- minimum versions: PASS - 2 >= 2
+- maximum breaking adjacent changes: PASS - 1 <= 1; breaking edges: 0->1
+- unique digests via DSL: PASS - 2 unique / 2 total
+- required User message via DSL: PASS - present: User
+- warning when demo package is still present: WARN - found: demo
+json: generated/descriptor_registry_published.json
+report: generated/descriptor_registry_publish_report.md
+junit: generated/descriptor_registry_publish_report.xml
+Moon Proto Lab registry publish: PASS
+published: generated/schema_registry_store/registries/demo-user.json
+- publish version 0: PASS - tests/fixtures/user_descriptor_set.hex -> generated/schema_registry_store/blobs/7cdb85c4d055d7593d28f39b3d10830190c14b1b71b049b1af895fb1c1c86a59.hex sha256=7cdb85c4d055d7593d28f39b3d10830190c14b1b71b049b1af895fb1c1c86a59
+- publish version 1: PASS - tests/fixtures/user_descriptor_set_reserved_v2.hex -> generated/schema_registry_store/blobs/0545e22403a3b7c6b547b7d773fcb09795baa1c4387b87be7d8499d04cfd2f24.hex sha256=0545e22403a3b7c6b547b7d773fcb09795baa1c4387b87be7d8499d04cfd2f24
+- publish manifest: PASS - generated/schema_registry_store/registries/demo-user.json
+json: generated/descriptor_registry_pulled.json
+report: generated/descriptor_registry_pull_report.md
+junit: generated/descriptor_registry_pull_report.xml
+Moon Proto Lab registry pull: PASS
+- fetch manifest: PASS - generated/schema_registry_store/registries/demo-user.json
+- pull version 0: PASS - generated/schema_registry_store/registries/../blobs/7cdb85c4d055d7593d28f39b3d10830190c14b1b71b049b1af895fb1c1c86a59.hex sha256=7cdb85c4d055d7593d28f39b3d10830190c14b1b71b049b1af895fb1c1c86a59 -> generated/schema_registry_pull/version_0_7cdb85c4d055d759.hex
+- pull version 1: PASS - generated/schema_registry_store/registries/../blobs/0545e22403a3b7c6b547b7d773fcb09795baa1c4387b87be7d8499d04cfd2f24.hex sha256=0545e22403a3b7c6b547b7d773fcb09795baa1c4387b87be7d8499d04cfd2f24 -> generated/schema_registry_pull/version_1_0545e22403a3b7c6.hex
+json: generated/descriptor_registry_http_pulled.json
+report: generated/descriptor_registry_http_pull_report.md
+junit: generated/descriptor_registry_http_pull_report.xml
+Moon Proto Lab registry pull: PASS
+- fetch manifest: PASS - http://127.0.0.1:63914/registries/demo-user.json
+- pull version 0: PASS - http://127.0.0.1:63914/blobs/7cdb85c4d055d7593d28f39b3d10830190c14b1b71b049b1af895fb1c1c86a59.hex sha256=7cdb85c4d055d7593d28f39b3d10830190c14b1b71b049b1af895fb1c1c86a59 -> generated/schema_registry_http_pull/version_0_7cdb85c4d055d759.hex
+- pull version 1: PASS - http://127.0.0.1:63914/blobs/0545e22403a3b7c6b547b7d773fcb09795baa1c4387b87be7d8499d04cfd2f24.hex sha256=0545e22403a3b7c6b547b7d773fcb09795baa1c4387b87be7d8499d04cfd2f24 -> generated/schema_registry_http_pull/version_1_0545e22403a3b7c6.hex
+json: generated/descriptor_registry_auth_missing_pulled.json
+report: generated/descriptor_registry_auth_missing_pull_report.md
+junit: generated/descriptor_registry_auth_missing_pull_report.xml
+Moon Proto Lab registry pull: FAIL
+- fetch manifest: FAIL - HTTP Error 401: Unauthorized
+json: generated/descriptor_registry_auth_pulled.json
+report: generated/descriptor_registry_auth_pull_report.md
+junit: generated/descriptor_registry_auth_pull_report.xml
+Moon Proto Lab registry pull: PASS
+- configure HTTP headers: PASS - headers: Authorization
+- fetch manifest: PASS - http://127.0.0.1:63918/registries/demo-user.json
+- pull version 0: PASS - http://127.0.0.1:63918/blobs/7cdb85c4d055d7593d28f39b3d10830190c14b1b71b049b1af895fb1c1c86a59.hex sha256=7cdb85c4d055d7593d28f39b3d10830190c14b1b71b049b1af895fb1c1c86a59 -> generated/schema_registry_auth_pull/version_0_7cdb85c4d055d759.hex
+- pull version 1: PASS - http://127.0.0.1:63918/blobs/0545e22403a3b7c6b547b7d773fcb09795baa1c4387b87be7d8499d04cfd2f24.hex sha256=0545e22403a3b7c6b547b7d773fcb09795baa1c4387b87be7d8499d04cfd2f24 -> generated/schema_registry_auth_pull/version_1_0545e22403a3b7c6.hex
+json: generated/descriptor_registry_push_missing.json
+report: generated/descriptor_registry_push_missing_report.md
+junit: generated/descriptor_registry_push_missing.xml
+Moon Proto Lab registry push: FAIL
+- resolve registry base URL: PASS - http://127.0.0.1:63923/
+- load registry manifest: PASS - generated/schema_registry_store/registries/demo-user.json
+- push version 0: FAIL - HTTP Error 401: Unauthorized
+- push version 1: FAIL - HTTP Error 401: Unauthorized
+- push registry manifest: FAIL - HTTP Error 401: Unauthorized
+json: generated/descriptor_registry_pushed.json
+report: generated/descriptor_registry_push_report.md
+junit: generated/descriptor_registry_push_report.xml
+Moon Proto Lab registry push: PASS
+- configure HTTP headers: PASS - headers: Authorization
+- resolve registry base URL: PASS - http://127.0.0.1:63923/
+- load registry manifest: PASS - generated/schema_registry_store/registries/demo-user.json
+- push version 0: PASS - /private/var/folders/jb/vq4jn1w94dsc2tt35tfkrvkr0000gn/T/moon_proto_codegen_check_31933/generated/schema_registry_store/blobs/7cdb85c4d055d7593d28f39b3d10830190c14b1b71b049b1af895fb1c1c86a59.hex -> http://127.0.0.1:63923/blobs/7cdb85c4d055d7593d28f39b3d10830190c14b1b71b049b1af895fb1c1c86a59.hex status=201 sha256=7cdb85c4d055d7593d28f39b3d10830190c14b1b71b049b1af895fb1c1c86a59
+- push version 1: PASS - /private/var/folders/jb/vq4jn1w94dsc2tt35tfkrvkr0000gn/T/moon_proto_codegen_check_31933/generated/schema_registry_store/blobs/0545e22403a3b7c6b547b7d773fcb09795baa1c4387b87be7d8499d04cfd2f24.hex -> http://127.0.0.1:63923/blobs/0545e22403a3b7c6b547b7d773fcb09795baa1c4387b87be7d8499d04cfd2f24.hex status=201 sha256=0545e22403a3b7c6b547b7d773fcb09795baa1c4387b87be7d8499d04cfd2f24
+- push registry manifest: PASS - http://127.0.0.1:63923/registries/demo-user.json status=201
+json: generated/descriptor_registry_hosted_pulled.json
+report: generated/descriptor_registry_hosted_pull_report.md
+junit: generated/descriptor_registry_hosted_pull_report.xml
+Moon Proto Lab registry pull: PASS
+- configure HTTP headers: PASS - headers: Authorization
+- fetch manifest: PASS - http://127.0.0.1:63923/registries/demo-user.json
+- pull version 0: PASS - http://127.0.0.1:63923/blobs/7cdb85c4d055d7593d28f39b3d10830190c14b1b71b049b1af895fb1c1c86a59.hex sha256=7cdb85c4d055d7593d28f39b3d10830190c14b1b71b049b1af895fb1c1c86a59 -> generated/schema_registry_hosted_pull/version_0_7cdb85c4d055d759.hex
+- pull version 1: PASS - http://127.0.0.1:63923/blobs/0545e22403a3b7c6b547b7d773fcb09795baa1c4387b87be7d8499d04cfd2f24.hex sha256=0545e22403a3b7c6b547b7d773fcb09795baa1c4387b87be7d8499d04cfd2f24 -> generated/schema_registry_hosted_pull/version_1_0545e22403a3b7c6.hex
+json: generated/descriptor_registry_profile_pushed.json
+report: generated/descriptor_registry_profile_push_report.md
+junit: generated/descriptor_registry_profile_push_report.xml
+Moon Proto Lab registry push: PASS
+- load registry profile: PASS - local-hosted
+- resolve registry backend: PASS - static-http
+- configure HTTP headers: PASS - headers: Authorization, X-Registry-Client
+- resolve registry base URL: PASS - http://127.0.0.1:63923/
+- resolve registry manifest name: PASS - demo-user.json
+- load registry manifest: PASS - generated/schema_registry_store/registries/demo-user.json
+- push version 0: PASS - /private/var/folders/jb/vq4jn1w94dsc2tt35tfkrvkr0000gn/T/moon_proto_codegen_check_31933/generated/schema_registry_store/blobs/7cdb85c4d055d7593d28f39b3d10830190c14b1b71b049b1af895fb1c1c86a59.hex -> http://127.0.0.1:63923/blobs/7cdb85c4d055d7593d28f39b3d10830190c14b1b71b049b1af895fb1c1c86a59.hex status=201 sha256=7cdb85c4d055d7593d28f39b3d10830190c14b1b71b049b1af895fb1c1c86a59
+- push version 1: PASS - /private/var/folders/jb/vq4jn1w94dsc2tt35tfkrvkr0000gn/T/moon_proto_codegen_check_31933/generated/schema_registry_store/blobs/0545e22403a3b7c6b547b7d773fcb09795baa1c4387b87be7d8499d04cfd2f24.hex -> http://127.0.0.1:63923/blobs/0545e22403a3b7c6b547b7d773fcb09795baa1c4387b87be7d8499d04cfd2f24.hex status=201 sha256=0545e22403a3b7c6b547b7d773fcb09795baa1c4387b87be7d8499d04cfd2f24
+- push registry manifest: PASS - http://127.0.0.1:63923/registries/demo-user.json status=201
+json: generated/descriptor_registry_profile_pulled.json
+report: generated/descriptor_registry_profile_pull_report.md
+junit: generated/descriptor_registry_profile_pull_report.xml
+Moon Proto Lab registry pull: PASS
+- load registry profile: PASS - local-hosted
+- resolve registry backend: PASS - static-http
+- configure HTTP headers: PASS - headers: Authorization, X-Registry-Client
+- fetch manifest: PASS - http://127.0.0.1:63923/registries/demo-user.json
+- pull version 0: PASS - http://127.0.0.1:63923/blobs/7cdb85c4d055d7593d28f39b3d10830190c14b1b71b049b1af895fb1c1c86a59.hex sha256=7cdb85c4d055d7593d28f39b3d10830190c14b1b71b049b1af895fb1c1c86a59 -> generated/schema_registry_profile_pull/version_0_7cdb85c4d055d759.hex
+- pull version 1: PASS - http://127.0.0.1:63923/blobs/0545e22403a3b7c6b547b7d773fcb09795baa1c4387b87be7d8499d04cfd2f24.hex sha256=0545e22403a3b7c6b547b7d773fcb09795baa1c4387b87be7d8499d04cfd2f24 -> generated/schema_registry_profile_pull/version_1_0545e22403a3b7c6.hex
+json: generated/descriptor_registry_managed_pushed.json
+report: generated/descriptor_registry_managed_push_report.md
+junit: generated/descriptor_registry_managed_push_report.xml
+Moon Proto Lab registry push: PASS
+- load registry profile: PASS - github-managed
+- resolve registry backend: PASS - github-contents
+- configure HTTP headers: PASS - headers: Authorization, X-Registry-Client
+- resolve registry base URL: PASS - http://127.0.0.1:63939/moon-registry
+- resolve registry manifest name: PASS - demo-user.json
+- load registry manifest: PASS - generated/schema_registry_store/registries/demo-user.json
+- push version 0: PASS - /private/var/folders/jb/vq4jn1w94dsc2tt35tfkrvkr0000gn/T/moon_proto_codegen_check_31933/generated/schema_registry_store/blobs/7cdb85c4d055d7593d28f39b3d10830190c14b1b71b049b1af895fb1c1c86a59.hex -> http://127.0.0.1:63939/repos/moonbit-community/schema-registry/contents/moon-registry/blobs/7cdb85c4d055d7593d28f39b3d10830190c14b1b71b049b1af895fb1c1c86a59.hex status=201 sha256=7cdb85c4d055d7593d28f39b3d10830190c14b1b71b049b1af895fb1c1c86a59
+- push version 1: PASS - /private/var/folders/jb/vq4jn1w94dsc2tt35tfkrvkr0000gn/T/moon_proto_codegen_check_31933/generated/schema_registry_store/blobs/0545e22403a3b7c6b547b7d773fcb09795baa1c4387b87be7d8499d04cfd2f24.hex -> http://127.0.0.1:63939/repos/moonbit-community/schema-registry/contents/moon-registry/blobs/0545e22403a3b7c6b547b7d773fcb09795baa1c4387b87be7d8499d04cfd2f24.hex status=201 sha256=0545e22403a3b7c6b547b7d773fcb09795baa1c4387b87be7d8499d04cfd2f24
+- push registry manifest: PASS - http://127.0.0.1:63939/repos/moonbit-community/schema-registry/contents/moon-registry/registries/demo-user.json status=201
+json: generated/descriptor_registry_managed_updated.json
+report: generated/descriptor_registry_managed_update_report.md
+junit: generated/descriptor_registry_managed_update_report.xml
+Moon Proto Lab registry push: PASS
+- load registry profile: PASS - github-managed
+- resolve registry backend: PASS - github-contents
+- configure HTTP headers: PASS - headers: Authorization, X-Registry-Client
+- resolve registry base URL: PASS - http://127.0.0.1:63939/moon-registry
+- resolve registry manifest name: PASS - demo-user.json
+- load registry manifest: PASS - generated/schema_registry_store/registries/demo-user.json
+- push version 0: PASS - /private/var/folders/jb/vq4jn1w94dsc2tt35tfkrvkr0000gn/T/moon_proto_codegen_check_31933/generated/schema_registry_store/blobs/7cdb85c4d055d7593d28f39b3d10830190c14b1b71b049b1af895fb1c1c86a59.hex -> http://127.0.0.1:63939/repos/moonbit-community/schema-registry/contents/moon-registry/blobs/7cdb85c4d055d7593d28f39b3d10830190c14b1b71b049b1af895fb1c1c86a59.hex status=200 sha256=7cdb85c4d055d7593d28f39b3d10830190c14b1b71b049b1af895fb1c1c86a59
+- push version 1: PASS - /private/var/folders/jb/vq4jn1w94dsc2tt35tfkrvkr0000gn/T/moon_proto_codegen_check_31933/generated/schema_registry_store/blobs/0545e22403a3b7c6b547b7d773fcb09795baa1c4387b87be7d8499d04cfd2f24.hex -> http://127.0.0.1:63939/repos/moonbit-community/schema-registry/contents/moon-registry/blobs/0545e22403a3b7c6b547b7d773fcb09795baa1c4387b87be7d8499d04cfd2f24.hex status=200 sha256=0545e22403a3b7c6b547b7d773fcb09795baa1c4387b87be7d8499d04cfd2f24
+- push registry manifest: PASS - http://127.0.0.1:63939/repos/moonbit-community/schema-registry/contents/moon-registry/registries/demo-user.json status=200
+json: generated/descriptor_registry_managed_pulled.json
+report: generated/descriptor_registry_managed_pull_report.md
+junit: generated/descriptor_registry_managed_pull_report.xml
+Moon Proto Lab registry pull: PASS
+- load registry profile: PASS - github-managed
+- resolve registry backend: PASS - github-contents
+- configure HTTP headers: PASS - headers: Authorization, X-Registry-Client
+- fetch manifest: PASS - http://127.0.0.1:63939/moon-registry/registries/demo-user.json
+- pull version 0: PASS - http://127.0.0.1:63939/moon-registry/blobs/7cdb85c4d055d7593d28f39b3d10830190c14b1b71b049b1af895fb1c1c86a59.hex sha256=7cdb85c4d055d7593d28f39b3d10830190c14b1b71b049b1af895fb1c1c86a59 -> generated/schema_registry_managed_pull/version_0_7cdb85c4d055d759.hex
+- pull version 1: PASS - http://127.0.0.1:63939/moon-registry/blobs/0545e22403a3b7c6b547b7d773fcb09795baa1c4387b87be7d8499d04cfd2f24.hex sha256=0545e22403a3b7c6b547b7d773fcb09795baa1c4387b87be7d8499d04cfd2f24 -> generated/schema_registry_managed_pull/version_1_0545e22403a3b7c6.hex
+Generated MoonBit source compiles
+
+==> python3 scripts/moon_proto_lab.py verify examples/ai/good_order.proto --report generated/ai_good_order_verify_report.md --junit-out generated/ai_good_order_verify_report.xml
+report: generated/ai_good_order_verify_report.md
+junit: generated/ai_good_order_verify_report.xml
+Moon Proto Lab verify: PASS
+- schema doctor: PASS - schema valid
+- schema inspect: PASS - schema summary generated
+- codegen: PASS - 114 generated lines
+- generated-code compile: PASS - Finished. moon: ran 5 tasks, now up to date
+
+==> python3 scripts/moon_proto_lab.py compat examples/ai/good_order.proto examples/ai/good_order_v2.proto --report generated/ai_good_order_compat_report.md --junit-out generated/ai_good_order_compat_report.xml
+schema compatible
+old messages: 2
+new messages: 2
+old enums: 1
+new enums: 1
+report: generated/ai_good_order_compat_report.md
+junit: generated/ai_good_order_compat_report.xml
+
+==> expected failure: Schema Doctor rejects deliberately broken AI schema
+schema invalid
+issues: 6
+message.Order.field.1: duplicate field number
+message.Order.field.invalid_labels.key: invalid map key type
+message.Order.field.legacy_note.number: field uses reserved number
+message.Order.field.legacy_note.name: field uses reserved name
+enum.OrderStatus.values[0]: proto3 enum first value must be zero
+enum.OrderStatus.value.1: duplicate enum value number
+expected failure observed: Schema Doctor rejects deliberately broken AI schema
+
+Moon Proto Lab release gate: PASS

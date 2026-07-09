@@ -1,13 +1,13 @@
 {
   "suite": "moon-proto-upstream-lite",
   "version": 1,
-  "description": "A checked-in upstream-style protobuf conformance subset imported into Moon Proto Lab's oracle-backed fixture matrix. The cases model protobuf conformance runner input/output semantics while staying small enough for contest CI.",
+  "description": "An original upstream-style protobuf conformance model in Moon Proto Lab's oracle-backed fixture matrix. The cases model selected protobuf input/output semantics while staying small enough for contest CI; they are not copied from the official conformance suite.",
   "source_note": "Modeled after protobuf conformance concepts: protobuf binary input, JSON output, unknown-field skipping, duplicate singular last-one-wins, packed/unpacked repeated numeric input, maps, oneof, boundary numerics and special float JSON strings.",
   "cases": [
     {
       "name": "Required.Proto3.ScalarRepeatedPacked.BinaryInput",
       "fixture": "user_full",
-      "category": "upstream-lite imported subset",
+      "category": "upstream-style modeled subset",
       "feature": "proto3 scalar, bytes, repeated string and packed numeric fields accepted from protobuf input",
       "upstream_reference": "ConformanceRequest.protobuf_payload -> ConformanceResponse.json_payload",
       "required_json": {
@@ -23,7 +23,7 @@
     {
       "name": "Required.Proto3.JsonInt64BytesEscaping.JsonOutput",
       "fixture": "user_full",
-      "category": "upstream-lite imported subset",
+      "category": "upstream-style modeled subset",
       "feature": "protobuf JSON 64-bit integers are strings and bytes are base64 while string escaping is preserved",
       "upstream_reference": "JSON mapping for int64/uint64/bytes/string fields",
       "required_json": {
@@ -37,7 +37,7 @@
     {
       "name": "Required.Proto3.UnknownFieldsAreSkipped.BinaryInput",
       "fixture": "user_wire_edges",
-      "category": "upstream-lite imported subset",
+      "category": "upstream-style modeled subset",
       "feature": "unknown binary field 99 is skipped and does not appear in JSON output",
       "upstream_reference": "Binary parser accepts unknown fields and drops them for JSON output",
       "required_json": {
@@ -50,7 +50,7 @@
     {
       "name": "Required.Proto3.DuplicateSingularLastOneWins.BinaryInput",
       "fixture": "user_wire_edges",
-      "category": "upstream-lite imported subset",
+      "category": "upstream-style modeled subset",
       "feature": "duplicate singular uint64 field keeps the final decoded value",
       "upstream_reference": "Last value wins for duplicate singular non-message fields",
       "required_json": {
@@ -61,7 +61,7 @@
     {
       "name": "Required.Proto3.PackedAndUnpackedRepeatedAccepted.BinaryInput",
       "fixture": "user_wire_edges",
-      "category": "upstream-lite imported subset",
+      "category": "upstream-style modeled subset",
       "feature": "repeated numeric field accepts both unpacked occurrences and packed payload in one stream",
       "upstream_reference": "Repeated primitive numeric fields accept packed and unpacked encodings",
       "required_json": {
@@ -72,7 +72,7 @@
     {
       "name": "Required.Proto3.MapStringUInt64.JsonOutput",
       "fixture": "bag_maps",
-      "category": "upstream-lite imported subset",
+      "category": "upstream-style modeled subset",
       "feature": "map<string,uint64> renders as a JSON object with uint64 string values",
       "upstream_reference": "Proto3 JSON map field object mapping",
       "required_json": {
@@ -83,7 +83,7 @@
     {
       "name": "Required.Proto3.MapInt64Keys.JsonOutput",
       "fixture": "bag_maps",
-      "category": "upstream-lite imported subset",
+      "category": "upstream-style modeled subset",
       "feature": "map<int64,string> renders integer keys as JSON object string properties",
       "upstream_reference": "Proto3 JSON map keys are strings",
       "required_json": {
@@ -94,7 +94,7 @@
     {
       "name": "Required.Proto3.OneofSelectedField.JsonOutput",
       "fixture": "contact_oneof",
-      "category": "upstream-lite imported subset",
+      "category": "upstream-style modeled subset",
       "feature": "oneof emits only the selected field in JSON output",
       "upstream_reference": "Oneof JSON mapping selected field semantics",
       "required_json": {
@@ -107,7 +107,7 @@
     {
       "name": "Required.Proto3.Numeric32Boundaries.JsonOutput",
       "fixture": "numbers32",
-      "category": "upstream-lite imported subset",
+      "category": "upstream-style modeled subset",
       "feature": "uint32/int32/sint32/fixed32/sfixed32 boundary values preserve protobuf JSON numeric forms",
       "upstream_reference": "32-bit numeric scalar JSON mapping",
       "required_json": {
@@ -122,7 +122,7 @@
     {
       "name": "Required.Proto3.FloatDouble.JsonOutput",
       "fixture": "floats",
-      "category": "upstream-lite imported subset",
+      "category": "upstream-style modeled subset",
       "feature": "finite float and double values preserve JSON numeric output",
       "upstream_reference": "float/double JSON mapping",
       "required_json": {
@@ -134,7 +134,7 @@
     {
       "name": "Required.Proto3.SpecialFloatJsonStrings.JsonOutput",
       "fixture": "float_specials",
-      "category": "upstream-lite imported subset",
+      "category": "upstream-style modeled subset",
       "feature": "NaN, Infinity and -Infinity render as protobuf JSON strings",
       "upstream_reference": "Special float JSON string mapping",
       "required_json": {

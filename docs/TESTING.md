@@ -34,10 +34,10 @@ Current tests cover:
 - nested message binary and JSON roundtrip through descriptor registries;
 - proto3 map parser/codegen snapshot, schema validation, binary roundtrip, JSON object mapping, numeric key exponent/overflow normalization, canonical duplicate-key rejection and enum-value JSON name mapping;
 - proto3 oneof parser/codegen snapshot, encode-time conflict rejection, binary last-one-wins decode and JSON conflict rejection;
-- codegen runtime helper snapshots, inline/file-based CLI smoke generation, schema-aware JSON roundtrip CLI normalization checks, Schema Doctor diagnostics, compatibility checks, verify report and JUnit XML generation, official differential/source/generated-output/installed-plugin live-generator report, manifest feature coverage gate and JUnit XML generation, descriptor verify/compat/registry/policy report and JUnit XML generation, registry adapter publish/push/pull/authenticated HTTP/profile/managed GitHub Contents backend report and JUnit XML generation, CI official source-contract checks, and generated-code compile checks;
+- codegen runtime helper snapshots, inline/file-based CLI smoke generation, schema-aware JSON roundtrip CLI normalization checks, Schema Doctor diagnostics, compatibility checks, verify report and JUnit XML generation, official contract compatibility/source/generated-output/installed-plugin adapter/live-generator report, manifest feature coverage gate and JUnit XML generation, descriptor verify/compat/registry/policy report and JUnit XML generation, registry adapter publish/push/pull/authenticated HTTP/profile/managed GitHub Contents backend report and JUnit XML generation, CI official source-contract checks, and generated-code compile checks;
 - deterministic property-style roundtrip corpora for varint, zig-zag, dynamic message binary and JSON;
 - official Python `google.protobuf` and Go `google.golang.org/protobuf` oracle fixtures for full scalar/repeated, map, oneof, 32-bit numeric boundary, float/double, special float and wire-decode edge messages;
-- conformance-lite Markdown/JSON/JUnit evidence report over the same oracle-backed fixture matrix, including upstream-style wire-decode edge vectors, an imported 11-case upstream-lite manifest, expected-fail mutation self-checks for corrupted fixtures and missing artifacts plus semantic-axis coverage gates.
+- conformance-lite Markdown/JSON/JUnit evidence report over the same oracle-backed fixture matrix, including upstream-style wire-decode edge vectors, an original 11-case modeled manifest, expected-fail mutation self-checks for corrupted fixtures and missing artifacts plus semantic-axis coverage gates.
 
 Run the one-command release gate:
 
@@ -52,11 +52,13 @@ python3 tests/oracle/python_protobuf_oracle.py
 (cd tests/oracle && go run .)
 moon fmt --check
 moon info
+moon package --list
 moon package
-moon check
+moon check --deny-warn
 moon build
-moon test
+moon test --deny-warn
 moon test --target all
+moon coverage analyze -p 123123213weqw/moon_proto -- -f summary
 moon run cmd/main -- gen --example
 python3 scripts/moon_proto_gen.py gen examples/simple/user.proto -o generated/
 python3 scripts/moon_proto_lab.py doctor examples/simple/user.proto
@@ -80,7 +82,7 @@ python3 scripts/moon_proto_lab.py verify examples/decorated/custom_options.proto
 python3 scripts/moon_proto_lab.py verify examples/decorated/edition_schema.proto --report generated/verify_edition_schema_report.md --junit-out generated/verify_edition_schema_report.xml
 python3 scripts/moon_proto_lab.py verify examples/decorated/oneof_options.proto --report generated/verify_oneof_options_report.md --junit-out generated/verify_oneof_options_report.xml
 python3 scripts/moon_proto_official_diff.py --report generated/official_diff_report.md --junit-out generated/official_diff_report.xml
-python3 scripts/moon_proto_official_diff.py --official-generated-dir tests/differential/official_generated_fixture --report generated/official_generated_diff_report.md --junit-out generated/official_generated_diff_report.xml
+python3 scripts/moon_proto_official_diff.py --official-generated-dir tests/differential/official_contract_fixture --report generated/official_generated_diff_report.md --junit-out generated/official_generated_diff_report.xml
 python3 scripts/moon_proto_official_diff.py --run-official-generator --official-plugin-bin protoc-gen-mbt --protoc-bin protoc --report generated/official_installed_plugin_diff_report.md --junit-out generated/official_installed_plugin_diff_report.xml
 python3 scripts/moon_proto_conformance.py --report generated/conformance_lite_report.md --json-out generated/conformance_lite.json --junit-out generated/conformance_lite.xml
 python3 scripts/moon_proto_descriptor.py verify tests/fixtures/user_descriptor_set.hex --report generated/descriptor_verify_report.md --junit-out generated/descriptor_verify_report.xml
@@ -109,7 +111,7 @@ The project is positioned as a protobuf ecosystem verification lab for MoonBit. 
 - generated-code compile checks ensure generated MoonBit source actually builds and schema-aware JSON roundtrip CLI behavior remains reproducible;
 - verify reports make the result reviewable as Markdown/HTML artifacts.
 
-Completed parser/schema-tool verification now includes old/new compatibility checks, descriptor-set compatibility checks, descriptor-registry release gates, JSON release-policy checks, richer release-policy DSL checks with warning severity, official generated-output contract checks, official scalar-matrix adapter coverage, installed-plugin official generator smoke checks, conformance-lite Markdown/JSON/JUnit evidence reports with expected-fail mutation self-checks and coverage gates, registry adapter publish/push/pull checks over local paths, HTTP, authenticated HTTP, hosted registry profiles, and managed GitHub Contents backend profiles, larger conformance-lite oracle fixtures, upstream-style wire-decode edge vectors, an imported upstream-lite conformance subset, edition/import/option/reserved/service/nested-type/qualified-nested-reference parser tolerance, signed enum value/reserved-range tolerance, enum allow_alias duplicate-number validation, schema-aware protobuf JSON enum-name mapping for fields and map values, string-literal escape/single-quote tolerance, empty-statement tolerance, top-level extend/custom-option block tolerance, oneof option tolerance, protobuf JSON URL-safe/unpadded bytes base64, standard JSON string escapes with Unicode/surrogate-pair decoding and malformed escape/control-character rejection, strict JSON number-token grammar, exact exponent-notation integer parsing with uint64/int64 overflow guards, numeric map-key normalization with canonical duplicate detection, null-as-absent and lowerCamelCase field-name alias/output helpers, block-comment tolerance, and reserved contract validation. Planned next verification:
+Completed parser/schema-tool verification now includes old/new compatibility checks, descriptor-set compatibility checks, descriptor-registry release gates, JSON release-policy checks, richer release-policy DSL checks with warning severity, official output-shape contract checks, official scalar-matrix adapter coverage, installed-plugin adapter smoke checks with a test double, conformance-lite Markdown/JSON/JUnit evidence reports with expected-fail mutation self-checks and coverage gates, registry adapter publish/push/pull checks over local paths, HTTP, authenticated HTTP, hosted registry profiles, and managed GitHub Contents backend profiles, larger conformance-lite oracle fixtures, upstream-style wire-decode edge vectors, a modeled upstream-style conformance subset, edition/import/option/reserved/service/nested-type/qualified-nested-reference parser tolerance, signed enum value/reserved-range tolerance, enum allow_alias duplicate-number validation, schema-aware protobuf JSON enum-name mapping for fields and map values, string-literal escape/single-quote tolerance, empty-statement tolerance, top-level extend/custom-option block tolerance, oneof option tolerance, protobuf JSON URL-safe/unpadded bytes base64, standard JSON string escapes with Unicode/surrogate-pair decoding and malformed escape/control-character rejection, strict JSON number-token grammar, exact exponent-notation integer parsing with uint64/int64 overflow guards, numeric map-key normalization with canonical duplicate detection, null-as-absent and lowerCamelCase field-name alias/output helpers, block-comment tolerance, and reserved contract validation. Planned next verification:
 
 - differential adapter tests against more official MoonBit protobuf runtime/codegen outputs when stable sample projects are available.
 

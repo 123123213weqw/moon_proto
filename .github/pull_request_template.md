@@ -18,11 +18,12 @@ Closes #
 
 - [ ] `moon fmt --check`
 - [ ] `moon info`
-- [ ] `moon package`
-- [ ] `moon check`
+- [ ] `moon package --list`
+- [ ] `moon check --deny-warn`
 - [ ] `moon build`
-- [ ] `moon test`
+- [ ] `moon test --deny-warn`
 - [ ] `moon test --target all`
+- [ ] `moon coverage analyze -p 123123213weqw/moon_proto -- -f summary`
 - [ ] `tests/codegen/compile_generated.sh`
 - [ ] Relevant CLI/report command attached below
 

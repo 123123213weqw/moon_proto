@@ -6,12 +6,12 @@
 
 README 顶部首先展示 `docs/diagrams/agent_feedback_loop_demo.png`。这张图明确标注为 demo diagram，用来解释：Agent 生成 schema 后，Moon Proto Lab 如何把诊断转换成可修复反馈，再由 Agent/开发者修复并重新跑 CI。
 
-紧接着的 `Actual run screenshots for reviewers` 区域包含 4 张由真实命令输出 transcript 渲染得到的 PNG 截图，用来证明上面的闭环可以实际运行：
+紧接着的实际运行区域展示由真实命令 transcript 渲染的关键 PNG，并链接其他文本证据：
 
 - `docs/screenshots/release_gate_pass.png`：`bash scripts/release_gate.sh` 最终通过；
-- `docs/screenshots/moon_test_all_targets.png`：`moon test --target all` 多后端测试通过；
 - `docs/screenshots/json_roundtrip_cli.png`：schema-aware JSON roundtrip 功能演示；
-- `docs/screenshots/moon_package_check.png`：`moon package` 打包 / mooncakes 发布门禁演示。
+- `docs/screenshots/moon_test_all_targets.txt`：`moon test --target all` 多后端测试通过；
+- `docs/screenshots/moon_package_check.txt`：清洁 Mooncakes 打包门禁。
 
 每张 PNG 都有同名 `.txt` 原始 transcript，包含 command、cwd、timestamp 和 exit code，便于评审核对。
 
@@ -57,9 +57,10 @@ bash scripts/release_gate.sh
 - Python/Go 官方 protobuf oracle fixtures；
 - `moon fmt --check`；
 - `moon info` 和 `.mbti` diff；
-- `moon package`；
-- `moon check` / `moon build`；
-- `moon test` / `moon test --target all`；
+- `moon package --list` 与发布包内容门禁；
+- `moon check --deny-warn` / `moon build`；
+- `moon test --deny-warn` / `moon test --target all`；
+- MoonBit 核心包 80% 覆盖率门禁；
 - CLI smoke；
 - generated code compile check；
 - AI schema 正例/兼容/反例检查。
@@ -69,11 +70,12 @@ bash scripts/release_gate.sh
 ```bash
 moon fmt --check
 moon info
-moon package
-moon check
+moon package --list
+moon check --deny-warn
 moon build
-moon test
+moon test --deny-warn
 moon test --target all
+moon coverage analyze -p 123123213weqw/moon_proto -- -f summary
 ```
 
 ## 5. AI 验证演示
